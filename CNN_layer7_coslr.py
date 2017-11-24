@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 import  numpy as np
 import tensorflow as tf
 import pandas as pd
+print '### TENSORFLOW VERSION %s ###'%tf.__version__
 float_formatter = lambda x: "%.3f" % x
 np.set_printoptions(formatter={'float_kind':float_formatter})
 dictt = {'A': 0, 'C': 1, 'E': 2, 'D': 3, 'G': 4,
          'F': 5, 'I': 6, 'H': 7, 'K': 8, 'M': 9,
          'L': 10, 'N': 11, 'Q': 12, 'P': 13, 'S': 14,
          'R': 15, 'T': 16, 'W': 17, 'V': 18, 'Y': 19  }
-import xgboost 
 #Interface Scale
 #ΔGwif (kcal/mol) 	Octanol Scale
 #ΔGwoct (kcal/mol) 	Octanol − Interface
@@ -73,11 +73,11 @@ for i in all:
 			result[j] =1
 		else:
 			result[j] += 1
-print result
+print 'different aa frequencies',result
 total_aa = np.sum([result[x] for x in result])
 for i in result:
 	result[i] = np.round(result[i]*1.0 /total_aa,3)
-print result
+print 'different aa frequencies normalized',result
 ######### Start of initilziing data ###
 X = []
 counter = 0
@@ -208,8 +208,7 @@ for variable in tf.trainable_variables():
         variable_parameters *= dim.value
     print variable.name,variable_parameters,variable
     total_parameters += variable_parameters
-print' ### model parameters',total_parameters,'###
-print len(result)
+print' ### model parameters',total_parameters,'###'
 training_epochs  = 120
 
 import sklearn.metrics,random
@@ -221,7 +220,7 @@ if len(sys.argv)==2:
     test = int(sys.argv[1])
 else:
     test = 2
-print "TEST IS",test
+print "TEST SET IS  FOLD",test
 all_data =[]
 test_emsemble= []
 def get_data_from_X(X,y,i): #get tensor inputs from X and y
@@ -274,7 +273,7 @@ for repeat in range(0,1): #perform 5 repeats
                 y_train += [x[-1],]
                 X_train_weighted += [(x[0],x[1],x[2]),]*mul
                 y_train_weighted += [x[-1],]*mul
-        print 'size of different sets:',len(X_train_weighted),len(X_val),len(X_test)
+        print 'size of different sets train/val/test:',len(X_train_weighted),len(X_val),len(X_test)
 
         best_roc_val = {}     # stores val ROC for trainnig epochs per CV+repeat run
         for epoch in range(training_epochs):#training_epochs):
@@ -321,7 +320,7 @@ for repeat in range(0,1): #perform 5 repeats
             sorted_data = zip(X_val,y_val)#sorted(zip(X_val,y_val),key = lambda x : x[0][-1][0])
             initial=0
             y_temp = []
-            for i in range(0,len(sorted_data)-1): #train error
+            for i in range(0,len(sorted_data)-1): #val error
                 if sorted_data[i+1][0][-1][0] == sorted_data[i][0][-1][0] and i!= len(sorted_data)-2: #getting same length together
                     None
                 else:
@@ -349,7 +348,7 @@ for repeat in range(0,1): #perform 5 repeats
             sorted_data = zip(X_test,y_test)#sorted(zip(X_test,y_test),key = lambda x : x[0][-1][0])
             initial=0
             y_temp = []
-            for i in range(0,len(sorted_data)-1): #train error
+            for i in range(0,len(sorted_data)-1): #test error
                 if sorted_data[i+1][0][-1][0] == sorted_data[i][0][-1][0] and i!= len(sorted_data)-2: #getting same length together
                     None
                 else:

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import  numpy as np
 import tensorflow as tf
 import pandas as pd
+print '### TENSORFLOW VERSION %s ###'%tf.__version__
 float_formatter = lambda x: "%.3f" % x
 np.set_printoptions(formatter={'float_kind':float_formatter})
 dictt = {'A': 0, 'C': 1, 'E': 2, 'D': 3, 'G': 4,
@@ -74,11 +75,11 @@ for i in all:
 			result[j] =1
 		else:
 			result[j] += 1
-print result
+print 'different aa frequencies',result
 total_aa = np.sum([result[x] for x in result])
 for i in result:
 	result[i] = np.round(result[i]*1.0 /total_aa,3)
-print result
+print 'different aa frequencies normalized',result
 ######### Start of initilziing data ###
 X = []
 counter = 0
@@ -191,7 +192,7 @@ for variable in tf.trainable_variables():
     print variable.name,variable_parameters,variable
     total_parameters += variable_parameters
 print' ### model parameters',total_parameters,'###'
-print len(result)
+
 training_epochs  = 100
 
 import sklearn.metrics,random
@@ -202,7 +203,7 @@ if len(sys.argv)==2:
     test = int(sys.argv[1])
 else:
     test = 2
-print "TEST IS",test
+print "TEST SET IS  FOLD",test
 all_data =[]
 test_emsemble= []
 def get_data_from_X(X,y,i): #get tensor inputs from X and y
@@ -257,7 +258,7 @@ for repeat in range(0,1): #perform 5 repeats
                 y_train += [x[-1],]
                 X_train_weighted += [(x[0],x[1],x[2],x[3]),]*mul
                 y_train_weighted += [x[-1],]*mul
-        print 'size of different sets:',len(X_train_weighted),len(X_val),len(X_test)
+        print 'size of different sets Train/val/test:',len(X_train_weighted),len(X_val),len(X_test)
 
         best_roc_val = {}     # stores val ROC for trainnig epochs per CV+repeat run
         for epoch in range(training_epochs):#training_epochs):
@@ -321,6 +322,7 @@ for repeat in range(0,1): #perform 5 repeats
                     
             print np.mean(cost_train),np.mean(cost_val)
             print roc_train,roc_val,roc_test
+            ### code below saves top 3 models of each iteration
             best_roc_val[epoch] = [roc_train,roc_val,roc_test,logit_test]
             all_data += [[roc_train,roc_val,roc_test],]
             if roc_val <= 0.5: # if val worst then chance, reinitalize tarining
