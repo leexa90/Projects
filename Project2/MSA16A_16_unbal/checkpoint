@@ -1,0 +1,6 @@
+model_checkpoint_path: "model300_reweigh_loss_70_74.ckpt"
+all_model_checkpoint_paths: "model300_reweigh_loss_66_73.ckpt"
+all_model_checkpoint_paths: "model300_reweigh_loss_67_73.ckpt"
+all_model_checkpoint_paths: "model300_reweigh_loss_68_73.ckpt"
+all_model_checkpoint_paths: "model300_reweigh_loss_69_73.ckpt"
+all_model_checkpoint_paths: "model300_reweigh_loss_70_74.ckpt"
