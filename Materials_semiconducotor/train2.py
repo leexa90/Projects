@@ -63,8 +63,8 @@ for seed in [1,5516,643,5235,2352]:
         train = train.set_value(test_id,'predict2',train.iloc[test_id]['predict2']+model1.predict(xgval)/5)
         test = test.set_value(test.index, target2, test[target2]+model1.predict(xgtest)/20)
 train2 = train[train['id'] < 3000]
-print (np.mean(train2['predict1']-train2[target1])**2)**.5
-print (np.mean(train2['predict2']-train2[target2])**2)**.5
+print np.mean((train2['predict1']-train2[target1])**2)**.5
+print np.mean((train2['predict2']-train2[target2])**2)**.5
 test[target1] = np.exp(test[target1])-1
 test[target2] = np.exp(test[target2])-1
 train[target1] = np.exp(train[target1])-1
@@ -72,16 +72,22 @@ train[target2] = np.exp(train[target2])-1
 train['predict1'] = np.exp(train['predict1'])-1
 train['predict2'] = np.exp(train['predict2'])-1
 test[['id',target1,target2]].to_csv('test3.csv',index=0)
-print train[[target1,'predict1',target2,'predict2']]
+#print train[[target1,'predict1',target2,'predict2']]
 if False:
     train.to_csv('train_v2.csv',index=0)
     test.to_csv('test_v2.csv',index=0)
 '''
 benchmark *5
-0.000127001908949
-0.000163903815825
+0.03250080113
+0.0880216978405
+0.0602612494852
 with engeinner features *5
-0.0000737150159566
-0.00018252043876
+0.028781766046
+0.0849339614409
+0.0568578637434
 
+engineer_features from paper*5
+0.026665032169
+0.0816681029669
+0.054166567568
 '''

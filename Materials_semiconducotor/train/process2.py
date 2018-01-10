@@ -20,9 +20,9 @@ def get_dist(atom_typeA,atom_typeB,temp):
         dist = dist[dist>0.01]
         dist = dist[dist <= 6.5]
         return list(dist)
-train =pd.read_csv('../train.csv')
-for target in ['formation_energy_ev_natom','bandgap_energy_ev']:
-    train[target] = (train[target] - np.mean(train[target]))/np.std(train[target])
+##train =pd.read_csv('../train.csv')
+##for target in ['formation_energy_ev_natom','bandgap_energy_ev']:
+##    train[target] = (train[target] - np.mean(train[target]))/np.std(train[target])
 
 data = pd.DataFrame(None,columns=['atom','X','Y','Z','type'])
 data = pd.DataFrame(None,columns=range(6))
@@ -139,20 +139,22 @@ for i in sorted(files,key = lambda x : int(x[2:]))[::1]:
         dist = np.sum((cor1 - cor2)**2,1)**.5
         dist_mat = np.reshape(dist ,(len(temp),len(temp)))
         methods = ["ward","single","average","complete"]
-        f, ax = plt.subplots(1,4,figsize=(20,5))
+        #f, ax = plt.subplots(1,4,figsize=(20,5))
         counter = 0
-        ax[counter].set_title(train[['formation_energy_ev_natom' , 'bandgap_energy_ev']].iloc[int(i[2:])-1])
+        #ax[counter].set_title(train[['formation_energy_ev_natom' , 'bandgap_energy_ev']].iloc[int(i[2:])-1])
         pictures[int(i[2:])] = []
         for method in methods:
             ordered_dist_mat, res_order, res_linkage = compute_serial_matrix(dist_mat,method);
-            ax[counter].imshow(ordered_dist_mat)
+            temp2 = temp[[1,2,3,4,5]].iloc[res_order].values
+            #ax[counter].imshow(ordered_dist_mat)
             counter += 1
-            pictures[int(i[2:])] += [ordered_dist_mat]
-        plt.savefig('../picture/%s.png'%(int(i[2:])),dpi=200) 
-        plt.close()
-data.to_csv('train_cord.csv',index=0)
-data_features.to_csv('train_data_features.csv',index=0)
-np.save('../pictures.npy',pictures)
+            pictures[int(i[2:])] += [[ordered_dist_mat,temp2],]
+        #plt.savefig('../picture/%s.png'%(int(i[2:])),dpi=200) 
+        #plt.close()
+if False:
+    data.to_csv('../train_cord.csv',index=0)
+    data_features.to_csv('../train_data_features.csv',index=0)
+    np.save('../pictures.npy',pictures)
 counter = 0
 if True:
     f, ax = plt.subplots(1,10,figsize=(50,5));k=0
