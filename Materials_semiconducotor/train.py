@@ -54,6 +54,11 @@ test2['id'] = test2['5']
 del test2['5']
 train = pd.merge(train,train2,on='id')
 test = pd.merge(test,test2,on='id')
+train_bond_angles = np.load('train_bond_angles.npy').item()
+test_bond_angles = np.load('test_bond_angles.npy').item()
+for i in [('Al', 'Ga'), ('Al', 'In'), ('Ga', 'In'), ('Al', 'Al'), ('Ga', 'Ga'), ('In', 'In'), ('O', 'O')]:
+    train[str(i)+'_mean'] = 0
+
 extra_feature = [x for x in train.keys() if '(' in x and 'Bond' not in x]
 for i in extra_feature:
     train['N'+i] = train[i]/train['vol']
