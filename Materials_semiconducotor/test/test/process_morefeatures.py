@@ -263,9 +263,9 @@ data_features = pd.DataFrame(np.stack(data_features),columns=temp_features.keys(
 data_features[5] = data_features[5].astype(np.int32)
 if True:
     #data.to_csv('../train_cord.csv',index=0)
-    #data_features.to_csv('../train_data_features2.csv',index=0)
-    np.save('../train_bond_angles.npy',dictt_bond_angles)
-    #np.save('../pictures.npy',pictures)
+    #data_features.to_csv('../../test_data_features2.csv',index=0)
+    np.save('../../test_bond_angles.npy',dictt_bond_angles)
+    #np.save('../../test_pictures.npy',pictures)
 counter = 0
 if True:
     f, ax = plt.subplots(1,10,figsize=(50,5));k=0
