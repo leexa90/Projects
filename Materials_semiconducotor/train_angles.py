@@ -131,9 +131,6 @@ train['predict1'] = 0
 test[target1] = 0
 train['predict2'] = 0
 test[target2] = 0
-if True:
-    train.to_csv('train_v2_nan.csv',index=0)
-    test.to_csv('test_v2_nan.csv',index=0)
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn import linear_model
@@ -253,8 +250,17 @@ train['predict1'] = np.exp(train['predict1'])-1
 train['predict2'] = np.exp(train['predict2'])-1
 test[['id',target1,target2]].to_csv('test_v2%s.csv'%np.round((a+b)/2,4),index=0)
 if True:
-    train.to_csv('train_v2%s.csv'%np.round((a+b)/2,4),index=0)
-    test.to_csv('test_v2%s.csv'%np.round((a+b)/2,4),index=0)
+    train.to_csv('train_v2%s.csv'%np.round((a+b)/2,4),,index=0)
+    test.to_csv('test_v2%s.csv'%np.round((a+b)/2,4),,index=0)
+if True:
+    name1 = 'predict1_%s'%np.round((a+b)/2,5)
+    name2 = 'predict2_%s'%np.round((a+b)/2,5)
+    test[name1] = np.log1p(test[target1])
+    test[name2] = np.log1p(test[target2])
+    train[name1] = np.log1p(train['predict1'])
+    train[name2] = np.log1p(train['predict2'])
+    train[['id',name1,name2,target1,target2]].to_csv('model_train_%s.csv'%np.round((a+b)/2,5),index=0)
+    test[['id',name1,name2]].to_csv('model_test_%s.csv'%np.round((a+b)/2,5),index=0)
 list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-70:][1]) + list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-70:][1])))
 import matplotlib.pyplot as plt
 ##for i in cols:
