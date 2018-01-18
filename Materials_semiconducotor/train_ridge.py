@@ -124,9 +124,14 @@ for i in [('Al', 'O'),('Ga', 'O'),('In', 'O')]:
             print str(i)+'_%s_%s'%(ii,ii+0.1)
 target1 = 'formation_energy_ev_natom'
 target2 = 'bandgap_energy_ev'
-cols = [x for x in train.keys() if (x not in ['id',target1,target2] and 'array' not in x)]
+all_dummy = pd.get_dummies(pd.concat([train['spacegroup'],test['spacegroup']]),drop_first=True)
+train[map(str,all_dummy.keys())] = all_dummy.iloc[:len(train)]
+test[map(str,all_dummy.keys())] = all_dummy.iloc[len(train):]
+cols = [x for x in train.keys() if (x not in ['id',target1,target2,'spacegroup'] and 'array' not in x)]
+cols_ori = list(np.copy(cols))
 train[target1] = np.log1p(train[target1])
 train[target2] = np.log1p(train[target2])
+comps = 20
 for alpha in [0.01,]:
     train['predict1'] = 0
     test['predict1'] = 0
@@ -149,8 +154,23 @@ for alpha in [0.01,]:
         train = train.sample(2400,random_state=seed).reset_index(drop=True)
         for i in range(0,10):
             test_id = [x for x in range(0,2400) if x%10 == i] 
-            train_id = [x for x in range(0,2400) if x%10 != i] 
+            train_id = [x for x in range(0,2400) if x%10 != i]
+            from sklearn.decomposition import PCA
             scaler = StandardScaler()
+            regr = PCA(n_components=comps)
+            names = []
+            for i in range(comps):
+                names += ['z'+str(i),]
+            for name in names :
+                train[name] = 0
+                test[name] = 0
+            scaler = scaler.fit(train.iloc[train_id][cols_ori].values)
+            temp = regr.fit(scaler.transform(train.iloc[train_id][cols_ori].values)).transform(scaler.transform(train[cols_ori].values))
+            train = train.set_value(train.index,names,temp);
+            temp = regr.fit(scaler.transform(train.iloc[train_id][cols_ori].values)).transform(scaler.transform(test[cols_ori].values))
+            test = test.set_value(test.index,names,temp)
+            if 'z1' not in cols:
+                cols += names
             regr = linear_model.Ridge(alpha=0.03)
             scaler = scaler.fit(train.iloc[train_id][cols].values)
             X_train, y_train1,y_train2 = train.iloc[train_id][cols], train.iloc[train_id][target1],\

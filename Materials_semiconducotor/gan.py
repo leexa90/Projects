@@ -60,7 +60,7 @@ cols = ["('Al', 'Al')_115_125", "('Al', 'Al')_125_135", "('Al', 'Al')_85_95", "(
         "N('O', 'O', 1)", "N('O', 'O', 2)", 'Norm2', 'Norm3', 'Norm5', 'lattice_angle_alpha_degree',
         'lattice_angle_beta_degree', 'lattice_angle_gamma_degree', 'lattice_vector_1_ang', 'lattice_vector_2_ang',
         'lattice_vector_3_ang', 'percent_atom_al', 'percent_atom_ga', 'percent_atom_in', 'period_mean', 'period_std',
-        'spacegroup', 'vol']
+        'spacegroup', 'vol'][::3]
 train_ori = train.copy(deep = True)
 cols_ori = list(np.copy(cols))
 seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2663,75765,2314][:1]
@@ -70,7 +70,7 @@ train['pred1'] = 0
 train['pred2'] = 0
 test['pred1'] = 0
 test['pred2'] = 0
-num = 10
+num = 2
 for seed in seeds:
     train = train.sample(2400,random_state=seed+1).reset_index(drop=True)
     for i in range(0,num):
@@ -129,22 +129,43 @@ for seed in seeds:
                                                      name='discrminator_input')
             discriminator_real  = discriminator_func(discriminator_input)
         with tf.variable_scope('D',reuse=True) as scope:
-            discriminator_fake = discriminator_func(generator)
+            discriminator_input_fake = tf.placeholder(tf.float32,[None,train[cols].values.shape[1]],
+                                                     name='discrminator_input_fake')
+            discriminator_fake = discriminator_func(discriminator_input_fake)
             
                                         
-        die
-
-        discriminator_cost = tf.reduce_mean(tf.log(discriminator))
-
         
-        # prepare callbacks
-        callbacks = [
-            keras.callbacks.EarlyStopping(
-                monitor='val_loss', 
-                patience=20, # was 10
-                verbose=0),
-        ]
-        model.compile(loss='mean_squared_error', # one may use 'mean_absolute_error' as alternative
-                          optimizer='adam',
-                         )
-        model.summary(); die       
+
+        loss_d = tf.reduce_mean(-tf.log(discriminator_real)+\
+                                -tf.log(1-discriminator_fake))
+        loss_g = tf.reduce_mean(-tf.log(discriminator_fake))
+        update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        lr_d = tf.Variable(0,dtype = tf.float32,trainable =False,
+                                             name='lr_d')
+        lr_g = tf.Variable(0,dtype = tf.float32,trainable =False,
+                                             name='lr_g')
+        with tf.control_dependencies(update_ops):
+            d_optimizer = tf.train.MomentumOptimizer(learning_rate=lr_d,momentum=0.5).minimize(loss_d)
+            g_optimizer = tf.train.MomentumOptimizer(learning_rate=lr_g,momentum=0.5).minimize(loss_g)
+            dg_optimizer = tf.train.MomentumOptimizer(learning_rate=lr_g+lr_d,momentum=0.5).minimize(loss_g+loss_d)
+        init = tf.global_variables_initializer();sess = tf.Session();sess.run(init)
+        for epoch in range(0,1000):
+            avg_g,avg_d = 0,0
+            prob_g_avg,prob_d_avg = [] , []
+            train = train.sample(2400,random_state=seed+1).reset_index(drop=True)
+            for num in range(0,64*(len(train)//64),64):
+                REAL = train[cols].iloc[num:num+64].values
+                NOISE = np.random.uniform(0,1,(64,len(cols))) #noise vector
+                FAKE  = sess.run(generator, feed_dict= { generator_input:NOISE, 
+                                                 discriminator_input : REAL,lr_d : 0.00001,lr_g : 0.00001})
+                for i in range(0,3):
+                    FAKE,_ = sess.run([generator,g_optimizer],
+                                    feed_dict= { generator_input:NOISE, discriminator_input_fake:FAKE,
+                                                 discriminator_input : REAL,lr_d : 0.0001,lr_g : 0.00003})
+                __,c_g,c_d,prob_g,prob_d = sess.run([d_optimizer,loss_d,loss_g,discriminator_fake,discriminator_real],
+                                        feed_dict= { generator_input:NOISE,discriminator_input_fake:FAKE, discriminator_input : REAL,lr_d : 0.0001,lr_g : 0.00001})
+                avg_g += c_g #real
+                avg_d += c_d #fake
+                prob_g_avg += list(prob_g)
+                prob_d_avg += list(prob_d)
+            print np.mean(avg_g),np.mean(avg_d),np.mean(prob_g_avg),np.mean(prob_d_avg)

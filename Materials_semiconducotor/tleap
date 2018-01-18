@@ -1,0 +1,8 @@
+source leaprc.ff14SB
+y = loadPDB OUT_DNA_2cky.pdb
+check y
+
+
+
+savepdb y DNA_2cky.pdb
+quit

@@ -161,19 +161,20 @@ for i in train.keys()[::-1]:
     test = test.fillna(0)
 train_ori = train.copy(deep = True)
 cols_ori = list(np.copy(cols))
-seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2663,75765,2314]
+seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2663,75765,2314][:2]
 print seeds,len(seeds)
+comps=20
 for seed in seeds:
     train = train.sample(2400,random_state=seed).reset_index(drop=True)
-    for i in range(0,6):
+    for i in range(0,10):
 ##    train = train_ori.copy(deep = True)
 ##    train['outlier'] = 1
 ##    train = train.set_value(train[(train[target1] <= 0.40) & (train[target2] <= 1.81) & (train[target2] >= 0.1) ].index,
 ##                            'outlier',0)
 ##    train = train.sort_values('outlier').reset_index(drop= True)
 ##    del train['outlier']
-        test_id = [x for x in range(0,2400) if x%6 == i] 
-        train_id = [x for x in range(0,2400) if x%6 != i] 
+        test_id = [x for x in range(0,2400) if x%10 == i] 
+        train_id = [x for x in range(0,2400) if x%10 != i] 
         scaler = StandardScaler()
         regr = linear_model.LinearRegression()
         scaler = scaler.fit(train.iloc[train_id][cols_ori].values,train[target1].values)
@@ -186,8 +187,22 @@ for seed in seeds:
         test['z2'] = regr.fit(scaler.transform(train.iloc[train_id][cols_ori].values),
                               train.iloc[train_id][target2].values).predict(scaler.transform(test[cols_ori].values))
         xgtest = xgb.DMatrix(test[cols].values,missing=np.NAN,feature_names=cols)
+        from sklearn.decomposition import PCA
+        regr = PCA(n_components=comps)
+        names = []
+        for i in range(comps):
+            names += ['zz'+str(i),]
+        for name in names :
+            train[name] = 0
+            test[name] = 0
+        scaler = scaler.fit(train.iloc[train_id][cols_ori].values)
+        temp = regr.fit(scaler.transform(train.iloc[train_id][cols_ori].values)).transform(scaler.transform(train[cols_ori].values))
+        train = train.set_value(train.index,names,temp);
+        temp = regr.fit(scaler.transform(train.iloc[train_id][cols_ori].values)).transform(scaler.transform(test[cols_ori].values))
+        test = test.set_value(test.index,names,temp)
+
         if 'z1' not in cols:
-            cols += ['z1','z2']
+            cols += ['z1','z2']+names
         X_train, y_train1,y_train2 = train.iloc[train_id][cols], train.iloc[train_id][target1],\
                                      train.iloc[train_id][target2]
         X_test, y_test1,y_test2 = train.iloc[test_id][cols], train.iloc[test_id][target1],\
@@ -195,13 +210,13 @@ for seed in seeds:
 
         params = {}
         params["objective"] = 'reg:linear' 
-        params["eta"] = 0.03/3
+        params["eta"] = 0.03
         params["min_child_weight"] = 10
         params["subsample"] = 0.6
         params["colsample_bytree"] = 0.4
         params["scale_pos_weight"] = 1
         params["silent"] = 0
-        params["max_depth"] = 8
+        params["max_depth"] = 6
         params['seed']=seed
         #params['maximize'] =True
         params['eval_metric'] =  'rmse'
@@ -213,19 +228,19 @@ for seed in seeds:
         model1=xgb.train(plst,xgtrain,1800,watchlist,early_stopping_rounds=50,
                          evals_result=model1_a,maximize=False,verbose_eval=1000)
         train = train.set_value(test_id,'predict1',train.iloc[test_id]['predict1']+model1.predict(xgval)/len(seeds))
-        test = test.set_value(test.index, target1, test[target1]+model1.predict(xgtest)/(6*len(seeds)))
+        test = test.set_value(test.index, target1, test[target1]+model1.predict(xgtest)/(10*len(seeds)))
         dictt_cols1[len(dictt_cols1.keys())+1] = dictt_cols1[1].map(model1.get_fscore())
         xgtrain = xgb.DMatrix(X_train[cols].values, label=y_train2.values,missing=np.NAN,feature_names=cols)
         xgval = xgb.DMatrix(X_test[cols].values, label=y_test2.values,missing=np.NAN,feature_names=cols)
         watchlist  = [ (xgtrain,'train'),(xgval,'test')]
         model1_a = {}
-        params["eta"] = 0.01/3
-        params["max_depth"] = 8
+        params["eta"] = 0.01
+        params["max_depth"] = 6
         plst = list(params.items())
         model2=xgb.train(plst,xgtrain,2800,watchlist,early_stopping_rounds=50,
                          evals_result=model1_a,maximize=False,verbose_eval=1000)
         train = train.set_value(test_id,'predict2',train.iloc[test_id]['predict2']+model2.predict(xgval)/len(seeds))
-        test = test.set_value(test.index, target2, test[target2]+model2.predict(xgtest)/(6*len(seeds)))
+        test = test.set_value(test.index, target2, test[target2]+model2.predict(xgtest)/(10*len(seeds)))
         dictt_cols2[len(dictt_cols2.keys())+1] = dictt_cols2[1].map(model2.get_fscore())
 dictt_cols1 = dictt_cols1.fillna(0)
 dictt_cols2 = dictt_cols2.fillna(0)
@@ -242,23 +257,19 @@ a,b = np.mean((train['predict1']-train[target1])**2)**.5, np.mean((train['predic
 print a
 print b
 print (a+b)/2
-test[target1] = np.exp(test[target1])-1
-test[target2] = np.exp(test[target2])-1
 train[target1] = np.exp(train[target1])-1
 train[target2] = np.exp(train[target2])-1
-train['predict1'] = np.exp(train['predict1'])-1
-train['predict2'] = np.exp(train['predict2'])-1
 test[['id',target1,target2]].to_csv('test_v2%s.csv'%np.round((a+b)/2,4),index=0)
 if True:
-    train.to_csv('train_v2%s.csv'%np.round((a+b)/2,4),,index=0)
-    test.to_csv('test_v2%s.csv'%np.round((a+b)/2,4),,index=0)
+    train.to_csv('train_v2%s.csv'%np.round((a+b)/2,4),index=0)
+    test.to_csv('test_v2%s.csv'%np.round((a+b)/2,4),index=0)
 if True:
     name1 = 'predict1_%s'%np.round((a+b)/2,5)
     name2 = 'predict2_%s'%np.round((a+b)/2,5)
-    test[name1] = np.log1p(test[target1])
-    test[name2] = np.log1p(test[target2])
-    train[name1] = np.log1p(train['predict1'])
-    train[name2] = np.log1p(train['predict2'])
+    test[name1] = test[target1]
+    test[name2] = test[target2]
+    train[name1] = train['predict1']
+    train[name2] = train['predict2']
     train[['id',name1,name2,target1,target2]].to_csv('model_train_%s.csv'%np.round((a+b)/2,5),index=0)
     test[['id',name1,name2]].to_csv('model_test_%s.csv'%np.round((a+b)/2,5),index=0)
 list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-70:][1]) + list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-70:][1])))
