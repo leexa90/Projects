@@ -21,8 +21,6 @@ for i in models:
     test = pd.merge(test,temp2, on=['id',])
     print i,np.mean(temp1[target1]),temp1[target1].head()
 
-y = ['predict1_0.05375', 'predict2_0.05375', 'predict1_0.05349',
-     'predict2_0.05349', 'predict1_0.05354', 'predict2_0.05354',
-     'predict1_0.05107', 'predict2_0.05107', 'predict1_0.05102',
-     'predict2_0.05102']#, 'formation_energy_ev_natom', 'bandgap_energy_ev']
+y = ['predict1', 'predict2', 'predict1_0.05375', 'predict2_0.05375', 'predict1_0.05349', 'predict2_0.05349', 'predict1_0.05354', 'predict2_0.05354', 'predict1_0.05107', 'predict2_0.05107', 'predict1_0.05451', 'predict2_0.05451', 'predict1_0.05103', 'predict2_0.05103', 'predict1_0.05102', 'predict2_0.05102', 'formation_energy_ev_natom', 'bandgap_energy_ev']
+
 
