@@ -2,27 +2,56 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import matplotlib.pyplot as plt
-train = np.load('train_pic.npy.zip')['train_pic'].item()
-test = np.load('test_pic.npy.zip')['test_pic'].item()
+import random
+random.seed(0)
+train = np.load('../train_pic.npy.zip')['train_pic'].item()
+test = np.load('../test_pic.npy.zip')['test_pic'].item()
+target1 = 'formation_energy_ev_natom'
+target2 = 'bandgap_energy_ev'
+train_y = np.log1p(pd.read_csv('../train.csv')[target1])
+train_predict = pd.read_csv('../train.csv')[['id', target1, target2]]
+test_predict = pd.read_csv('../test.csv')[['id',]]
+train_predict['predict1'] = 0
+train_predict['predict2'] = 0
+test_predict['predict1'] = 0
+test_predict['predict2'] = 0
+
+X_test = []
 X_train = []
 X_val = []
-X_test = []
+num = 0
+import sys
+if len(sys.argv) ==3:
+    num = int(sys.argv[1])
+    if sys.argv[2] == str(2):
+        train_y = np.log1p(pd.read_csv('../train.csv')[target2])
+    else:
+        train_y = np.log1p(pd.read_csv('../train.csv')[target1])
+for i in train.keys():
+    tempA = train[i][1][num:num+1]*np.stack([train[i][0][num:num+1],]*10,-1)
+    tempB = np.stack([train[i][0][num:num+1]],-1)
+    temp = np.concatenate([tempA,tempB],-1)
+    final = []
+    y = train_y[i-1]
+    for ii in temp:
+        final +=[ii,]
+    final = [np.array([np.concatenate(final,-1)]),y]
+    del train[i]
+    if i%2 ==0 :
+        X_train += [final,]
+    else:
+        X_val += [final,]
+for i in test.keys():
+    tempA = test[i][1][num:num+1]*np.stack([test[i][0][num:num+1],]*10,-1)
+    tempB = np.stack([test[i][0][num:num+1]],-1)
+    temp = np.concatenate([tempA,tempB],-1)
+    final = []
+    for ii in temp:
+        final +=[ii,]
+    final =[np.array([np.concatenate(final,-1)]),-999]
+    del test[i]
+    X_test += [final,]
 
-def make_array(train):
-    X_train = []
-    for i in train:
-        tempA = train[i][1][:2]*np.stack([train[i][0][:2],]*10,-1)
-        tempB = np.stack([train[i][0][:2]],-1)
-        temp = np.concatenate([tempA,tempB],-1)
-        final = []
-        for i in temp:
-            final +=[i,]
-        final = np.array([np.concatenate(final,-1)])
-        del train[i]
-        if i%2 ==0 :
-            X_train += [final,]
-        else:
-            X_test += [final,]
 
 
 def one_layer(D_input,output,name):
@@ -36,7 +65,7 @@ def one_layer(D_input,output,name):
     layer1_pool = tf.layers.average_pooling2d(layer1,(2,2),strides =(2,2),
                                               name=name+'pool')
     return layer1_pool
-D_input = tf.placeholder(tf.float32,[1,None,None,22],name='input')
+D_input = tf.placeholder(tf.float32,[1,None,None,11],name='input')
 answer = tf.placeholder(tf.float32,[1,],name='answer')
 with tf.name_scope('layers') as scope:
     layer1 = one_layer(D_input,32,'layer1')
@@ -66,3 +95,82 @@ for variable in tf.trainable_variables():
     total_parameters += variable_parameters
 print' ### model parameters',total_parameters,'###'
 init = tf.global_variables_initializer();sess = tf.Session();sess.run(init)
+for epoch in range(100):
+    print (epoch),
+    shuffle = range(len(X_train))
+    random.shuffle(shuffle)
+    train_cost = []
+    val_cost = []
+    
+    lr = 1+np.cos(1.0*3.142/len(shuffle))
+    for sample in  shuffle:
+        X,y = X_train[sample]
+        _, c = sess.run([optimizer, cost], feed_dict={D_input: X,answer:[y], learning_rate : lr, })
+    for i in range(len(X_train)):
+        X,y = X_train[i]
+        out, c = sess.run([dense3, cost], feed_dict={D_input: X,answer:[y], learning_rate : lr, })
+        train_cost += [c,]
+    print (np.mean(train_cost)),
+    val_answer = []
+    for i in range(len(X_val)):
+        X,y = X_val[i]
+        out, c = sess.run([dense3, cost], feed_dict={D_input: X,answer:[y], learning_rate : lr, })
+        val_cost += [c,]
+        val_answer += [out,]
+    test_answer = []
+    for i in range(len(X_test)):
+        X,y = X_test[i]
+        out = sess.run(dense3, feed_dict={D_input: X,answer:[y], learning_rate : 0 })
+        test_answer += [out,]
+    print (np.mean(val_cost))
+    if epoch >= 80:
+        train_predict = train_predict.set_value(range(1,len(train_predict),2),
+                                                'predict1',
+                                                train_predict['predict1'] + val_answer)
+        test_predict = test_predict.set_value(range(len(test_predict)),
+                                              'predict1',
+                                              test_predict['predict1'] + test_answer)
+init = tf.global_variables_initializer();sess = tf.Session();sess.run(init)
+X_train,X_val = X_val,X_train
+for epoch in range(100):
+    print (epoch),
+    shuffle = range(len(X_train))
+    random.shuffle(shuffle)
+    train_cost = []
+    val_cost = []
+    
+    lr = 1+np.cos(1.0*3.142/len(shuffle))
+    for sample in  shuffle:
+        X,y = X_train[sample]
+        _, c = sess.run([optimizer, cost], feed_dict={D_input: X,answer:[y], learning_rate : lr, })
+    for i in range(len(X_train)):
+        X,y = X_train[i]
+        out, c = sess.run([dense3, cost], feed_dict={D_input: X,answer:[y], learning_rate : lr, })
+        train_cost += [c,]
+    print (np.mean(train_cost)),
+    val_answer = []
+    for i in range(len(X_val)):
+        X,y = X_val[i]
+        out, c = sess.run([dense3, cost], feed_dict={D_input: X,answer:[y], learning_rate : lr, })
+        val_cost += [c,]    
+    print (np.mean(val_cost))
+    test_answer = []
+    for i in range(len(X_test)):
+        X,y = X_test[i]
+        out = sess.run(dense3, feed_dict={D_input: X,answer:[y], learning_rate : 0 })
+        test_answer += [out,]
+    print (np.mean(val_cost))
+    if epoch >= 80:
+        train_predict = train_predict.set_value(range(1,len(train_predict),2),
+                                                'predict2',
+                                                train_predict['predict2'] + val_answer)
+        test_predict = test_predict.set_value(range(len(test_predict)),
+                                              'predict2',
+                                              test_predict['predict2'] + test_answer)
+
+test_predict['predict1'] = test_predict['predict1']/2
+test_predict['predict2'] = test_predict['predict2']/2
+
+train_predict.to_csv('train_CNN.csv',index=0)
+test_predict.to_csv('test_CNN.csv', index=0)
+
