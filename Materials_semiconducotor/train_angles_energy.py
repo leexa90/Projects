@@ -171,8 +171,8 @@ test['dihe_75'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -
 
 for ii in np.linspace(0,180,10)[:-1]:
     diff= np.linspace(0,180,10)[1]-np.linspace(0,180,10)[0]
-    train['dihe_%s_%s'%(ii,ii+diff)] = train['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
-    test['dihe_%s_%s'%(ii,ii+diff)] = test['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
+    #train['dihe_%s_%s'%(ii,ii+diff)] = train['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
+    #test['dihe_%s_%s'%(ii,ii+diff)] = test['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
 ##### get energy ###
 train_E = np.load('train_energy.npy').item()
 test_E = np.load('test_energy.npy').item()
@@ -182,16 +182,28 @@ train['lj_E'] = train['array_energy'].map(lambda x : x[1])
 train['M_E'] = train['array_energy'].map(lambda x : x[4])
 train['force1_mean'] = train['array_energy'].map(lambda x : np.mean(np.sum(x[3]**2,1),0))
 train['force2_mean'] = train['array_energy'].map(lambda x : np.mean(np.sum(x[-1]**2,1),0))
-train['force1_std'] = train['array_energy'].map(lambda x : np.mean(np.std(x[3]**2,1),0))
-train['force2_std'] = train['array_energy'].map(lambda x : np.mean(np.std(x[-1]**2,1),0))
+train['force1_std'] = train['array_energy'].map(lambda x : np.std(np.sum(x[3]**2,1),0))
+train['force2_std'] = train['array_energy'].map(lambda x : np.std(np.sum(x[-1]**2,1),0))
+train['force1_25'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[3]**2,1),25))
+train['force2_25'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),25))
+train['force1_50'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[3]**2,1),50))
+train['force2_50'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),50))
+train['force1_75'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[3]**2,1),75))
+train['force2_75'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),75))
 
 test['array_energy'] = test['id'].map(train_E)
 test['lj_E'] = test['array_energy'].map(lambda x : x[1])
 test['M_E'] = test['array_energy'].map(lambda x : x[4])
 test['force1_mean'] = test['array_energy'].map(lambda x : np.mean(np.sum(x[3]**2,1),0))
 test['force2_mean'] = test['array_energy'].map(lambda x : np.mean(np.sum(x[-1]**2,1),0))
-test['force1_std'] = test['array_energy'].map(lambda x : np.mean(np.std(x[3]**2,1),0))
-test['force2_std'] = test['array_energy'].map(lambda x : np.mean(np.std(x[-1]**2,1),0))
+test['force1_std'] = test['array_energy'].map(lambda x : np.std(np.sum(x[3]**2,1),0))
+test['force2_std'] = test['array_energy'].map(lambda x : np.std(np.sum(x[-1]**2,1),0))
+test['force1_25'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[3]**2,1),25))
+test['force2_25'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),25))
+test['force1_50'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[3]**2,1),50))
+test['force2_50'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),50))
+test['force1_75'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[3]**2,1),75))
+test['force2_75'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),75))
 
 
 # CNN features based on distance matrix
