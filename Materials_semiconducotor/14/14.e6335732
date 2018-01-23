@@ -1,0 +1,19 @@
+2018-01-22 17:56:12.383054: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1031] Found device 0 with properties: 
+name: Tesla K40t major: 3 minor: 5 memoryClockRate(GHz): 0.8755
+pciBusID: 0000:82:00.0
+totalMemory: 11.17GiB freeMemory: 11.10GiB
+2018-01-22 17:56:12.383087: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 17:56:13.385135: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+train_CNN.py:133: FutureWarning: set_value is deprecated and will be removed in a future release. Please use .at[] or .iat[] accessors instead
+  train_predict['predict1'].iloc[val_id] + np.array(val_answer))
+train_CNN.py:136: FutureWarning: set_value is deprecated and will be removed in a future release. Please use .at[] or .iat[] accessors instead
+  test_predict['predict1'] + np.array(test_answer)/10)
+2018-01-22 18:38:04.352837: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 19:19:26.109513: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 20:00:50.084383: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 20:42:11.849014: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 21:23:58.952260: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 22:05:23.723042: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 22:46:48.211232: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-22 23:28:27.505906: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2018-01-23 00:10:16.190082: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1121] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: Tesla K40t, pci bus id: 0000:82:00.0, compute capability: 3.5)

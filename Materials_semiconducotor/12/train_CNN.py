@@ -92,13 +92,14 @@ print' ### model parameters',total_parameters,'###'
 init = tf.global_variables_initializer();sess = tf.Session();sess.run(init)
 range
 for fold in  range(0,10):
+    init = tf.global_variables_initializer();sess = tf.Session();sess.run(init)
     all_id = range(len(X_train))
-    random.shuffle(all_id)
+    #random.shuffle(all_id)
     train_id = [all_id[x] for x in range(len(all_id)) if x%10 != fold]
     val_id =  [all_id[x] for x in range(len(all_id)) if x%10 == fold]
-    for epoch in range(80):
+    for epoch in range(100):
         print (epoch),
-        shuffle = range(len(train_id))
+        shuffle = train_id
         random.shuffle(shuffle)
         train_cost = []
         val_cost = []
@@ -124,9 +125,9 @@ for fold in  range(0,10):
         for i in range(len(X_test)):
             X,y = X_test[i]
             out = sess.run(dense3, feed_dict={D_input: X,answer:[y], learning_rate : 0 })
-            test_answer += [out,]
+            test_answer += [out[0][0],]
         print (np.mean(val_cost))
-        if epoch >= 60:
+        if epoch >= 80:
             train_predict = train_predict.set_value(val_id,
                                                     'predict1',
                                                     train_predict['predict1'].iloc[val_id] + np.array(val_answer))
@@ -135,9 +136,9 @@ for fold in  range(0,10):
                                                   test_predict['predict1'] + np.array(test_answer)/10)
 
 
-test_predict['predict1'] = test_predict['predict1']/2
 
-train_predict.to_csv('train_CNN.csv',index=0)
-test_predict.to_csv('test_CNN.csv', index=0)
+
+            train_predict.to_csv('train_CNN.csv',index=0)
+            test_predict.to_csv('test_CNN.csv', index=0)
 
 
