@@ -191,7 +191,7 @@ train['force2_50'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x
 train['force1_75'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[3]**2,1),75))
 train['force2_75'] = train['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),75))
 
-test['array_energy'] = test['id'].map(train_E)
+test['array_energy'] = test['id'].map(test_E)
 test['lj_E'] = test['array_energy'].map(lambda x : x[1])
 test['M_E'] = test['array_energy'].map(lambda x : x[4])
 test['force1_mean'] = test['array_energy'].map(lambda x : np.mean(np.sum(x[3]**2,1),0))
