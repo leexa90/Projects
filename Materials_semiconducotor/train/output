@@ -1,0 +1,32 @@
+platform        Linux-3.13.0-123-generic-x86_64-with-Ubuntu-14.04-trusty
+python-2.7.6    /usr/bin/python
+ase-3.15.0      /usr/local/lib/python2.7/dist-packages/ase/
+numpy-1.14.0    /usr/local/lib/python2.7/dist-packages/numpy/
+scipy-1.0.0     /usr/local/lib/python2.7/dist-packages/scipy/
+test-dir        /tmp/ase-test-mnj_5M 
+
+............................s.....E.................ss............s......s..............s..................s.sss.....s.....ssssssssss......s....ssssss..ss..s......ss............s............sssss..s.ssss.ssssssssssssssss
+======================================================================
+ERROR: doctests.py
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/ase/test/__init__.py", line 50, in testfile
+    exec(compile(fd.read(), self.filename, 'exec'), {})
+  File "/usr/local/lib/python2.7/dist-packages/ase/test/doctests.py", line 26, in <module>
+    print(mod, doctest.testmod(mod, raise_on_error=True))
+  File "/usr/lib/python2.7/doctest.py", line 1911, in testmod
+    runner.run(test)
+  File "/usr/lib/python2.7/doctest.py", line 1799, in run
+    r = DocTestRunner.run(self, test, compileflags, out, False)
+  File "/usr/lib/python2.7/doctest.py", line 1454, in run
+    return self.__run(test, compileflags, out)
+  File "/usr/lib/python2.7/doctest.py", line 1363, in __run
+    self.report_failure(out, test, example, got)
+  File "/usr/lib/python2.7/doctest.py", line 1808, in report_failure
+    raise DocTestFailure(test, example, got)
+DocTestFailure: <DocTest ase.spacegroup.spacegroup.Spacegroup from /usr/local/lib/python2.7/dist-packages/ase/spacegroup/spacegroup.py:49 (6 examples)>
+
+----------------------------------------------------------------------
+Ran 220 tests in 193.101s
+
+FAILED (errors=1, skipped=60)

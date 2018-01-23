@@ -1,0 +1,6 @@
+dict(charge=0.0,
+     kpts=None,
+     pps='fhi',
+     raw=None,
+     smearing=None,
+     xc='LDA')

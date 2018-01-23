@@ -170,6 +170,23 @@ test['dihe_nan'] = test['array_dihe'].map(lambda x : 1.0*(len(x)-len(np.array(x)
 test['dihe_25'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.percentile(x,25))
 test['dihe_50'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.percentile(x,50))
 test['dihe_75'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.percentile(x,75))
+
+# CNN features based on distance matrix
+train['CNN1']= 0
+test['CNN1']= 0
+train['CNN2']= 0
+test['CNN2']= 0
+for i in ['11/','12/','13/','14/',]:
+    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+    train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
+    test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
+for i in ['22/','23/','24/']:
+    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+    train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
+    test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
+
 for ii in np.linspace(0,180,10)[:-1]:
     diff= np.linspace(0,180,10)[1]-np.linspace(0,180,10)[0]
     #test['dihe_%s_%s'%(ii,ii+diff)] = test['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
@@ -189,6 +206,7 @@ dictt_EN = {'O' : 3.44, 'In': 1.78, 'Al' : 1.61, 'Ga' : 1.81}
 
 cols = ["N('O', 'O', 2)", "('In', 'In')_125_135", "('Al', 'O')_2.2_2.3000000000000003", "('Al', 'Al')_85_95", "N('In', 'Ga', 0)", 'period_mean', "N('Al', 'Al', 0)", "('Al', 'Ga')_115_125", 'dihe_mean', "('In', 'In')_A_50", "N('In', 'In', 0)", "('O', 'O')_85_95", "('Ga', 'In')_95_105", "('Al', 'In')_125_135", "('Al', 'Al')_A_50", "('Al', 'O')_B_25", "Bond_('Ga', 'O')_std", "('Al', 'In')_A_50", "('Al', 'Ga')_A_50", "('In', 'In')_A_std", "Bond_('In', 'O')_mean", "N('Al', 'O', 2)", "('Ga', 'Ga')_95_105", "('Ga', 'Ga')_A_75", "N('In', 'In', 1)", "('Ga', 'Ga')_115_125", "('Al', 'O')_1.8_1.9000000000000001", "('O', 'O')_75_85", "('Al', 'Ga')_85_95", "('O', 'O')_A_mean", 'spacegroup', "('Ga', 'O')_B_75", "('In', 'In')_95_105", 'dihe_nan', "N('Al', 'Ga', 1)", "('In', 'In')_A_mean", "('Al', 'In')_95_105", "N('O', 'O', 1)", 'IonChar_mean', "('Ga', 'O')_2.1_2.2", "N('In', 'In', 4)", "N('Ga', 'Ga', 2)", 'lattice_angle_beta_degree', "N('Al', 'In', 0)", 'IonChar_std', "('In', 'In')_A_75", "('Al', 'In')_105_115", "('Al', 'Al')_A_75", "('Ga', 'In')_115_125", "('O', 'O')_155_165", "('Ga', 'O')_B_50", 'dihe_std', "N('Al', 'O', 0)", "('Ga', 'In')_85_95", "('Ga', 'In')_A_mean", "N('Al', 'Ga', 0)", 'dihe_25', "N('In', 'O', 0)", "N('Ga', 'O', 4)", "('Al', 'Ga')_95_105", "Bond_('Al', 'O')_mean", 'z1', 'z2', "('Ga', 'O')_1.8_1.9000000000000001", 'period_std', "('Ga', 'Ga')_A_mean", "N('Ga', 'Ga', 3)", "('O', 'O')_175_185", "Bond_('In', 'O')_std", 'lattice_vector_3_ang', "('Al', 'O')_B_75", "('Al', 'Ga')_A_mean", "('Al', 'Ga')_125_135", "N('Al', 'Ga', 3)", "('O', 'O')_A_75", "('Al', 'In')_85_95", "('Al', 'Ga')_A_25", "('Ga', 'In')_A_25", "('Al', 'In')_115_125", 'lattice_angle_alpha_degree', "N('In', 'O', 1)", "N('Ga', 'O', 3)", "N('Al', 'O', 1)", "('Ga', 'Ga')_125_135", "N('Ga', 'Ga', 0)", "('Ga', 'Ga')_85_95", "('Ga', 'Ga')_A_25", 'dihe_50', "('Al', 'In')_A_mean", "N('Al', 'In', 2)", "('Ga', 'O')_1.9000000000000001_2.0", "Bond_('Ga', 'O')_mean", "('Ga', 'O')_B_25", "('In', 'O')_2.0_2.1", "('Al', 'In')_A_75", 'percent_atom_in', 'percent_atom_ga', "('In', 'In')_115_125", "('In', 'O')_1.9000000000000001_2.0", "('In', 'O')_2.1_2.2", "('Ga', 'In')_A_50", "N('Al', 'O', 3)", "N('Ga', 'O', 2)", "('O', 'O')_95_105", "('O', 'O')_105_115", "N('In', 'O', 2)", "('Al', 'Al')_125_135", "('In', 'In')_A_25", "N('Al', 'In', 3)", "('O', 'O')_A_25", "N('In', 'Ga', 3)", "('Al', 'Al')_A_25", "('Ga', 'Ga')_A_std", "Bond_('Al', 'O')_std", "('Al', 'O')_B_50", 'Norm3', 'Norm2', 'Norm7', 'Norm5', "('Al', 'O')_2.0_2.1", "('Ga', 'In')_A_std", "('O', 'O')_A_50", "N('O', 'O', 0)", 'vol', "('Al', 'O')_2.1_2.2", "('Al', 'In')_A_std", "N('Ga', 'O', 1)", "('In', 'O')_2.2_2.3000000000000003", "('O', 'O')_A_std", 'lattice_angle_gamma_degree', "N('Al', 'Ga', 2)", "N('In', 'O', 3)", 'dihe_75', "('In', 'O')_1.8_1.9000000000000001", "('In', 'In')_85_95", "N('Al', 'Al', 2)", "('Al', 'O')_1.9000000000000001_2.0", "N('In', 'In', 2)", "N('In', 'Ga', 2)", "('In', 'O')_B_75", "('Al', 'Al')_95_105", 'lattice_vector_2_ang', "('In', 'O')_B_25", "('Al', 'In')_A_25", "('Al', 'Al')_A_mean", "('Al', 'Ga')_A_75", "('In', 'In')_105_115", "('Ga', 'Ga')_A_50", "('Ga', 'O')_2.2_2.3000000000000003", 'lattice_vector_1_ang', "('Ga', 'In')_A_75", "('Al', 'Al')_A_std", "N('Al', 'O', 4)", "N('Ga', 'O', 0)", "N('Al', 'Al', 3)", "('In', 'O')_B_50", "N('In', 'In', 3)", 'percent_atom_al', "('Al', 'Al')_115_125", "('Ga', 'O')_2.0_2.1", "('Al', 'Ga')_A_std"]
 cols = [x for x in cols if x not in ['z1','z2']]
+cols = [x for x in train.keys() if x not in ['id',target1,target2,'predict1','predict2'] and 'array' not in x]
 dictt_cols1 = pd.DataFrame(cols + ['z1','z2'],columns=[1])
 dictt_cols2 = pd.DataFrame(cols + ['z1','z2'],columns=[1])
 train_ori = train.copy(deep = True)
@@ -199,9 +217,9 @@ for i in cols:
 train = train.fillna(0)
 test = test.fillna(0)
 ori_cols = list(np.copy(cols))
-seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,75764,2314][:2]
+seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,75764,2314,1111,2222,3333,4444][:]
 print seeds,len(seeds)
-comps=30
+comps=1
 for seed in seeds:
     train = train.sample(2400,random_state=seed).reset_index(drop=True)
     for i in range(0,10):
@@ -249,9 +267,9 @@ for seed in seeds:
 
         params = {}
         params["objective"] = 'reg:linear' 
-        params["eta"] = 0.03/3
-        params["min_child_weight"] = 10
-        params["subsample"] = 0.5
+        params["eta"] = 0.03
+        params["min_child_weight"] = 30
+        params["subsample"] = 0.4
         params["colsample_bytree"] = 0.2 # many features here
         params["scale_pos_weight"] = 1
         params["silent"] = 0
@@ -266,7 +284,7 @@ for seed in seeds:
         xgval = xgb.DMatrix(X_test[cols].values, label=y_test1.values,missing=np.NAN,feature_names=cols)
         watchlist  = [ (xgtrain,'train'),(xgval,'test')]
         model1_a = {}
-        model1=xgb.train(plst,xgtrain,5000,watchlist,early_stopping_rounds=50,
+        model1=xgb.train(plst,xgtrain,5000,watchlist,early_stopping_rounds=200,
                          evals_result=model1_a,maximize=False,verbose_eval=1000)
         train = train.set_value(test_id,'predict1',train.iloc[test_id]['predict1']+model1.predict(xgval)/len(seeds))
         test = test.set_value(test.index, target1, test[target1]+model1.predict(xgtest)/(10*len(seeds)))
@@ -275,12 +293,12 @@ for seed in seeds:
         xgval = xgb.DMatrix(X_test[cols].values, label=y_test2.values,missing=np.NAN,feature_names=cols)
         watchlist  = [ (xgtrain,'train'),(xgval,'test')]
         model1_a = {}
-        params["eta"] = 0.01/3
+        params["eta"] = 0.01
         params["max_depth"] = 8
         if seed %2 == 0:
             None#params["eta"] = params["eta"]/3
         plst = list(params.items())
-        model2=xgb.train(plst,xgtrain,6500,watchlist,early_stopping_rounds=50,
+        model2=xgb.train(plst,xgtrain,6500,watchlist,early_stopping_rounds=200,
                          evals_result=model1_a,maximize=False,verbose_eval=1000)
         train = train.set_value(test_id,'predict2',train.iloc[test_id]['predict2']+model2.predict(xgval)/len(seeds))
         test = test.set_value(test.index, target2, test[target2]+model2.predict(xgtest)/(10*len(seeds)))
@@ -354,6 +372,58 @@ engineer_features from paper*5
 0.0245717966321
 0.0791911408058
 0.051881468719
+
+subsample - .4,.2 , minchildweight 30
+0.0239410315486
+0.0782776287956
+0.0511093301721
+
+subsample - .4,.2 , minchildweight 30 lr = 0.01,0.03 *20 times
+0.023778079611263384
+0.0771968674936528
+0.05048747355245809
+                              1         avg
+150             ('O', 'O')_A_75  183.417086
+153            ('O', 'O')_75_85  190.947214
+11                          vol  198.055595
+10   lattice_angle_gamma_degree  200.901129
+154            ('O', 'O')_85_95  216.069805
+148           ('O', 'O')_A_mean  222.199119
+58              N('Al', 'O', 4)  228.808007
+24                  period_mean  263.938349
+206                     dihe_50  265.067483
+7          lattice_vector_3_ang  275.732155
+64               N('O', 'O', 1)  281.492789
+25                   period_std  299.460332
+8    lattice_angle_alpha_degree  305.278223
+203                    dihe_std  310.953925
+207                     dihe_75  323.714476
+152             ('O', 'O')_A_25  331.960053
+208                        CNN1  347.957447
+210                          z1  467.259731
+209                        CNN2  511.531939
+211                          z2  737.917741
+                                      1         avg
+97                 ('Al', 'In')_115_125  175.930240
+75                      N('Ga', 'O', 4)  183.028885
+7                  lattice_vector_3_ang  191.126826
+148                   ('O', 'O')_A_mean  193.755681
+9             lattice_angle_beta_degree  194.402176
+211                                  z2  197.553866
+10           lattice_angle_gamma_degree  202.273635
+168  ('Al', 'O')_1.9000000000000001_2.0  209.181913
+206                             dihe_50  211.853298
+202                           dihe_mean  213.543254
+152                     ('O', 'O')_A_25  214.879128
+205                             dihe_25  221.379413
+65                       N('O', 'O', 2)  226.921717
+8            lattice_angle_alpha_degree  270.385879
+63                       N('O', 'O', 0)  277.364493
+207                             dihe_75  284.543782
+64                       N('O', 'O', 1)  312.089142
+203                            dihe_std  341.195960
+208                                CNN1  406.399358
+210                                  z1  600.574949
 '''
 
 '''
