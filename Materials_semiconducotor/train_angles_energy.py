@@ -222,7 +222,49 @@ for i in ['22/','23/','24/']:
     train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
     test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
 
-
+## eleemntal properties, https://www.kaggle.com/cbartel/random-forest-using-elemental-properties/data
+dictt_ = {}
+dictt_['EN'] = {'O' : 3.44, 'In': 1.78, 'Al' : 1.61, 'Ga' : 1.81}
+dictt_['EA'] = {'O' : -0.22563, 'In': -0.3125, 'Al' : -0.2563, 'Ga' : -0.1081}
+dictt_['HOMO'] = {'O' : -2.74, 'In': -2.784, 'Al' : -2.697, 'Ga' : -2.732}
+dictt_['LUMO'] = {'O' : 0.397, 'In': 0.695, 'Al' : 0.368, 'Ga' : 0.13}
+dictt_['IP'] = {'O' :-5.71187, 'In': -5.5374, 'Al' : -5.78, 'Ga' : -5.8182}
+dictt_['MASS'] = {'O' :16, 'In': 115, 'Al' : 27, 'Ga' :70}
+dictt_['RD'] = {'O' :2.4033, 'In': 1.94, 'Al' : 3.11, 'Ga' :2.16}
+dictt_['RP'] = {'O' :1.406667, 'In': 1.39, 'Al' : 1.5, 'Ga' :1.33}
+dictt_['RS'] = {'O' :1.07, 'In': 1.09, 'Al' : 1.13, 'Ga' :0.99}
+train_ele = np.load('train_resi.npy').item()
+test_ele = np.load('test_resi.npy').item()
+train['array_ele'] = train['id'].map(train_ele)
+test['array_ele'] = test['id'].map(test_ele)
+def get_all_ele(x,d):
+    return [d['Al'],]*x[0] + [d['Ga'],]*x[1] + [d['In'],]*x[2] + [d['O'],]*x[3] 
+for element in dictt_.keys():
+    temp = train['array_ele'].map(lambda x : get_all_ele(x,dictt_[element]))
+    train[element+'_mean'] = map(np.mean,temp)
+    train[element+'_std'] = map(np.std,temp)
+    train[element+'_25'] = map(lambda x : np.percentile(x,25),temp)
+    train[element+'_50'] = map(lambda x : np.percentile(x,50),temp)
+    train[element+'_75'] = map(lambda x : np.percentile(x,75),temp)
+    temp = test['array_ele'].map(lambda x : get_all_ele(x,dictt_[element]))
+    test[element+'_mean'] = map(np.mean,temp)
+    test[element+'_std'] = map(np.std,temp)
+    test[element+'_25'] = map(lambda x : np.percentile(x,25),temp)
+    test[element+'_50'] = map(lambda x : np.percentile(x,50),temp)
+    test[element+'_75'] = map(lambda x : np.percentile(x,75),temp)
+train['N_number_of_total_atoms']= train['number_of_total_atoms']/train['vol']
+test['N_number_of_total_atoms']= test['number_of_total_atoms']/test['vol']
+for i in range(0,4):
+    res = ['Al', 'Ga', 'In', 'O']
+    train['N_num'+res[i]] = train['array_ele'].map(lambda x : x[i])
+    train['N_num'+res[i]] = train['N_num'+res[i]] /train['vol']
+    test['N_num'+res[i]] = test['array_ele'].map(lambda x : x[i])
+    test['N_num'+res[i]] = test['N_num'+res[i]] /test['vol']
+for i in train.keys():
+    if 'array'  in i or  np.std(train[i]) == 0:
+        print i#
+        del train[i],test[i]
+## finished ellemental properties
 target1 = 'formation_energy_ev_natom'
 target2 = 'bandgap_energy_ev'
 
@@ -236,7 +278,6 @@ test[target2] = 0
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn import linear_model
-dictt_EN = {'O' : 3.44, 'In': 1.78, 'Al' : 1.61, 'Ga' : 1.81}
 
 cols = ["N('O', 'O', 2)", "('In', 'In')_125_135", "('Al', 'O')_2.2_2.3000000000000003", "('Al', 'Al')_85_95", "N('In', 'Ga', 0)", 'period_mean', "N('Al', 'Al', 0)", "('Al', 'Ga')_115_125", 'dihe_mean', "('In', 'In')_A_50", "N('In', 'In', 0)", "('O', 'O')_85_95", "('Ga', 'In')_95_105", "('Al', 'In')_125_135", "('Al', 'Al')_A_50", "('Al', 'O')_B_25", "Bond_('Ga', 'O')_std", "('Al', 'In')_A_50", "('Al', 'Ga')_A_50", "('In', 'In')_A_std", "Bond_('In', 'O')_mean", "N('Al', 'O', 2)", "('Ga', 'Ga')_95_105", "('Ga', 'Ga')_A_75", "N('In', 'In', 1)", "('Ga', 'Ga')_115_125", "('Al', 'O')_1.8_1.9000000000000001", "('O', 'O')_75_85", "('Al', 'Ga')_85_95", "('O', 'O')_A_mean", 'spacegroup', "('Ga', 'O')_B_75", "('In', 'In')_95_105", 'dihe_nan', "N('Al', 'Ga', 1)", "('In', 'In')_A_mean", "('Al', 'In')_95_105", "N('O', 'O', 1)", 'IonChar_mean', "('Ga', 'O')_2.1_2.2", "N('In', 'In', 4)", "N('Ga', 'Ga', 2)", 'lattice_angle_beta_degree', "N('Al', 'In', 0)", 'IonChar_std', "('In', 'In')_A_75", "('Al', 'In')_105_115", "('Al', 'Al')_A_75", "('Ga', 'In')_115_125", "('O', 'O')_155_165", "('Ga', 'O')_B_50", 'dihe_std', "N('Al', 'O', 0)", "('Ga', 'In')_85_95", "('Ga', 'In')_A_mean", "N('Al', 'Ga', 0)", 'dihe_25', "N('In', 'O', 0)", "N('Ga', 'O', 4)", "('Al', 'Ga')_95_105", "Bond_('Al', 'O')_mean", 'z1', 'z2', "('Ga', 'O')_1.8_1.9000000000000001", 'period_std', "('Ga', 'Ga')_A_mean", "N('Ga', 'Ga', 3)", "('O', 'O')_175_185", "Bond_('In', 'O')_std", 'lattice_vector_3_ang', "('Al', 'O')_B_75", "('Al', 'Ga')_A_mean", "('Al', 'Ga')_125_135", "N('Al', 'Ga', 3)", "('O', 'O')_A_75", "('Al', 'In')_85_95", "('Al', 'Ga')_A_25", "('Ga', 'In')_A_25", "('Al', 'In')_115_125", 'lattice_angle_alpha_degree', "N('In', 'O', 1)", "N('Ga', 'O', 3)", "N('Al', 'O', 1)", "('Ga', 'Ga')_125_135", "N('Ga', 'Ga', 0)", "('Ga', 'Ga')_85_95", "('Ga', 'Ga')_A_25", 'dihe_50', "('Al', 'In')_A_mean", "N('Al', 'In', 2)", "('Ga', 'O')_1.9000000000000001_2.0", "Bond_('Ga', 'O')_mean", "('Ga', 'O')_B_25", "('In', 'O')_2.0_2.1", "('Al', 'In')_A_75", 'percent_atom_in', 'percent_atom_ga', "('In', 'In')_115_125", "('In', 'O')_1.9000000000000001_2.0", "('In', 'O')_2.1_2.2", "('Ga', 'In')_A_50", "N('Al', 'O', 3)", "N('Ga', 'O', 2)", "('O', 'O')_95_105", "('O', 'O')_105_115", "N('In', 'O', 2)", "('Al', 'Al')_125_135", "('In', 'In')_A_25", "N('Al', 'In', 3)", "('O', 'O')_A_25", "N('In', 'Ga', 3)", "('Al', 'Al')_A_25", "('Ga', 'Ga')_A_std", "Bond_('Al', 'O')_std", "('Al', 'O')_B_50", 'Norm3', 'Norm2', 'Norm7', 'Norm5', "('Al', 'O')_2.0_2.1", "('Ga', 'In')_A_std", "('O', 'O')_A_50", "N('O', 'O', 0)", 'vol', "('Al', 'O')_2.1_2.2", "('Al', 'In')_A_std", "N('Ga', 'O', 1)", "('In', 'O')_2.2_2.3000000000000003", "('O', 'O')_A_std", 'lattice_angle_gamma_degree', "N('Al', 'Ga', 2)", "N('In', 'O', 3)", 'dihe_75', "('In', 'O')_1.8_1.9000000000000001", "('In', 'In')_85_95", "N('Al', 'Al', 2)", "('Al', 'O')_1.9000000000000001_2.0", "N('In', 'In', 2)", "N('In', 'Ga', 2)", "('In', 'O')_B_75", "('Al', 'Al')_95_105", 'lattice_vector_2_ang', "('In', 'O')_B_25", "('Al', 'In')_A_25", "('Al', 'Al')_A_mean", "('Al', 'Ga')_A_75", "('In', 'In')_105_115", "('Ga', 'Ga')_A_50", "('Ga', 'O')_2.2_2.3000000000000003", 'lattice_vector_1_ang', "('Ga', 'In')_A_75", "('Al', 'Al')_A_std", "N('Al', 'O', 4)", "N('Ga', 'O', 0)", "N('Al', 'Al', 3)", "('In', 'O')_B_50", "N('In', 'In', 3)", 'percent_atom_al', "('Al', 'Al')_115_125", "('Ga', 'O')_2.0_2.1", "('Al', 'Ga')_A_std"]
 cols = [x for x in cols if x not in ['z1','z2']]
@@ -252,7 +293,8 @@ for i in cols:
 train = train.fillna(0)
 test = test.fillna(0)
 ori_cols = list(np.copy(cols))
-seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,75764,2314,1111,2222,3333,4444][:3]
+seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,
+         75764,2314,1111,2222,3333,4444][:]
 print seeds,len(seeds)
 comps=1
 for seed in seeds:
@@ -305,7 +347,7 @@ for seed in seeds:
         params["eta"] = 0.03
         params["min_child_weight"] = 30
         params["subsample"] = 0.4
-        params["colsample_bytree"] = 0.2 # many features here
+        params["colsample_bytree"] = 0.18 # many features here
         params["scale_pos_weight"] = 1
         params["silent"] = 0
         params["max_depth"] = 8
@@ -348,11 +390,11 @@ for i in range(2,1+len(dictt_cols1.keys())):
 dictt_cols1['avg'] =  np.sum(dictt_cols1[range(2,len(dictt_cols1.keys()))].values,1)
 dictt_cols2['avg'] =  np.sum(dictt_cols2[range(2,len(dictt_cols1.keys()))].values,1)
 if True:
-    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[:20]
-    print dictt_cols1[[1,'avg']].sort_values('avg').iloc[:20]
+    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[:50]
+    print dictt_cols1[[1,'avg']].sort_values('avg').iloc[:50]
 if True:
-    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[-20:]
-    print dictt_cols1[[1,'avg']].sort_values('avg').iloc[-20:]
+    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[-50:]
+    print dictt_cols1[[1,'avg']].sort_values('avg').iloc[-50:]
 print list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-160:][1])+list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-160:][1])))
 a,b = np.mean((train['predict1']-train[target1])**2)**.5, np.mean((train['predict2']-train[target2])**2)**.5
 print a
@@ -423,6 +465,11 @@ subsample - .4,.2 , minchildweight 30 lr = 0.01,0.03 *20 times
 0.023778079611263384
 0.0771968674936528
 0.05048747355245809
+
+subsample - .4,.2 , minchildweight 30 + energy lr = 0.01,0.03 *20 times
+0.023752181966207975
+0.07653704132015239
+0.05014461164318018
                               1         avg
 150             ('O', 'O')_A_75  183.417086
 153            ('O', 'O')_75_85  190.947214

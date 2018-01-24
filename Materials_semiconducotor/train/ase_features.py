@@ -28,6 +28,7 @@ from ase.calculators.morse import MorsePotential
 from ase.build import bulk
 import os
 result = {}
+length = {}
 files = [x[0] for x in  os.walk('.') if '/' in x[0] ]
 for i in sorted(files,key = lambda x : int(x[2:]))[::-1]:
     if '00' in i:
@@ -55,4 +56,6 @@ for i in sorted(files,key = lambda x : int(x[2:]))[::-1]:
     r2 = s.get_reciprocal_cell()
     f2 = s.get_forces()
     result[int(i[2:])] = [v1,e1,r1,f1,e2,r2,f2]
+    length[int(i[2:])] = map(sum,[data[0] =='Al',data[0] =='Ga',data[0] =='In',data[0] =='O'])
 np.save('../train_energy.npy',result)
+np.save('../train_resi.npy',length)
