@@ -4,6 +4,8 @@ import xgboost as xgb
 import matplotlib.pyplot as plt
 # calculate the volume of the structure
 
+
+    
 '''
 added volume
 added bond angles
@@ -88,7 +90,7 @@ for i in [('Al', 'Ga'), ('Al', 'In'), ('Ga', 'In'),
         all_angle += train_angle[j][i]
         all_list += [np.array(train_angle[j][i]),]
     all_angle = [ x for x in all_angle if x  <= 500 and x >=-500];
-    plt.hist(all_angle,bins = 100);plt.savefig(str(i)+'.png');plt.close()
+    #plt.hist(all_angle,bins = 100);plt.savefig(str(i)+'.png');plt.close()
     train = train.set_value(train.index,[str(i)+'_A_mean',str(i)+'_A_std'],temp)
     train = train.set_value(train.index,'array_'+str(i),all_list)
     def percentile(x,per):
@@ -233,25 +235,30 @@ dictt_['MASS'] = {'O' :16, 'In': 115, 'Al' : 27, 'Ga' :70}
 dictt_['RD'] = {'O' :2.4033, 'In': 1.94, 'Al' : 3.11, 'Ga' :2.16}
 dictt_['RP'] = {'O' :1.406667, 'In': 1.39, 'Al' : 1.5, 'Ga' :1.33}
 dictt_['RS'] = {'O' :1.07, 'In': 1.09, 'Al' : 1.13, 'Ga' :0.99}
+dictt_['VOL'] = {'Al' : 0.5235,'Ga' : 0.9982,'In' :2.2258, 'O' : 11.4927 }
 train_ele = np.load('train_resi.npy').item()
 test_ele = np.load('test_resi.npy').item()
 train['array_ele'] = train['id'].map(train_ele)
 test['array_ele'] = test['id'].map(test_ele)
 def get_all_ele(x,d):
-    return [d['Al'],]*x[0] + [d['Ga'],]*x[1] + [d['In'],]*x[2] + [d['O'],]*x[3] 
+    return [d['Al'],]*x[0] + [d['Ga'],]*x[1] + [d['In'],]*x[2] + [d['O'],]*x[3]
+
 for element in dictt_.keys():
-    temp = train['array_ele'].map(lambda x : get_all_ele(x,dictt_[element]))
-    train[element+'_mean'] = map(np.mean,temp)
-    train[element+'_std'] = map(np.std,temp)
-    train[element+'_25'] = map(lambda x : np.percentile(x,25),temp)
-    train[element+'_50'] = map(lambda x : np.percentile(x,50),temp)
-    train[element+'_75'] = map(lambda x : np.percentile(x,75),temp)
-    temp = test['array_ele'].map(lambda x : get_all_ele(x,dictt_[element]))
-    test[element+'_mean'] = map(np.mean,temp)
-    test[element+'_std'] = map(np.std,temp)
-    test[element+'_25'] = map(lambda x : np.percentile(x,25),temp)
-    test[element+'_50'] = map(lambda x : np.percentile(x,50),temp)
-    test[element+'_75'] = map(lambda x : np.percentile(x,75),temp)
+    temp1 = train['array_ele'].map(lambda x : get_all_ele(x,dictt_[element]))
+    train[element+'_mean'] = map(np.mean,temp1)
+    train[element+'_std'] = map(np.std,temp1)
+    train[element+'_25'] = map(lambda x : np.percentile(x,25),temp1)
+    train[element+'_50'] = map(lambda x : np.percentile(x,50),temp1)
+    train[element+'_75'] = map(lambda x : np.percentile(x,75),temp1)
+    temp2 = test['array_ele'].map(lambda x : get_all_ele(x,dictt_[element]))
+    test[element+'_mean'] = map(np.mean,temp2)
+    test[element+'_std'] = map(np.std,temp2)
+    test[element+'_25'] = map(lambda x : np.percentile(x,25),temp2)
+    test[element+'_50'] = map(lambda x : np.percentile(x,50),temp2)
+    test[element+'_75'] = map(lambda x : np.percentile(x,75),temp2)
+    if element == 'VOL':
+        train[element+'_sum'] = 1-map(np.sum,temp1)/train['vol']
+        test[element+'_sum'] = 1-map(np.sum,temp2)/test['vol']
 train['N_number_of_total_atoms']= train['number_of_total_atoms']/train['vol']
 test['N_number_of_total_atoms']= test['number_of_total_atoms']/test['vol']
 for i in range(0,4):
@@ -404,8 +411,9 @@ train[target1] = np.exp(train[target1])-1
 train[target2] = np.exp(train[target2])-1
 
 if True:
-    train.to_csv('train_v2%s.csv'%np.round((a+b)/2,4),index=0)
-    test.to_csv('test_v2%s.csv'%np.round((a+b)/2,4),index=0)
+    train.to_csv('train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+    test.to_csv('test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+    np.save('cols_%s_%s.npy'%(permutation_seed,np.round((a+b)/2,5)),cols)
 if True:
     name1 = 'predict1_%s'%np.round((a+b)/2,5)
     name2 = 'predict2_%s'%np.round((a+b)/2,5)
@@ -413,12 +421,12 @@ if True:
     test[name2] = test[target2]
     train[name1] = train['predict1']
     train[name2] = train['predict2']
-    train[['id',name1,name2,target1,target2]].to_csv('model_train_%s.csv'%np.round((a+b)/2,5),index=0)
-    test[['id',name1,name2]].to_csv('model_test_%s.csv'%np.round((a+b)/2,5),index=0)
+    train[['id',name1,name2,target1,target2]].to_csv('model_train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+    test[['id',name1,name2]].to_csv('model_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
 if True:
     test[target1] = np.exp(test[target1])-1
     test[target2] = np.exp(test[target2])-1
-    test[['id',target1,target2]].to_csv('submit_test_v2%s.csv'%np.round((a+b)/2,4),index=0)
+    test[['id',target1,target2]].to_csv('submit_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
 list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-70:][1]) + list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-70:][1])))
 import matplotlib.pyplot as plt
 ##for i in cols:
@@ -470,6 +478,11 @@ subsample - .4,.2 , minchildweight 30 + energy lr = 0.01,0.03 *20 times
 0.023752181966207975
 0.07653704132015239
 0.05014461164318018
+
+subsample - .4,.2 , minchildweight 30 + energy lr = 0.01,0.03 *20 times
+0.023627274977340185
+0.07623970604179706
+0.04993349050956862
                               1         avg
 150             ('O', 'O')_A_75  183.417086
 153            ('O', 'O')_75_85  190.947214
