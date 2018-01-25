@@ -12,12 +12,26 @@ added bond angles
 added dihe 
 
 '''
+
 train  = pd.read_csv('train.csv')
 train2 = pd.read_csv('train_data_features2.csv')
 test = pd.read_csv('test.csv')
 test2 = pd.read_csv('test_data_features2.csv')
-
 train2['id'] = train2['5']
+train['CNN1']= 0
+test['CNN1']= 0
+train['CNN2']= 0
+test['CNN2']= 0
+for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
+    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+    train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
+    test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
+for i in ['21/','22/','23/','24/','21B/','22B/','23B/'][:]:
+    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+    train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
+    test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
 
 def get_vol(a, b, c, alpha, beta, gamma):
     """
@@ -171,10 +185,10 @@ test['dihe_25'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -
 test['dihe_50'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.percentile(x,50))
 test['dihe_75'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.percentile(x,75))
 
-for ii in np.linspace(0,180,10)[:-1]:
-    diff= np.linspace(0,180,10)[1]-np.linspace(0,180,10)[0]
-    #train['dihe_%s_%s'%(ii,ii+diff)] = train['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
-    #test['dihe_%s_%s'%(ii,ii+diff)] = test['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
+for ii in np.linspace(0,180,91)[:-1]:
+    diff= np.linspace(0,180,91)[1]-np.linspace(0,180,91)[0]
+    train['dihe_%s_%s'%(ii,ii+diff)] = train['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
+    test['dihe_%s_%s'%(ii,ii+diff)] = test['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
 ##### get energy ###
 train_E = np.load('train_energy.npy').item()
 test_E = np.load('test_energy.npy').item()
@@ -259,6 +273,7 @@ for element in dictt_.keys():
     if element == 'VOL':
         train[element+'_sum'] = 1-map(np.sum,temp1)/train['vol']
         test[element+'_sum'] = 1-map(np.sum,temp2)/test['vol']
+
 train['N_number_of_total_atoms']= train['number_of_total_atoms']/train['vol']
 test['N_number_of_total_atoms']= test['number_of_total_atoms']/test['vol']
 for i in range(0,4):
@@ -268,14 +283,26 @@ for i in range(0,4):
     test['N_num'+res[i]] = test['array_ele'].map(lambda x : x[i])
     test['N_num'+res[i]] = test['N_num'+res[i]] /test['vol']
 for i in train.keys():
-    if 'array'  in i or  np.std(train[i]) == 0:
+    if 'array'  in i or  np.std(train[i]) <= 0.0001:
         print i#
         del train[i],test[i]
+corr = train.corr()
+for ii in range(len(corr)):
+    for jj in range(ii+1,len(corr)):
+        i =corr.keys()[ii]
+        j =corr.keys()[jj]
+        if i!=j and corr[i][j]**2 >= 0.99**2 :
+            try:
+                print i ,j ,corr[i][j]
+                del train[j]
+                del test[j]
+            except KeyError:
+                None
 ## finished ellemental properties
 target1 = 'formation_energy_ev_natom'
 target2 = 'bandgap_energy_ev'
 
-cols = [x for x in train.keys() if (x not in ['id',target1,target2] and 'array' not in x)]
+
 train[target1] = np.log1p(train[target1])
 train[target2] = np.log1p(train[target2])
 train['predict1'] = 0
@@ -307,17 +334,11 @@ comps=1
 for seed in seeds:
     train = train.sample(2400,random_state=seed).reset_index(drop=True)
     for i in range(0,10):
-##    train = train.copy(deep = True)
-##    train['outlier'] = 1
-##    train = train.set_value(train[(train[target1] <= 0.40) & (train[target2] <= 1.81) & (train[target2] >= 0.1) ].index,
-##                            'outlier',0)
-##    train = train.sort_values('outlier').reset_index(drop= True)
-##    del train['outlier']
         test_id = [x for x in range(0,2400) if x%10 == i] 
         train_id = [x for x in range(0,2400) if x%10 != i] 
         scaler = StandardScaler()
         regr = linear_model.LinearRegression()
-        scaler = scaler.fit(train.iloc[train_id][ori_cols].values,train[target1].values)
+        scaler = scaler.fit(pd.concat([train,test])[ori_cols].values)
         train['z1'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
                                train.iloc[train_id][target1].values).predict(scaler.transform(train[ori_cols].values))
         train['z2'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
@@ -335,14 +356,12 @@ for seed in seeds:
         for name in names :
             train[name] = 0
             test[name] = 0
-        scaler = scaler.fit(train.iloc[train_id][ori_cols].values)
-        temp = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values)).transform(scaler.transform(train[ori_cols].values))
+        temp = regr.fit(scaler.transform(pd.concat([train,test])[ori_cols].values)).transform(scaler.transform(train[ori_cols].values))
         train = train.set_value(train.index,names,temp);
-        temp = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values)).transform(scaler.transform(test[ori_cols].values))
+        temp = regr.fit(scaler.transform(pd.concat([train,test])[ori_cols].values)).transform(scaler.transform(test[ori_cols].values))
         test = test.set_value(test.index,names,temp)
-
         if 'z1' not in cols:
-            cols += ['z1','z2'] #+names
+            cols += ['z1','z2']  #+names #PCA does not help
         X_train, y_train1,y_train2 = train.iloc[train_id][cols], train.iloc[train_id][target1],\
                                      train.iloc[train_id][target2]
         X_test, y_test1,y_test2 = train.iloc[test_id][cols], train.iloc[test_id][target1],\
@@ -409,7 +428,7 @@ print b
 print (a+b)/2
 train[target1] = np.exp(train[target1])-1
 train[target2] = np.exp(train[target2])-1
-
+permutation_seed = 'removeCorr'
 if True:
     train.to_csv('train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
     test.to_csv('test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
@@ -483,6 +502,11 @@ subsample - .4,.2 , minchildweight 30 + energy lr = 0.01,0.03 *20 times
 0.023627274977340185
 0.07623970604179706
 0.04993349050956862
+
+subsample - .4,.2 , minchildweight 30 + energy +dihe all ,lr  = 0.01,0.03 *20 times
+0.0236444411868
+0.0759608951044
+0.0498026681456
                               1         avg
 150             ('O', 'O')_A_75  183.417086
 153            ('O', 'O')_75_85  190.947214
