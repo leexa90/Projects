@@ -35,7 +35,7 @@ def log_rmse(y_pred,dtrain):
     loss = np.mean((np.log1p(y_pred) - np.log1p(answer))**2)
     return 'mae error',loss**.5
 
-obj = huber_approx_obj
+obj = None#huber_approx_obj
 '''
 added volume
 added bond angles
@@ -474,7 +474,7 @@ print (a+b)/2
 train[target1] = np.exp(train[target1])-1
 train[target2] = np.exp(train[target2])-1
 
-permutation_seed = 'MAE1'
+permutation_seed = 'RMSE'
 if True:
     train.to_csv('train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
     test.to_csv('test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
@@ -513,9 +513,296 @@ Fair objective
 0.024094492163879683
 0.07741023540876714
 0.05075236378632341
+#RMSE *20
+0.0237838236201
+0.0762322149592
+0.0500080192897
+
+#huber 1 *20
+0.0237777744767
+0.0760913266231
+0.0499345505499
+
+# fair *20
+0.0236724974596
+0.0763541846614
+0.0500133410605
+
 
 # log_cosh_obj *20
 0.02375701222456912
 0.0762436476695883
 0.05000032994707871
+
+204  ('Al', 'O')_1.8_1.9000000000000001  106.515709
+57                 Bond_('Al', 'O')_std  107.673123
+146                ('Ga', 'In')_115_125  108.792827
+141                   ('Ga', 'In')_A_25  109.067776
+176                   ('In', 'In')_A_50  109.831599
+187                     ('O', 'O')_A_75  111.298338
+91                      N('Al', 'O', 0)  111.548220
+129                   ('Al', 'In')_A_25  112.415982
+116                   ('Al', 'Ga')_A_50  112.558600
+337                          force1_std  112.853015
+345                             RP_mean  116.351656
+79                     N('Al', 'In', 0)  116.888654
+152                   ('Al', 'Al')_A_50  117.034291
+60                Bond_('In', 'O')_mean  117.855520
+343                           force2_75  118.131769
+366                            LUMO_std  118.230310
+246                        dihe_2.0_4.0  121.449709
+342                           force1_75  122.030901
+331                    dihe_176.0_178.0  122.619481
+64                          period_mean  125.855844
+356                              IP_std  126.174361
+310                    dihe_134.0_136.0  134.212470
+101                      N('O', 'O', 1)  137.286423
+353                            VOL_mean  137.537669
+95                      N('Al', 'O', 4)  137.586152
+340                           force1_50  139.542029
+128                   ('Al', 'In')_A_50  139.562198
+362                             RD_mean  139.963667
+10           lattice_angle_gamma_degree  142.271195
+62                         IonChar_mean  143.625536
+65                           period_std  145.061991
+7                  lattice_vector_3_ang  147.205563
+185                   ('O', 'O')_A_mean  148.874762
+134                ('Al', 'In')_115_125  154.740344
+83                     N('Al', 'Al', 0)  160.915838
+243                             dihe_50  161.387891
+265                      dihe_42.0_44.0  175.358697
+289                      dihe_90.0_92.0  176.713707
+311                    dihe_136.0_138.0  184.916804
+302                    dihe_118.0_120.0  186.322952
+189                     ('O', 'O')_A_25  188.126284
+355                             VOL_sum  194.675774
+288                      dihe_88.0_90.0  202.230743
+244                             dihe_75  209.484396
+240                            dihe_std  222.323572
+8            lattice_angle_alpha_degree  242.753997
+11                                 CNN1  267.326352
+12                                 CNN2  312.083576
+370                                  z1  365.375649
+371                                  z2  526.888961
+                                      1         avg
+59                 Bond_('Ga', 'O')_std  107.503469
+12                                 CNN2  108.764691
+265                      dihe_42.0_44.0  109.682996
+79                     N('Al', 'In', 0)  109.805354
+200                    ('Al', 'O')_B_50  109.906015
+311                    dihe_136.0_138.0  110.592448
+219                 ('Ga', 'O')_2.0_2.1  112.478860
+334                                 M_E  113.051886
+206                 ('Al', 'O')_2.0_2.1  114.241137
+333                                lj_E  114.647368
+56                Bond_('Al', 'O')_mean  115.466724
+125                 ('Al', 'In')_A_mean  116.341577
+9             lattice_angle_beta_degree  116.922494
+112                     N('Ga', 'O', 4)  117.778442
+152                   ('Al', 'Al')_A_50  118.122299
+289                      dihe_90.0_92.0  118.241121
+368                            HOMO_std  118.663327
+245                        dihe_0.0_2.0  119.225640
+61                 Bond_('In', 'O')_std  119.876888
+129                   ('Al', 'In')_A_25  120.407142
+175                   ('In', 'In')_A_75  121.481929
+201                    ('Al', 'O')_B_25  123.592157
+128                   ('Al', 'In')_A_50  124.330870
+57                 Bond_('Al', 'O')_std  124.845360
+232  ('In', 'O')_1.9000000000000001_2.0  125.360339
+182                ('In', 'In')_115_125  125.435801
+185                   ('O', 'O')_A_mean  127.727285
+177                   ('In', 'In')_A_25  127.959354
+7                  lattice_vector_3_ang  128.073572
+199                    ('Al', 'O')_B_75  128.416068
+214                    ('Ga', 'O')_B_25  129.325781
+10           lattice_angle_gamma_degree  130.296102
+239                           dihe_mean  130.905380
+288                      dihe_88.0_90.0  130.944158
+102                      N('O', 'O', 2)  135.677124
+173                 ('In', 'In')_A_mean  142.161139
+176                   ('In', 'In')_A_50  145.731809
+243                             dihe_50  149.710162
+189                     ('O', 'O')_A_25  153.418897
+134                ('Al', 'In')_115_125  156.968351
+371                                  z2  171.186817
+242                             dihe_25  172.732519
+205  ('Al', 'O')_1.9000000000000001_2.0  178.262479
+8            lattice_angle_alpha_degree  189.378496
+100                      N('O', 'O', 0)  194.503671
+101                      N('O', 'O', 1)  205.979184
+244                             dihe_75  213.602266
+240                            dihe_std  251.656940
+11                                 CNN1  412.552995
+370                                  z1  612.488680
+if True:
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from scipy import stats
+
+    sns.set(style='white')
+    iris = sns.load_dataset('iris')
+
+    def corrfunc(x, y, **kws):
+      r, p = stats.pearsonr(x, y)
+      p_stars = ''
+      if p <= 0.05:
+        p_stars = '*'
+      if p <= 0.01:
+        p_stars = '**'
+      if p <= 0.001:
+        p_stars = '***'
+      ax = plt.gca()
+      ax.annotate('r = {:.2f} '.format(r) + p_stars,
+                  xy=(0.05, 0.9), xycoords=ax.transAxes)
+
+    def annotate_colname(x, **kws):
+      ax = plt.gca()
+      ax.annotate(x.name, xy=(0.05, 0.9), xycoords=ax.transAxes,
+                  fontweight='bold')
+
+    def cor_matrix(df):
+      sns.regplot.func_defaults=(None, None, None, 'ci', True, True, 95, 1000, None, 1, False, False, False, False, None, None, False, True, None, None, None, None, 'o', None, None, None)
+      g = sns.PairGrid(df, palette=['red'])
+      # Use normal regplot as `lowess=True` doesn't provide CIs.
+      g.map_upper(sns.regplot, scatter_kws={'s':1},line_kws={'lw':1})
+      g.map_diag(sns.distplot)
+      g.map_diag(annotate_colname)
+      #g.map_lower(sns.kdeplot, cmap='Blues_d')
+      #g.map_lower(corrfunc)
+      # Remove axis labels, as they're in the diagonals.
+      for ax in g.axes.flatten():
+        ax.set_ylabel('')
+        ax.set_xlabel('')
+      return g
+cor_matrix(train[['dihe_75','dihe_std','lattice_angle_alpha_degree',target1,target2]])
+a=train.groupby(['dihe_75','dihe_std'])[target1].apply(np.mean)
+b=train.groupby(['dihe_75','dihe_std'])[target1].apply(len)
+x=plt.plot(range(len(a.keys())),a.values,'ro');x=plt.plot(range(len(b.keys())),b.values/20,'bo');plt.show()
+
+
 '''
+def plot(a,b):
+    old_num = 0
+    for i in range(len(a)-1):
+        if a.keys().labels[0][i] != a.keys().labels[0][i+1]  :
+            plt.plot(range(len(a.keys()))[old_num:i+1],a.values[old_num:i+1],'o')
+            plt.plot(range(len(a.keys()))[old_num:i+1],b[old_num:i+1],'o')
+            old_num = i+1
+    plt.show()
+def plot20(train,var1,var2,target1=target1,target2=target2):
+    from matplotlib.colors import LogNorm
+    f, ax = plt.subplots(8,5,figsize=(15,24));
+    for i in range(0,20):
+        temp = train[train[var1]==i]
+        ax[i//5,i%5].hist2d(temp[var2].values,temp[target1].values,10,norm=LogNorm())
+        ax[i//5,i%5].set_title(str(i)+'__'+str(np.corrcoef(temp[var2].values,temp[target1].values)[0,1])[:5]+'__'+str(len(temp)))
+        ax[i//5,i%5].set_xticks(temp.groupby(var2)[target1].apply(np.mean).keys())
+        ax[i//5,i%5].set_xticklabels( map(lambda x : str(np.round(x,1)),temp.groupby(var2)[target1].apply(np.mean).values))
+        ax[i//5+4,i%5].hist2d(temp[var2].values,temp[target2].values,10,norm=LogNorm())
+        ax[i//5+4,i%5].set_title(str(i)+'__'+str(np.corrcoef(temp[var2].values,temp[target2].values)[0,1])[:5]+'__'+str(len(temp)))
+        ax[i//5+4,i%5].set_xticks(temp.groupby(var2)[target2].apply(np.mean).keys())
+        ax[i//5+4,i%5].set_xticklabels(map(lambda x : str(np.round(x,1)),temp.groupby(var2)[target2].apply(np.mean).values))
+    plt.savefig( var1+'_'+var2+'_.png',bbox_inches='tight');plt.close()
+
+
+def plot20B(train_old,var1,var2,target1=target1,target2=target2):
+    # function discretise features to 20 bins and then plots them together
+    def discrete(z):
+        change_z = np.copy(z)
+        final = 20
+        mul = 100.0/final
+        for i in range(0,final):
+            lower = np.percentile(z,mul*i)
+            upper = np.percentile(z,mul*(1+i))
+            change_z[(z >= lower) & (z < upper)] = i
+        lower = np.percentile(z,mul*(final-1))
+        change_z[ (z > lower)] = final-1
+        return change_z
+    train = train_old.copy()
+    train[var1] = discrete(train[var1])
+    train[var2] = discrete(train[var2])
+    f, ax = plt.subplots(8,5,figsize=(15,24));
+    for i in range(0,20):
+        temp = train[train[var1]==i]
+        a = temp.groupby(var2)[target1].apply(np.mean)
+        b = temp.groupby(var2)[target1].apply(np.std)
+        ax[i//5,i%5].set_xlim([0,20])
+        ax[i//5+4,i%5].set_xlim([0,20])
+        ax[i//5,i%5].set_ylim([0,0.65])
+        ax[i//5+4,i%5].set_ylim([0,5.3])
+        ax[i//5,i%5].plot(temp[var2].values,temp[target1].values,'o',markersize=1.5)
+        ax[i//5,i%5].plot(a.keys(),a.values,'orange')
+        ax[i//5,i%5].errorbar(a.keys(),a.values,b.values,fmt='o', ecolor='g')
+        ax[i//5,i%5].set_title(str(i)+'__'+str(np.corrcoef(temp[var2].values,temp[target1].values)[0,1])[:5]+'__'+str(len(temp)))
+        ax[i//5,i%5].set_xticks(a.keys())
+        ax[i//5,i%5].set_xticklabels( temp.groupby(var2)[target1].apply(lambda x : np.round(np.log10(len(x)),1)).values,fontsize=4)
+        a = temp.groupby(var2)[target2].apply(np.mean)
+        b = temp.groupby(var2)[target2].apply(np.std)
+        ax[i//5+4,i%5].plot(temp[var2].values,temp[target2].values,'o',markersize=1.5)
+        ax[i//5+4,i%5].plot(a.keys(),a.values,'orange')
+        ax[i//5+4,i%5].errorbar(a.keys(),a.values,b.values,fmt='o', ecolor='g')
+        ax[i//5+4,i%5].set_title(str(i)+'__'+str(np.corrcoef(temp[var2].values,temp[target2].values)[0,1])[:5]+'__'+str(len(temp)))
+        ax[i//5+4,i%5].set_xticks(a.keys())
+        ax[i//5+4,i%5].set_xticklabels( temp.groupby(var2)[target2].apply(lambda x : np.round(np.log10(len(x)),1)).values,fontsize=4)
+    if sorted((var1,var2))[0] == var1:
+        plt.savefig( str(sorted((var1,var2)))+'_1_.png',bbox_inches='tight',dpi=150);plt.close()
+    else:
+        plt.savefig( str(sorted((var1,var2)))+'_2_.png',bbox_inches='tight',dpi=150);plt.close()
+
+a=train.groupby(['dihe_75','dihe_std'])[target1].apply(np.mean);b=train.groupby(['dihe_75','dihe_std'])[target2].apply(np.mean);plot(a,b.values)
+
+def discrete(z):
+    change_z = np.copy(z)
+    final = 20
+    mul = 100.0/final
+    for i in range(0,final):
+        lower = np.percentile(z,mul*i)
+        upper = np.percentile(z,mul*(1+i))
+        change_z[(z >= lower) & (z < upper)] = i
+    lower = np.percentile(z,mul*(final-1))
+    change_z[ (z > lower)] = final-1
+    return change_z
+
+train_ori = train.copy()
+train = train_ori.copy()
+for i in cols:
+    if len(pd.unique(train[i]))>=100:
+        z = train[i].copy(deep=True).values
+        z1=discrete(z)
+        train[i] = z1
+for i in range(len(impt)):
+	for j in range(i+1,len(impt)):
+		plot20B(train,impt[i],impt[j])
+impt = ['dihe_std','dihe_75',"N('O', 'O', 1)","N('O', 'O', 0)",
+        "lattice_angle_alpha_degree","dihe_25","dihe_88.0_90.0",
+        "N('O', 'O', 2)","lattice_vector_3_ang","('O', 'O')_A_25'",
+        'dihe_mean','dihe_50','period_std','period_mean',"N('Al', 'O', 4)",
+        "('O', 'O')_A_mean"]
+
+def maximum_likelihood_feature(train,test,feature):
+    def discrete(z,trn,tst): #original variables are not modified
+        change_z = np.copy(z) #only training, percetiles based on here
+        change_trn = np.copy(trn) #test set
+        change_tst = np.copy(tst) #entire training set (include validation)
+        final = 100
+        mul = 100.0/final
+        final_l = []
+        for i in range(0,final):
+            lower = np.percentile(z,mul*i)
+            upper = np.percentile(z,mul*(1+i))
+            change_z[(z >= lower) & (z < upper)] = i
+            change_trn[(trn >= lower) & (trn < upper)] = i
+            change_tst[(tst >= lower) & (tst < upper)] = i
+            final_l += [lower,]
+        lower = np.percentile(z,mul*(final-1))
+        final_l += [np.max(z),]
+        change_z[ (z > lower)] = final
+        change_trn[ (trn > lower)] = final
+        change_tst[ (tst > lower)] = final
+        return change_z,change_trn,change_tst,final_l
+    train_copy = train.copy()[['id',feature,target1,target2]]
+    return discrete(train.copy().iloc[train_id][feature].values,
+                     train.copy()[feature].values,test.copy()[feature].values)
+        
+        
