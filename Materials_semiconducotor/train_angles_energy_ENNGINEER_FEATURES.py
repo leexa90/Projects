@@ -312,14 +312,14 @@ test[target2] = 0
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn import linear_model
-train['predict1_0.498'] = pd.read_csv('model_train_removeCorr_0.0498.csv').\
-                          sort_values('id').reset_index(drop=True)['predict1_0.0498']
-test['predict1_0.498'] = pd.read_csv('model_test_removeCorr_0.0498.csv').\
-                         sort_values('id').reset_index(drop=True)['predict1_0.0498']
-train['predict2_0.498'] = pd.read_csv('model_train_removeCorr_0.0498.csv').\
-                          sort_values('id').reset_index(drop=True)['predict2_0.0498']
-test['predict2_0.498'] = pd.read_csv('model_test_removeCorr_0.0498.csv').\
-                         sort_values('id').reset_index(drop=True)['predict2_0.0498']
+##train['predict1_0.498'] = pd.read_csv('model_train_removeCorr_0.0498.csv').\
+##                          sort_values('id').reset_index(drop=True)['predict1_0.0498']
+##test['predict1_0.498'] = pd.read_csv('model_test_removeCorr_0.0498.csv').\
+##                         sort_values('id').reset_index(drop=True)['predict1_0.0498']
+##train['predict2_0.498'] = pd.read_csv('model_train_removeCorr_0.0498.csv').\
+##                          sort_values('id').reset_index(drop=True)['predict2_0.0498']
+##test['predict2_0.498'] = pd.read_csv('model_test_removeCorr_0.0498.csv').\
+##                         sort_values('id').reset_index(drop=True)['predict2_0.0498']
 
 cols = ["N('O', 'O', 2)", "('In', 'In')_125_135", "('Al', 'O')_2.2_2.3000000000000003", "('Al', 'Al')_85_95", "N('In', 'Ga', 0)", 'period_mean', "N('Al', 'Al', 0)", "('Al', 'Ga')_115_125", 'dihe_mean', "('In', 'In')_A_50", "N('In', 'In', 0)", "('O', 'O')_85_95", "('Ga', 'In')_95_105", "('Al', 'In')_125_135", "('Al', 'Al')_A_50", "('Al', 'O')_B_25", "Bond_('Ga', 'O')_std", "('Al', 'In')_A_50", "('Al', 'Ga')_A_50", "('In', 'In')_A_std", "Bond_('In', 'O')_mean", "N('Al', 'O', 2)", "('Ga', 'Ga')_95_105", "('Ga', 'Ga')_A_75", "N('In', 'In', 1)", "('Ga', 'Ga')_115_125", "('Al', 'O')_1.8_1.9000000000000001", "('O', 'O')_75_85", "('Al', 'Ga')_85_95", "('O', 'O')_A_mean", 'spacegroup', "('Ga', 'O')_B_75", "('In', 'In')_95_105", 'dihe_nan', "N('Al', 'Ga', 1)", "('In', 'In')_A_mean", "('Al', 'In')_95_105", "N('O', 'O', 1)", 'IonChar_mean', "('Ga', 'O')_2.1_2.2", "N('In', 'In', 4)", "N('Ga', 'Ga', 2)", 'lattice_angle_beta_degree', "N('Al', 'In', 0)", 'IonChar_std', "('In', 'In')_A_75", "('Al', 'In')_105_115", "('Al', 'Al')_A_75", "('Ga', 'In')_115_125", "('O', 'O')_155_165", "('Ga', 'O')_B_50", 'dihe_std', "N('Al', 'O', 0)", "('Ga', 'In')_85_95", "('Ga', 'In')_A_mean", "N('Al', 'Ga', 0)", 'dihe_25', "N('In', 'O', 0)", "N('Ga', 'O', 4)", "('Al', 'Ga')_95_105", "Bond_('Al', 'O')_mean", 'z1', 'z2', "('Ga', 'O')_1.8_1.9000000000000001", 'period_std', "('Ga', 'Ga')_A_mean", "N('Ga', 'Ga', 3)", "('O', 'O')_175_185", "Bond_('In', 'O')_std", 'lattice_vector_3_ang', "('Al', 'O')_B_75", "('Al', 'Ga')_A_mean", "('Al', 'Ga')_125_135", "N('Al', 'Ga', 3)", "('O', 'O')_A_75", "('Al', 'In')_85_95", "('Al', 'Ga')_A_25", "('Ga', 'In')_A_25", "('Al', 'In')_115_125", 'lattice_angle_alpha_degree', "N('In', 'O', 1)", "N('Ga', 'O', 3)", "N('Al', 'O', 1)", "('Ga', 'Ga')_125_135", "N('Ga', 'Ga', 0)", "('Ga', 'Ga')_85_95", "('Ga', 'Ga')_A_25", 'dihe_50', "('Al', 'In')_A_mean", "N('Al', 'In', 2)", "('Ga', 'O')_1.9000000000000001_2.0", "Bond_('Ga', 'O')_mean", "('Ga', 'O')_B_25", "('In', 'O')_2.0_2.1", "('Al', 'In')_A_75", 'percent_atom_in', 'percent_atom_ga', "('In', 'In')_115_125", "('In', 'O')_1.9000000000000001_2.0", "('In', 'O')_2.1_2.2", "('Ga', 'In')_A_50", "N('Al', 'O', 3)", "N('Ga', 'O', 2)", "('O', 'O')_95_105", "('O', 'O')_105_115", "N('In', 'O', 2)", "('Al', 'Al')_125_135", "('In', 'In')_A_25", "N('Al', 'In', 3)", "('O', 'O')_A_25", "N('In', 'Ga', 3)", "('Al', 'Al')_A_25", "('Ga', 'Ga')_A_std", "Bond_('Al', 'O')_std", "('Al', 'O')_B_50", 'Norm3', 'Norm2', 'Norm7', 'Norm5', "('Al', 'O')_2.0_2.1", "('Ga', 'In')_A_std", "('O', 'O')_A_50", "N('O', 'O', 0)", 'vol', "('Al', 'O')_2.1_2.2", "('Al', 'In')_A_std", "N('Ga', 'O', 1)", "('In', 'O')_2.2_2.3000000000000003", "('O', 'O')_A_std", 'lattice_angle_gamma_degree', "N('Al', 'Ga', 2)", "N('In', 'O', 3)", 'dihe_75', "('In', 'O')_1.8_1.9000000000000001", "('In', 'In')_85_95", "N('Al', 'Al', 2)", "('Al', 'O')_1.9000000000000001_2.0", "N('In', 'In', 2)", "N('In', 'Ga', 2)", "('In', 'O')_B_75", "('Al', 'Al')_95_105", 'lattice_vector_2_ang', "('In', 'O')_B_25", "('Al', 'In')_A_25", "('Al', 'Al')_A_mean", "('Al', 'Ga')_A_75", "('In', 'In')_105_115", "('Ga', 'Ga')_A_50", "('Ga', 'O')_2.2_2.3000000000000003", 'lattice_vector_1_ang', "('Ga', 'In')_A_75", "('Al', 'Al')_A_std", "N('Al', 'O', 4)", "N('Ga', 'O', 0)", "N('Al', 'Al', 3)", "('In', 'O')_B_50", "N('In', 'In', 3)", 'percent_atom_al', "('Al', 'Al')_115_125", "('Ga', 'O')_2.0_2.1", "('Al', 'Ga')_A_std"]
 cols = [x for x in cols if x not in ['z1','z2']]
@@ -327,245 +327,64 @@ cols = [x for x in train.keys() if x not in ['id',target1,target2,'predict1','pr
 print cols
 dictt_cols1 = pd.DataFrame(cols + ['z1','z2'],columns=[1])
 dictt_cols2 = pd.DataFrame(cols + ['z1','z2'],columns=[1])
+test[target1]=0
+test[target2]=0
 train_ori = train.copy(deep = True)
 test_ori = test.copy(deep = True)
-for i in cols:
-    train[i] = train[i].fillna(0)
-    test[i] = test[i].fillna(0)
-train = train.fillna(0)
-test = test.fillna(0)
-ori_cols = list(np.copy(cols))
-seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,
-         75764,2314,1111,2222,3333,4444][:3]
-print seeds,len(seeds)
-comps=1
-for seed in seeds:
-    train = train.sample(2400,random_state=seed).reset_index(drop=True)
-    for i in range(0,10):
-        test_id = [x for x in range(0,2400) if x%10 == i] 
-        train_id = [x for x in range(0,2400) if x%10 != i] 
-        scaler = StandardScaler()
-        regr = linear_model.LinearRegression()
-        scaler = scaler.fit(pd.concat([train,test])[ori_cols].values)
-        train['z1'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
-                               train.iloc[train_id][target1].values).predict(scaler.transform(train[ori_cols].values))
-        train['z2'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
-                               train.iloc[train_id][target2].values).predict(scaler.transform(train[ori_cols].values))
-        test['z1'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
-                              train.iloc[train_id][target1].values).predict(scaler.transform(test[ori_cols].values))
-        test['z2'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
-                              train.iloc[train_id][target2].values).predict(scaler.transform(test[ori_cols].values))
-        xgtest = xgb.DMatrix(test[cols].values,missing=np.NAN,feature_names=cols)
-        from sklearn.decomposition import PCA
-        regr = PCA(n_components=comps)
-        names = []
-        for i in range(comps):
-            names += ['zz'+str(i),]
-        for name in names :
-            train[name] = 0
-            test[name] = 0
-        temp = regr.fit(scaler.transform(pd.concat([train,test])[ori_cols].values)).transform(scaler.transform(train[ori_cols].values))
-        train = train.set_value(train.index,names,temp);
-        temp = regr.fit(scaler.transform(pd.concat([train,test])[ori_cols].values)).transform(scaler.transform(test[ori_cols].values))
-        test = test.set_value(test.index,names,temp)
-        if 'z1' not in cols:
-            None#cols += ['z1','z2']  #+names #PCA does not help
-        X_train, y_train1,y_train2 = train.iloc[train_id][cols], train.iloc[train_id][target1],\
-                                     train.iloc[train_id][target2]
-        X_test, y_test1,y_test2 = train.iloc[test_id][cols], train.iloc[test_id][target1],\
-                                  train.iloc[test_id][target2]
-        
-
-        params = {}
-        params["objective"] = 'reg:linear' 
-        params["eta"] = 0.03
-        params["min_child_weight"] = 30
-        params["subsample"] = 0.4
-        params["colsample_bytree"] = 0.2 # many features here
-        params["scale_pos_weight"] = 1
-        params["silent"] = 0
-        params["max_depth"] = 8
-        params['seed']=seed
-        #params['maximize'] =True
-        params['eval_metric'] =  'rmse'
-        if seed %2 == 0:
-            None#params["eta"] = params["eta"]/3
-        plst = list(params.items())
-        xgtrain = xgb.DMatrix(X_train[cols].values, label=y_train1.values,missing=np.NAN,feature_names=cols)
-        xgval = xgb.DMatrix(X_test[cols].values, label=y_test1.values,missing=np.NAN,feature_names=cols)
-        watchlist  = [ (xgtrain,'train'),(xgval,'test')]
-        model1_a = {}
-        model1=xgb.train(plst,xgtrain,5000,watchlist,early_stopping_rounds=200,
-                         evals_result=model1_a,maximize=False,verbose_eval=1000)
-        train = train.set_value(test_id,'predict1',train.iloc[test_id]['predict1']+model1.predict(xgval)/len(seeds))
-        test = test.set_value(test.index, target1, test[target1]+model1.predict(xgtest)/(10*len(seeds)))
-        dictt_cols1[len(dictt_cols1.keys())+1] = dictt_cols1[1].map(model1.get_fscore())
-        xgtrain = xgb.DMatrix(X_train[cols].values, label=y_train2.values,missing=np.NAN,feature_names=cols)
-        xgval = xgb.DMatrix(X_test[cols].values, label=y_test2.values,missing=np.NAN,feature_names=cols)
-        watchlist  = [ (xgtrain,'train'),(xgval,'test')]
-        model1_a = {}
-        params["eta"] = 0.01
-        params["max_depth"] = 8
-        if seed %2 == 0:
-            None#params["eta"] = params["eta"]/3
-        plst = list(params.items())
-        model2=xgb.train(plst,xgtrain,6500,watchlist,early_stopping_rounds=200,
-                         evals_result=model1_a,maximize=False,verbose_eval=1000)
-        train = train.set_value(test_id,'predict2',train.iloc[test_id]['predict2']+model2.predict(xgval)/len(seeds))
-        test = test.set_value(test.index, target2, test[target2]+model2.predict(xgtest)/(10*len(seeds)))
-        dictt_cols2[len(dictt_cols2.keys())+1] = dictt_cols2[1].map(model2.get_fscore())
-dictt_cols1 = dictt_cols1.fillna(0)
-dictt_cols2 = dictt_cols2.fillna(0)
-for i in range(2,1+len(dictt_cols1.keys())):
-    dictt_cols1[i] = 100*dictt_cols1[i] / np.sum(dictt_cols1[i])
-    dictt_cols2[i] = 100*dictt_cols2[i] / np.sum(dictt_cols2[i])
-#print np.sum(dictt_cols1[range(2,len(dictt_cols1.keys()))].values,1)
-#print np.sum(dictt_cols2[range(2,len(dictt_cols1.keys()))].values,1)
-dictt_cols1['avg'] =  np.sum(dictt_cols1[range(2,len(dictt_cols1.keys()))].values,1)
-dictt_cols2['avg'] =  np.sum(dictt_cols2[range(2,len(dictt_cols1.keys()))].values,1)
+def maximum_likelihood_feature(train,test,feature):
+    def discrete(z,trn,tst): #original variables are not modified
+        change_z = np.copy(z) #only training, percetiles based on here
+        change_trn = np.copy(trn) #test set
+        change_tst = np.copy(tst) #entire training set (include validation)
+        final = 100
+        mul = 100.0/final
+        final_l = []
+        for i in range(0,final):
+            lower = np.percentile(z[~np.isnan(z)],mul*i)
+            upper = np.percentile(z[~np.isnan(z)],mul*(1+i))
+            change_z[(z >= lower) & (z < upper)] = i
+            change_trn[(trn >= lower) & (trn < upper)] = i
+            change_tst[(tst >= lower) & (tst < upper)] = i
+            final_l += [lower,]
+        lower = np.percentile(z[~np.isnan(z)],mul*(final-1))
+        final_l += [np.max(z[~np.isnan(z)]),]
+        change_z[ (z > lower)] = final
+        change_trn[ (trn > lower)] = final
+        change_tst[ (tst > lower)] = final
+        return change_z,change_trn,change_tst,final_l
+    train_copy = train.copy()[['id',feature,target1,target2]]
+    return discrete(train.copy().iloc[train_id][feature].values,
+                     train.copy()[feature].values,test.copy()[feature].values)
+from sklearn.metrics import normalized_mutual_info_score
+from sklearn.metrics import mutual_info_score
+from MI_continous import mutual_information
 if True:
-    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[:50]
-    print dictt_cols1[[1,'avg']].sort_values('avg').iloc[:50]
-if True:
-    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[-50:]
-    print dictt_cols1[[1,'avg']].sort_values('avg').iloc[-50:]
-print list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-160:][1])+list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-160:][1])))
-a,b = np.mean((train['predict1']-train[target1])**2)**.5, np.mean((train['predict2']-train[target2])**2)**.5
-print a
-print b
-print (a+b)/2
-train[target1] = np.exp(train[target1])-1
-train[target2] = np.exp(train[target2])-1
-permutation_seed = 'removeCorr'
-if True:
-    train.to_csv('train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-    test.to_csv('test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-    np.save('cols_%s_%s.npy'%(permutation_seed,np.round((a+b)/2,5)),cols)
-if True:
-    name1 = 'predict1_%s'%np.round((a+b)/2,5)
-    name2 = 'predict2_%s'%np.round((a+b)/2,5)
-    test[name1] = test[target1]
-    test[name2] = test[target2]
-    train[name1] = train['predict1']
-    train[name2] = train['predict2']
-    train[['id',name1,name2,target1,target2]].to_csv('model_train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-    test[['id',name1,name2]].to_csv('model_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-if True:
-    test[target1] = np.exp(test[target1])-1
-    test[target2] = np.exp(test[target2])-1
-    test[['id',target1,target2]].to_csv('submit_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-70:][1]) + list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-70:][1])))
-import matplotlib.pyplot as plt
-##for i in cols:
-##	f, ax = plt.subplots(1,2,figsize=(10,5));
-##	ax[0].plot(train[i],train[target1],'ro')
-##	ax[1].plot(train[i],train[target2],'ro')
-##	ax[0].set_title(i+'_'+target1)
-##	ax[1].set_title(i+'_'+target2)
-##	ax[0].set_xlabel(train[[i,target1]].corr()[i])
-##	ax[1].set_xlabel(train[[i,target2]].corr()[i])
-##	plt.savefig(i+'.png',dpi=300,bbox_inches='tight');plt.close();
-'''
-benchmark *5
-0.03250080113
-0.0880216978405
-0.0602612494852
-with engeinner features *5
-0.028781766046
-0.0849339614409
-0.0568578637434
-
-engineer_features from paper*5
-0.026665032169
-0.0816681029669
-0.054166567568
-
-# engineer_features from paper*5 + bond angles
-0.0245717966321
-0.0791911408058
-0.051881468719
-
-subsample - .4,.2 , minchildweight 30
-0.0239410315486
-0.0782776287956
-0.0511093301721
-
-subsample - .4,.2 , minchildweight 30 + energy
-0.023734659522426566
-0.07768566908570522
-0.05071016430406589
-
-
-subsample - .4,.2 , minchildweight 30 lr = 0.01,0.03 *20 times
-0.023778079611263384
-0.0771968674936528
-0.05048747355245809
-
-subsample - .4,.2 , minchildweight 30 + energy lr = 0.01,0.03 *20 times
-0.023752181966207975
-0.07653704132015239
-0.05014461164318018
-
-subsample - .4,.2 , minchildweight 30 + energy lr = 0.01,0.03 *20 times
-0.023627274977340185
-0.07623970604179706
-0.04993349050956862
-
-subsample - .4,.2 , minchildweight 30 + energy +dihe all ,lr  = 0.01,0.03 *20 times
-0.0236444411868
-0.0759608951044
-0
-.0498026681456
-                              1         avg
-150             ('O', 'O')_A_75  183.417086
-153            ('O', 'O')_75_85  190.947214
-11                          vol  198.055595
-10   lattice_angle_gamma_degree  200.901129
-154            ('O', 'O')_85_95  216.069805
-148           ('O', 'O')_A_mean  222.199119
-58              N('Al', 'O', 4)  228.808007
-24                  period_mean  263.938349
-206                     dihe_50  265.067483
-7          lattice_vector_3_ang  275.732155
-64               N('O', 'O', 1)  281.492789
-25                   period_std  299.460332
-8    lattice_angle_alpha_degree  305.278223
-203                    dihe_std  310.953925
-207                     dihe_75  323.714476
-152             ('O', 'O')_A_25  331.960053
-208                        CNN1  347.957447
-210                          z1  467.259731
-209                        CNN2  511.531939
-211                          z2  737.917741
-                                      1         avg
-97                 ('Al', 'In')_115_125  175.930240
-75                      N('Ga', 'O', 4)  183.028885
-7                  lattice_vector_3_ang  191.126826
-148                   ('O', 'O')_A_mean  193.755681
-9             lattice_angle_beta_degree  194.402176
-211                                  z2  197.553866
-10           lattice_angle_gamma_degree  202.273635
-168  ('Al', 'O')_1.9000000000000001_2.0  209.181913
-206                             dihe_50  211.853298
-202                           dihe_mean  213.543254
-152                     ('O', 'O')_A_25  214.879128
-205                             dihe_25  221.379413
-65                       N('O', 'O', 2)  226.921717
-8            lattice_angle_alpha_degree  270.385879
-63                       N('O', 'O', 0)  277.364493
-207                             dihe_75  284.543782
-64                       N('O', 'O', 1)  312.089142
-203                            dihe_std  341.195960
-208                                CNN1  406.399358
-210                                  z1  600.574949
-'''
-
-'''
-https://media.nature.com/original/nature-assets/npjcompumats/2016/npjcompumats201628/extref/npjcompumats201628-s1.pdf
-Average atomic mass
-Average column on periodic table
-Average  row  on  the  periodic  table
-Average atomic radius
-verage electronegativity
-fraction of valence electrons
-'''
+    result = {}
+    mutual_information = mutual_info_score
+    train = train_ori.copy()
+    train_id = range(2400)
+    for i in cols+[target1,target2]:
+        if len(pd.unique(train[i])) >=101:
+            x,y,z,final = maximum_likelihood_feature(train,test,i)
+            train[i] = y
+    for i in cols:
+            x,y = mutual_information(train[target1],train[i]),mutual_information(train[target2],train[i])
+            if np.mean(train[i].isnull()) <=0.03:
+                    print i,x,y
+                    f, ax = plt.subplots(2,1,figsize=(5,10));
+                    ax[0].plot(train[i],train[target1],'bo')
+                    ax[1].plot(train[i],train[target2],'ro')
+                    ax[0].set_title(x)
+                    ax[1].set_title(y)
+                    plt.savefig('z'+i+'.png')
+                    plt.close()
+                    result[i] = [x,y]
+best=  sorted(result,key = lambda x : result[x][0],reverse = True)[:10]
+a=train.iloc[train_id].groupby(best[0])[target1].apply(np.mean)
+b=train.iloc[train_id].groupby(best[1])[target1].apply(np.mean)
+c=train.iloc[train_id].groupby(best[2])[target1].apply(np.mean)
+d=train.iloc[train_id].groupby(best[7])[target1].apply(np.mean)
+e=train.iloc[train_id].groupby(best[8])[target1].apply(np.mean)
+train['1'] = train[best[0]].map(a.to_dict()) + train[best[1]].map(b.to_dict())+train[best[2]].map(c.to_dict()) + train[best[7]].map(d.to_dict())+ train[best[8]].map(e.to_dict())
+ 
+c=pd.merge(a,b)

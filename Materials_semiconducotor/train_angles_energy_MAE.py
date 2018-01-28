@@ -52,12 +52,12 @@ train['CNN1']= 0
 test['CNN1']= 0
 train['CNN2']= 0
 test['CNN2']= 0
-for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
+for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:4]:
     #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
     #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
     train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
     test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
-for i in ['21/','22/','23/','24/','21B/','22B/','23B/','24B/'][:]:
+for i in ['21/','22/','23/','24/','21B/','22B/','23B/','24B/'][1:4]:
     #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
     #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
     train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
@@ -252,21 +252,7 @@ test['force1_75'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[3
 test['force2_75'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),75))
 
 
-# CNN features based on distance matrix
-train['CNN1']= 0
-test['CNN1']= 0
-train['CNN2']= 0
-test['CNN2']= 0
-for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
-    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-    train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
-    test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
-for i in ['21/','22/','23/','24/','21B/','22B/','23B/'][:]:
-    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-    train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
-    test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
+
 
 ## eleemntal properties, https://www.kaggle.com/cbartel/random-forest-using-elemental-properties/data
 dictt_ = {}
@@ -805,4 +791,12 @@ def maximum_likelihood_feature(train,test,feature):
     return discrete(train.copy().iloc[train_id][feature].values,
                      train.copy()[feature].values,test.copy()[feature].values)
         
-        
+train = train_ori.copy()  
+for i in cols:
+    if len(pd.unique(train[i])) >=101:  
+        x,y,z,final = maximum_likelihood_feature(train,test,i)
+        train[i] = y
+for i in cols:
+	x,y = normalized_mutual_info_score(train[target1],train[i]),normalized_mutual_info_score(train[target2],train[i])
+	if x > 0.95 or y > 0.95:
+		print i,x,y
