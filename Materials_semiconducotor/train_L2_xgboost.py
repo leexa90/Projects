@@ -86,6 +86,7 @@ for i in extra_feature:
 ##    del train[i]
 ##    del test[i]
 # bond angles
+print '###doing bond angles features###'
 train_angle = np.load('train_bond_angles.npy').item()
 test_angle = np.load('test_bond_angles.npy').item()
 def more_less_than(x,a,b):
@@ -135,6 +136,7 @@ for i in [('Al', 'Ga'), ('Al', 'In'), ('Ga', 'In'),
             del test[str(i)+'_%s_%s'%(ii,ii+10)]
             print str(i)+'_%s_%s'%(ii,ii+10)
 
+print '###doing bond features###'
 train_bond = np.load('train_bond_distribution.npy').item()
 test_bond = np.load('test_bond_distribution.npy').item()
 for i in [('Al', 'O'),('Ga', 'O'),('In', 'O')]:
@@ -166,6 +168,7 @@ for i in [('Al', 'O'),('Ga', 'O'),('In', 'O')]:
             print str(i)+'_%s_%s'%(ii,ii+0.1)
 
 ##### get dihedrals ###
+print '###doing dihe features###'
 train_dihe = np.load('train_dihe.npy').item()
 test_dihe = np.load('test_dihe.npy').item()
 
@@ -190,6 +193,7 @@ for ii in np.linspace(0,180,91)[:-1]:
     train['dihe_%s_%s'%(ii,ii+diff)] = train['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
     test['dihe_%s_%s'%(ii,ii+diff)] = test['array_dihe'].apply(lambda x : more_less_than(x,ii,ii+diff))
 ##### get energy ###
+print '###doing VDW energy features###'
 train_E = np.load('train_energy.npy').item()
 test_E = np.load('test_energy.npy').item()
 
@@ -224,6 +228,7 @@ test['force2_75'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[-
 
 
 ## eleemntal properties, https://www.kaggle.com/cbartel/random-forest-using-elemental-properties/data
+print '###doing elemental features###'
 dictt_ = {}
 dictt_['EN'] = {'O' : 3.44, 'In': 1.78, 'Al' : 1.61, 'Ga' : 1.81}
 dictt_['EA'] = {'O' : -0.22563, 'In': -0.3125, 'Al' : -0.2563, 'Ga' : -0.1081}
@@ -267,6 +272,46 @@ for i in range(0,4):
     train['N_num'+res[i]] = train['N_num'+res[i]] /train['vol']
     test['N_num'+res[i]] = test['array_ele'].map(lambda x : x[i])
     test['N_num'+res[i]] = test['N_num'+res[i]] /test['vol']
+if True:
+    print '###doing predict495 features###'
+    a = pd.read_csv('model_train_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict1_0.04958']
+    b = pd.read_csv('model_train_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict1_0.04969']
+    train['predict1_0.495'] = (a + b)/2
+    a = pd.read_csv('model_train_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict2_0.04958']
+    b = pd.read_csv('model_train_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict2_0.04969']
+    train['predict2_0.495'] = (a + b)/2
+    a = pd.read_csv('model_test_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict1_0.04958']
+    b = pd.read_csv('model_test_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict1_0.04969']
+    test['predict1_0.495'] = (a + b)/2
+    a = pd.read_csv('model_test_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict2_0.04958']
+    b = pd.read_csv('model_test_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict2_0.04969']
+    test['predict2_0.495'] = (a + b)/2
+
+if True:
+    print '###doing eswald features###'
+    train_E = np.load('train_ewald_sum_data.npy.zip')['train_ewald_sum_data.npy'].item()
+    train['Eswald_array'] = train['id'].apply(lambda x : train_E[x-1])
+    test_E = np.load('test_ewald_sum_data.npy.zip')['test_ewald_sum_data.npy'].item()
+    test['Eswald_array'] = test['id'].apply(lambda x : test_E[x-1])
+    for i in range(0,4):
+        if i < 3:
+            diagonal= np.diagonal
+        else:
+            def x(x):return x
+            diagonal = x #last one only has forces
+        train['Eswald_%s_mean'%i] = train['Eswald_array'].apply(lambda x :np.mean(diagonal(x[i])))
+        train['Eswald_%s_50'%i] = train['Eswald_array'].apply(lambda x :np.median(diagonal(x[i])))
+        train['Eswald_%s_25'%i] = train['Eswald_array'].apply(lambda x :np.percentile(diagonal(x[i]),25))
+        train['Eswald_%s_75'%i] = train['Eswald_array'].apply(lambda x :np.percentile(diagonal(x[i]),75))
+        train['Eswald_%s_std'%i] = train['Eswald_array'].apply(lambda x :np.median(diagonal(x[i])))
+        test['Eswald_%s_mean'%i] = test['Eswald_array'].apply(lambda x :np.mean(diagonal(x[i])))
+        test['Eswald_%s_50'%i] = test['Eswald_array'].apply(lambda x :np.median(diagonal(x[i])))
+        test['Eswald_%s_25'%i] = test['Eswald_array'].apply(lambda x :np.percentile(diagonal(x[i]),25))
+        test['Eswald_%s_75'%i] = test['Eswald_array'].apply(lambda x :np.percentile(diagonal(x[i]),75))
+        test['Eswald_%s_std'%i] = test['Eswald_array'].apply(lambda x :np.median(diagonal(x[i])))
+    
+
+
 for i in train.keys():
     if 'array'  in i or  np.std(train[i]) <= 0.0001:
         print i#
@@ -286,21 +331,6 @@ for ii in range(len(corr)):
 ## finished ellemental properties
 target1 = 'formation_energy_ev_natom'
 target2 = 'bandgap_energy_ev'
-if True:
-    a = pd.read_csv('model_train_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict1_0.04958']
-    b = pd.read_csv('model_train_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict1_0.04969']
-    train['predict1_0.495'] = (a + b)/2
-    a = pd.read_csv('model_train_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict2_0.04958']
-    b = pd.read_csv('model_train_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict2_0.04969']
-    train['predict2_0.495'] = (a + b)/2
-    a = pd.read_csv('model_test_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict1_0.04958']
-    b = pd.read_csv('model_test_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict1_0.04969']
-    test['predict1_0.495'] = (a + b)/2
-    a = pd.read_csv('model_test_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict2_0.04958']
-    b = pd.read_csv('model_test_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict2_0.04969']
-    test['predict2_0.495'] = (a + b)/2
-    aa,bb = np.mean((train['predict1_0.495']-train[target1])**2)**.5, np.mean((train['predict2_0.495']-train[target2])**2)**.5
-
 
 train[target1] = np.log(1+train[target1])
 train[target2] = np.log(1+train[target2])
@@ -334,7 +364,7 @@ train = train.fillna(0)
 test = test.fillna(0)
 ori_cols = list(np.copy(cols))
 seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,
-         75764,2314,1111,2222,3333,4444][:]
+         75764,2314,1111,2222,3333,4444][:3]
 print seeds,len(seeds)
 comps=1
 '''
@@ -452,11 +482,10 @@ for i in range(2,1+len(dictt_cols1.keys())):
 dictt_cols1['avg'] =  np.sum(dictt_cols1[range(2,len(dictt_cols1.keys()))].values,1)
 dictt_cols2['avg'] =  np.sum(dictt_cols2[range(2,len(dictt_cols1.keys()))].values,1)
 if True:
-    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[:50]
     print dictt_cols1[[1,'avg']].sort_values('avg').iloc[:50]
-if True:
-    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[-50:]
+    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[:50]
     print dictt_cols1[[1,'avg']].sort_values('avg').iloc[-50:]
+    print dictt_cols2[[1,'avg']].sort_values('avg').iloc[-50:]
 print list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-160:][1])+list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-160:][1])))
 a,b = np.mean((train['predict1']-train[target1])**2)**.5, np.mean((train['predict2']-train[target2])**2)**.5
 print a

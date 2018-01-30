@@ -367,7 +367,7 @@ if True:
         if len(pd.unique(train[i])) >=101:
             x,y,z,final = maximum_likelihood_feature(train,test,i)
             train[i] = y
-    for i in cols:
+    for i in sorted(cols):
             x,y = mutual_information(train[target1],train[i]),mutual_information(train[target2],train[i])
             if np.mean(train[i].isnull()) <=0.03:
                     print i,x,y
@@ -379,12 +379,37 @@ if True:
                     plt.savefig('z'+i+'.png')
                     plt.close()
                     result[i] = [x,y]
-best=  sorted(result,key = lambda x : result[x][0],reverse = True)[:10]
-a=train.iloc[train_id].groupby(best[0])[target1].apply(np.mean)
-b=train.iloc[train_id].groupby(best[1])[target1].apply(np.mean)
-c=train.iloc[train_id].groupby(best[2])[target1].apply(np.mean)
-d=train.iloc[train_id].groupby(best[7])[target1].apply(np.mean)
-e=train.iloc[train_id].groupby(best[8])[target1].apply(np.mean)
-train['1'] = train[best[0]].map(a.to_dict()) + train[best[1]].map(b.to_dict())+train[best[2]].map(c.to_dict()) + train[best[7]].map(d.to_dict())+ train[best[8]].map(e.to_dict())
- 
-c=pd.merge(a,b)
+if True:
+    result = {}
+    mutual_information = mutual_info_score
+    train = train_ori.copy()
+    train_id = range(2400)
+    for i in cols+[target1,target2]:
+        if len(pd.unique(train[i])) >=101:
+            x,y,z,final = maximum_likelihood_feature(train,test,i)
+            train[i] = y
+i=0
+test_id = [x for x in range(0,2400) if x%10 == i] 
+train_id = [x for x in range(0,2400) if x%10 != i] 
+best=  sorted(result,key = lambda x : result[x][0],reverse = True)[:100]
+for name in ['dihe',"('O', 'O')_A",'lattice','force',"N('O', 'O'",'mean',"N('Ga', 'O'","N('Al', 'O'","MO_"]:
+    train[name+'1_all'] =0
+    test[name+'1_all'] =0
+for name in ['dihe',"('O', 'O')_A",'lattice','force',"N('O', 'O'",'mean',"N('Ga', 'O'","N('Al', 'O'","MO_"]:
+    impt = [x for x in best if name in x ]
+    for i in impt:
+        a=train.iloc[train_id].groupby(i)[target1].apply(np.mean)
+        train = train.set_values(test_id,name+'1_all',train.iloc[test_id][i].map(a.to_dict()))
+        test = test.set_values(range(600),name+'1_all',test.map(a.to_dict())/10+test[name+'1_all'])
+best2=  sorted(result,key = lambda x : result[x][1],reverse = True)[:100]
+for name in ['dihe',"('O', 'O')_A",'lattice','force',"N('O', 'O'","IonChar","RD",'MO_','VOL']:
+    train[name+'2_all'] =0
+    test[name+'2_all'] =0
+for name in ['dihe',"('O', 'O')_A",'lattice','force',"N('O', 'O'","IonChar","RD",'MO_','VOL']:
+    impt = [x for x in best2 if name.upper() in x.upper() ]
+    for i in impt:
+        a=train.iloc[train_id].groupby(i)[target2].apply(np.mean)
+        train = train.set_values(test_id,name+'2_all',train.iloc[test_id][i].map(a.to_dict()))
+        test = test.set_values(range(600),name+'2_all',test.map(a.to_dict())/10+test[name+'2_all'])
+
+    
