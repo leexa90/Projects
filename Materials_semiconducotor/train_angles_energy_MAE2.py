@@ -48,20 +48,20 @@ train2 = pd.read_csv('train_data_features2.csv')
 test = pd.read_csv('test.csv')
 test2 = pd.read_csv('test_data_features2.csv')
 train2['id'] = train2['5']
-train['CNN1']= 0
-test['CNN1']= 0
-train['CNN2']= 0
-test['CNN2']= 0
-for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
-    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-    train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
-    test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
-for i in ['21/','22/','23/','24/','21B/','22B/','23B/','24B/'][:]:
-    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-    train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
-    test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
+##train['CNN1']= 0
+##test['CNN1']= 0
+##train['CNN2']= 0
+##test['CNN2']= 0
+##for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
+##    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+##    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+##    train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
+##    test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
+##for i in ['21/','22/','23/','24/','21B/','22B/','23B/','24B/'][:]:
+##    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+##    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+##    train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
+##    test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
 
 def get_vol(a, b, c, alpha, beta, gamma):
     """
@@ -207,7 +207,7 @@ train['dihe_25'] =  train['array_dihe'].map(lambda x : np.array(x)[np.array(x) >
 train['dihe_50'] =  train['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.percentile(x,50))
 train['dihe_75'] =  train['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.percentile(x,75))
 
-test['array_dihe'] = test['id'].map(train_dihe)
+test['array_dihe'] = test['id'].map(test_dihe)
 test['dihe_mean'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.mean(x))
 test['dihe_std'] = test['array_dihe'].map(lambda x : np.array(x)[np.array(x) >= -0.001]).map(lambda x : np.std(x))
 test['dihe_nan'] = test['array_dihe'].map(lambda x : 1.0*(len(x)-len(np.array(x)[np.array(x) >= -0.001]))/len(x))
@@ -252,21 +252,6 @@ test['force1_75'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[3
 test['force2_75'] = test['array_energy'].map(lambda x : np.percentile(np.sum(x[-1]**2,1),75))
 
 
-# CNN features based on distance matrix
-train['CNN1']= 0
-test['CNN1']= 0
-train['CNN2']= 0
-test['CNN2']= 0
-for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
-    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-    train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
-    test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
-for i in ['21/','22/','23/','24/','21B/','22B/','23B/'][:]:
-    #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-    #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-    train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
-    test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
 
 ## eleemntal properties, https://www.kaggle.com/cbartel/random-forest-using-elemental-properties/data
 dictt_ = {}
@@ -328,6 +313,21 @@ for ii in range(len(corr)):
             except KeyError:
                 None
 ## finished ellemental properties
+if True:
+    a = pd.read_csv('model_train_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict1_0.04958']
+    b = pd.read_csv('model_train_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict1_0.04969']
+    train['predict1_0.495'] = (a + b)/2
+    a = pd.read_csv('model_train_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict2_0.04958']
+    b = pd.read_csv('model_train_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict2_0.04969']
+    train['predict2_0.495'] = (a + b)/2
+    a = pd.read_csv('model_test_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict1_0.04958']
+    b = pd.read_csv('model_test_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict1_0.04969']
+    test['predict1_0.495'] = (a + b)/2
+    a = pd.read_csv('model_test_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict2_0.04958']
+    b = pd.read_csv('model_test_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict2_0.04969']
+    test['predict2_0.495'] = (a + b)/2
+    aa,bb = np.mean((train['predict1_0.495']-train[target1])**2)**.5, np.mean((train['predict2_0.495']-train[target2])**2)**.5
+
 target1 = 'formation_energy_ev_natom'
 target2 = 'bandgap_energy_ev'
 
