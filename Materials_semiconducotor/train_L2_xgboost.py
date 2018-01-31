@@ -364,7 +364,7 @@ train = train.fillna(0)
 test = test.fillna(0)
 ori_cols = list(np.copy(cols))
 seeds = [1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,
-         75764,2314,1111,2222,3333,4444][:3]
+         75764,2314,1111,2222,3333,4444][:]
 print seeds,len(seeds)
 comps=1
 '''
@@ -524,6 +524,10 @@ import matplotlib.pyplot as plt
 ##	ax[1].set_xlabel(train[[i,target2]].corr()[i])
 ##	plt.savefig(i+'.png',dpi=300,bbox_inches='tight');plt.close();
 '''
+# with eswald 20
+0.0242578824265
+0.0747007564236
+0.049479319425
 
 L2 with 0.498 and normal code *3
 0.0242731863625
