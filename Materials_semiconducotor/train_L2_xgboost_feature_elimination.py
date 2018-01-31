@@ -4,8 +4,9 @@ import xgboost as xgb
 import matplotlib.pyplot as plt
 # calculate the volume of the structure
 
-
+TRY CHAINGING LN R to mean values
 '''
+
 # No CNN, no eswald, predict1_0.495 for model2
 [2314, 1111, 2222, 3333, 4444]
 0.023777557694703744
