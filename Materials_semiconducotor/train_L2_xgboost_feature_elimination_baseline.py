@@ -6,22 +6,6 @@ import matplotlib.pyplot as plt
 
 
 '''
-
-# No CNN, no eswald, predict1_0.495 for model2
-[2314, 1111, 2222, 3333, 4444]
-0.023777557694703744
-0.07322642574011586
-0.0485019917174098
-[5555, 6666, 7777, 8888, 9999]
-0.024048941798210904
-0.07365744823160975
-0.048853195014910325
-[111, 222, 333, 444, 555]
-0.02399012900705931
-0.07369018753514377
-0.04884015827110154
-
-
 BENCHMARK
 if True:
   A=[0.024425624291,0.0243964088121,0.0243356065627,0.0242540405675,0.0243152888378]
@@ -74,10 +58,10 @@ predict2_0.495 confirmed - 0.0735
 
 '''
 name = 'benchmark'
-#dictt_cols1_old = pd.DataFrame(np.load('./log/dictt_cols1.npy'))
-#dictt_cols2_old = pd.DataFrame(np.load('./log/dictt_cols2.npy'))
-#removed_features = list(set(list(dictt_cols1_old[0].iloc[-10:])+list(dictt_cols2_old[0].iloc[-10:])))[-3:]
-#sprint removed_features
+dictt_cols1_old = pd.DataFrame(np.load('./log/dictt_cols1.npy'))
+dictt_cols2_old = pd.DataFrame(np.load('./log/dictt_cols2.npy'))
+removed_features = list(set(list(dictt_cols1_old[0].iloc[-10:])+list(dictt_cols2_old[0].iloc[-10:])))[-3:]
+print removed_features
 log = open('./log/'+ name+'.txt','w')
 removed_feature = ''
 if True:#for removed_feature in removed_features:
@@ -94,21 +78,20 @@ if True:#for removed_feature in removed_features:
     test = pd.read_csv('test.csv')
     test2 = pd.read_csv('test_data_features2.csv')
     train2['id'] = train2['5']
-    if False:
-        train['CNN1']= 0
-        test['CNN1']= 0
-        train['CNN2']= 0
-        test['CNN2']= 0
-        for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
-            #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-            #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-            train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
-            test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
-        for i in ['21/','22/','23/','24/','21B/','22B/','23B/'][:]:
-            #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
-            #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
-            train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
-            test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
+    train['CNN1']= 0
+    test['CNN1']= 0
+    train['CNN2']= 0
+    test['CNN2']= 0
+    for i in ['11/','12/','13/','14/','11B/','12B/','13B/','14B/','15A/'][:]:
+        #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+        #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+        train['CNN1'] =  train['CNN1']+pd.read_csv(i+'train_CNN.csv')['predict1']
+        test['CNN1'] = test['CNN1']+pd.read_csv(i+'test_CNN.csv')['predict1']
+    for i in ['21/','22/','23/','24/','21B/','22B/','23B/'][:]:
+        #train[i] = pd.read_csv(i+'train_CNN.csv')['predict1']
+        #test[i] = pd.read_csv(i+'test_CNN.csv')['predict1']
+        train['CNN2'] = train['CNN2']+pd.read_csv(i+'train_CNN.csv')['predict1']
+        test['CNN2'] = test['CNN2']+pd.read_csv(i+'test_CNN.csv')['predict1']
 
     def get_vol(a, b, c, alpha, beta, gamma):
         """
@@ -349,7 +332,7 @@ if True:#for removed_feature in removed_features:
         train['N_num'+res[i]] = train['N_num'+res[i]] /train['vol']
         test['N_num'+res[i]] = test['array_ele'].map(lambda x : x[i])
         test['N_num'+res[i]] = test['N_num'+res[i]] /test['vol']
-    if False:
+    if True:
         print '###doing predict495 features###'
         a = pd.read_csv('model_train_removeCorr_0.04958.csv').sort_values('id').reset_index(drop=True)['predict1_0.04958']
         b = pd.read_csv('model_train_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict1_0.04969']
@@ -364,24 +347,7 @@ if True:#for removed_feature in removed_features:
         b = pd.read_csv('model_test_removeCorrLess_0.04969.csv').sort_values('id').reset_index(drop=True)['predict2_0.04969']
         test['predict2_0.495'] = (a + b)/2
 
-    '''0.023510690358920693
-    0.07351348695632946
-    0.048512088657625074'''
     if True:
-        print '###doing predict485 features###'
-        a = pd.read_csv('model_train_L2_0.04851.csv').sort_values('id').reset_index(drop=True)['predict1_0.04851']
-        b = pd.read_csv('model_train_L2_0.04875.csv').sort_values('id').reset_index(drop=True)['predict1_0.04875']
-        train['predict1_0.485'] = (a + b)/2
-        a = pd.read_csv('model_train_L2_0.04851.csv').sort_values('id').reset_index(drop=True)['predict2_0.04851']
-        b = pd.read_csv('model_train_L2_0.04875.csv').sort_values('id').reset_index(drop=True)['predict2_0.04875']
-        train['predict2_0.485'] = (a + b)/2
-        a = pd.read_csv('model_test_L2_0.04851.csv').sort_values('id').reset_index(drop=True)['predict1_0.04851']
-        b = pd.read_csv('model_test_L2_0.04875.csv').sort_values('id').reset_index(drop=True)['predict1_0.04875']
-        test['predict1_0.485'] = (a + b)/2
-        a = pd.read_csv('model_test_L2_0.04851.csv').sort_values('id').reset_index(drop=True)['predict2_0.04851']
-        b = pd.read_csv('model_test_L2_0.04875.csv').sort_values('id').reset_index(drop=True)['predict2_0.04875']
-        test['predict2_0.485'] = (a + b)/2
-    if False:
         print '###doing eswald features###'
         train_E = np.load('train_ewald_sum_data.npy.zip')['train_ewald_sum_data.npy'].item()
         train['Eswald_array'] = train['id'].apply(lambda x : train_E[x-1])
@@ -482,11 +448,11 @@ if True:#for removed_feature in removed_features:
                                   train.iloc[train_id][target2].values).predict(scaler.transform(test[ori_cols].values))/10)
         xgtest = xgb.DMatrix(test[cols].values,missing=np.NAN,feature_names=cols)
     '''
-    for repeat in range(0,1):
+    for repeat in range(0,3):
         seeds = 10*[1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,
                  75764,2314,1111,2222,3333,4444,5555,6666,7777,8888,9999,111,222,333,444,555,666,777,888,999,11,22,
                     33,44,55,66,77,88,99,12,23,34,45,56,67,78,89,90]
-        seeds = seeds[repeat*20:(repeat+1)*20]
+        seeds = seeds[repeat*5:(repeat+1)*5]
         train['predict1'] = 0
         test[target1] = 0
         train['predict2'] = 0
@@ -499,21 +465,18 @@ if True:#for removed_feature in removed_features:
                 train_id = [x for x in range(0,2400) if x%10 != i] 
                 scaler = StandardScaler()
                 regr = linear_model.LinearRegression()
-                ori_cols1 = [x for x in ori_cols if '0.485' not in x and 'Eswald' not in x]
-                ori_cols2 = [x for x in ori_cols if 'Eswald' not in x]# if 'predict2_0.485' not in x] causes 0.0755 instead of 0.0735
-                scaler = scaler.fit(pd.concat([train,test])[ori_cols1].values)
-                train['z1'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols1].values),
-                                       train.iloc[train_id][target1].values).predict(scaler.transform(train[ori_cols1].values))
+                scaler = scaler.fit(pd.concat([train,test])[ori_cols].values)
+                train['z1'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
+                                       train.iloc[train_id][target1].values).predict(scaler.transform(train[ori_cols].values))
                 regr = linear_model.LinearRegression()
-                test['z1'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols1].values),
-                                      train.iloc[train_id][target1].values).predict(scaler.transform(test[ori_cols1].values))
-                scaler = scaler.fit(pd.concat([train,test])[ori_cols2].values)
+                train['z2'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
+                                       train.iloc[train_id][target2].values).predict(scaler.transform(train[ori_cols].values))
                 regr = linear_model.LinearRegression()
-                train['z2'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols2].values),
-                                       train.iloc[train_id][target2].values).predict(scaler.transform(train[ori_cols2].values))
+                test['z1'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
+                                      train.iloc[train_id][target1].values).predict(scaler.transform(test[ori_cols].values))
                 regr = linear_model.LinearRegression()
-                test['z2'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols2].values),
-                                      train.iloc[train_id][target2].values).predict(scaler.transform(test[ori_cols2].values))
+                test['z2'] = regr.fit(scaler.transform(train.iloc[train_id][ori_cols].values),
+                                      train.iloc[train_id][target2].values).predict(scaler.transform(test[ori_cols].values))
                 
         ##    for i in range(0,10):
                 test_id = [x for x in range(0,2400) if x%10 == i] 
@@ -526,7 +489,6 @@ if True:#for removed_feature in removed_features:
                 for name in names :
                     train[name] = 0
                     test[name] = 0
-                scaler = scaler.fit(pd.concat([train,test])[ori_cols].values)
                 temp = regr.fit(scaler.transform(pd.concat([train,test])[ori_cols].values)).transform(scaler.transform(train[ori_cols].values))
                 train = train.set_value(train.index,names,temp);
                 temp = regr.fit(scaler.transform(pd.concat([train,test])[ori_cols].values)).transform(scaler.transform(test[ori_cols].values))
@@ -554,8 +516,7 @@ if True:#for removed_feature in removed_features:
                 if seed %2 == 0:
                     None#params["eta"] = params["eta"]/3
                 plst = list(params.items())
-                cols = [x for x in cols_model12 if x != removed_feature and  '0.485' not \
-                        in x and "Eswald" not in x and 'CNN' not in x ]
+                cols = [x for x in cols_model12 if x != removed_feature and  '0.495' not in x and "Eswald" not in x and 'CNN' not in x ]
                 X_train, y_train1,y_train2 = train.iloc[train_id][cols], train.iloc[train_id][target1],\
                                              train.iloc[train_id][target2]
                 X_test, y_test1,y_test2 = train.iloc[test_id][cols], train.iloc[test_id][target1],\
@@ -567,8 +528,7 @@ if True:#for removed_feature in removed_features:
                 model1_a = {}
                 model1=xgb.train(plst,xgtrain,5000,watchlist,early_stopping_rounds=200,
                                  evals_result=model1_a,maximize=False,verbose_eval=1000)
-                cols = [x for x in cols_model12 if x != removed_feature  and 'predict2_0.485' \
-                        not in x and 'CNN' not in x and "Eswald" not in x]
+                cols = [x for x in cols_model12 if x != removed_feature  and 'predict2_0.495' not in x and 'CNN' not in x]
                 X_train, y_train1,y_train2 = train.iloc[train_id][cols], train.iloc[train_id][target1],\
                                              train.iloc[train_id][target2]
                 X_test, y_test1,y_test2 = train.iloc[test_id][cols], train.iloc[test_id][target1],\
@@ -614,30 +574,28 @@ if True:#for removed_feature in removed_features:
     print list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-160:][1])+list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-160:][1])))
 
 log.close()
-train[target1] = np.exp(train[target1])-1
-train[target2] = np.exp(train[target2])-1
-def write_files():
-
-       
-    permutation_seed = 'L2'
-    if True:
-        train.to_csv('train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-        test.to_csv('test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-        np.save('cols_%s_%s.npy'%(permutation_seed,np.round((a+b)/2,5)),cols)
-    if True:
-        name1 = 'predict1_%s'%np.round((a+b)/2,5)
-        name2 = 'predict2_%s'%np.round((a+b)/2,5)
-        test[name1] = test[target1]
-        test[name2] = test[target2]
-        train[name1] = train['predict1']
-        train[name2] = train['predict2']
-        train[['id',name1,name2,target1,target2]].to_csv('model_train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-        test[['id',name1,name2]].to_csv('model_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-    if True:
-        test[target1] = np.exp(test[target1])-1
-        test[target2] = np.exp(test[target2])-1
-        test[['id',target1,target2]].to_csv('submit_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
-    list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-70:][1]) + list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-70:][1])))
+##train[target1] = np.exp(train[target1])-1
+##train[target2] = np.exp(train[target2])-1
+##   
+##permutation_seed = 'L2'
+##if True:
+##    train.to_csv('train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+##    test.to_csv('test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+##    np.save('cols_%s_%s.npy'%(permutation_seed,np.round((a+b)/2,5)),cols)
+##if True:
+##    name1 = 'predict1_%s'%np.round((a+b)/2,5)
+##    name2 = 'predict2_%s'%np.round((a+b)/2,5)
+##    test[name1] = test[target1]
+##    test[name2] = test[target2]
+##    train[name1] = train['predict1']
+##    train[name2] = train['predict2']
+##    train[['id',name1,name2,target1,target2]].to_csv('model_train_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+##    test[['id',name1,name2]].to_csv('model_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+##if True:
+##    test[target1] = np.exp(test[target1])-1
+##    test[target2] = np.exp(test[target2])-1
+##    test[['id',target1,target2]].to_csv('submit_test_%s_%s.csv'%(permutation_seed,np.round((a+b)/2,5)),index=0)
+##list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-70:][1]) + list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-70:][1])))
 import matplotlib.pyplot as plt
 ##for i in cols:
 ##	f, ax = plt.subplots(1,2,figsize=(10,5));
