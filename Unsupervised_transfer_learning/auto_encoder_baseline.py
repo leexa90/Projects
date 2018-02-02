@@ -54,6 +54,5 @@ model.compile(loss=mean_squared_error2,
               optimizer=opt)
 model.summary()
 model.load_weights("model.h5")
-die
-model.fit(data[::2],data[::2],256,20,verbose=2,validation_data = (data[1::2],data[1::2]))
-
+model.fit(data[::2],data[::2],256,50,verbose=2,validation_data = (data[1::2],data[1::2]))
+model.save_weights("model.h5")
