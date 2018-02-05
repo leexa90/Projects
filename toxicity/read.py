@@ -15,7 +15,7 @@ for i in [data2,data3,data4,data5,data6,data7]:
     print i.groupby(2)[2].apply(len)
     del i[2]
     data = pd.merge(data,i,how='outer',on=[1,0])
-    
+
 
 def got_null(x):
     result = 0
@@ -28,7 +28,24 @@ data['got'] = map(got_null, data[[2, '2_1', '2_2', '2_3', '2_4', '2_5', '2_6']].
 import matplotlib.pyplot as plt
 x=plt.hist(data['got'],6)
 data = data.fillna(-999)
+from rdkit.Chem import AllChem
+from rdkit import Chem
+for i in range(len(data2)):
+    if i%100 == 0:
+        print i
+    m1 = Chem.MolToSmiles(Chem.MolFromSmiles(data2.iloc[i][0]))
+    m2 = Chem.MolFromSmiles(m1)
+    AllChem.Compute2DCoords(m2)
+    #open('./nr-ahr/data1_%s.sdf'%i,'w').write(Chem.MolToMolBlock(m2) )
+    AllChem.EmbedMolecule(m2,AllChem.ETKDG()) #add 2D coordinates by embedding the molecule
+    m3 = Chem.AddHs(m2)
+    AllChem.EmbedMolecule(m3,AllChem.ETKDG()) #3d cord
+    m3 = Chem.RemoveHs(m3) #remove H
+    open('./nr-ahr/data2_%s.sdf'%i,'w').write(Chem.MolToMolBlock(m3) )
 import openbabel
+
+
+
 import pybel
 for mymol in pybel.readfile("sdf", "nr-ahr.sdf"):
     print mymol
