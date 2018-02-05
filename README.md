@@ -11,5 +11,5 @@ This was organized by Red Dragon AI and supported by workforce Singapore.
 
 # Other Projects 
 
-i) [Predicting Semiconductor properties of group 13 oxides](Materials_semiconducotor)
+i) [Predicting Semiconductor Properties of Group 13 Oxides](Materials_semiconducotor)
 
