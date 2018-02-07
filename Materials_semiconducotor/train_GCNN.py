@@ -252,6 +252,8 @@ for fold in  range(0,10):
                                                           num_atoms: x4,
                                                           answer: [[y]],
                                                           learning_rate : 0 })
+            val_cost += [c,]
+            val_answer += [out[0][0],]
         test_answer = []
         for sample in range(len(test)):
             x1,x2,x3 = train.iloc[sample][['Adj_matrix','A_matrix','P_matrix']]
@@ -262,6 +264,7 @@ for fold in  range(0,10):
                                                           num_atoms: x4,
                                                           answer: [[y]],
                                                           learning_rate : 0 })
+            test_answer += [out[0][0],]
         print (np.mean(val_cost))
         if epoch >= 80:
             train = train.set_value(val_id,
