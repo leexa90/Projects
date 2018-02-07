@@ -486,7 +486,7 @@ if True:#for removed_feature in removed_features:
         seeds = 10*[1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,
                  75764,2314,1111,2222,3333,4444,5555,6666,7777,8888,9999,111,222,333,444,555,666,777,888,999,11,22,
                     33,44,55,66,77,88,99,12,23,34,45,56,67,78,89,90]
-        seeds = seeds[repeat*20:(repeat+1)*20]
+        seeds = seeds[repeat*3:(repeat+1)*3]
         train['predict1'] = 0
         test[target1] = 0
         train['predict2'] = 0
@@ -558,6 +558,8 @@ if True:#for removed_feature in removed_features:
                         in x and "Eswald" not in x and 'CNN' not in x ]
                 X_train, y_train1,y_train2 = train.iloc[train_id][cols], train.iloc[train_id][target1],\
                                              train.iloc[train_id][target2]
+                X_test, y_test1,y_test2 = train.iloc[test_id][cols], train.iloc[test_id][target1],\
+                                          train.iloc[test_id][target2]
                 X_test, y_test1,y_test2 = train.iloc[test_id][cols], train.iloc[test_id][target1],\
                                           train.iloc[test_id][target2]
                 xgtest = xgb.DMatrix(test[cols].values,missing=np.NAN,feature_names=cols)

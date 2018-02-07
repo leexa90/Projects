@@ -5,6 +5,32 @@ import matplotlib.pyplot as plt
 # calculate the volume of the structure
 
 
+[3333, 4444, 5555, 6666, 7777, 8888, 9999, 111, 222, 333]
+0.11507186683650583
+0.03195878439303025
+0.07351532561476803
+transform
+0.02398154705915655
+0.07351185760753037
+0.04874670233334346
+
+[3333, 4444, 5555, 6666, 7777, 8888, 9999, 111, 222, 333]
+0.0948818735887179
+0.027088870506194768
+0.060985372047456333
+transform
+0.02374495117816305
+0.07361289668431142
+0.04867892393123724
+
+[3333, 4444, 5555, 6666, 7777, 8888, 9999, 111, 222, 333]
+0.08223573942811653
+0.023483724535144846
+0.05285973198163069
+transform
+0.02365333726075058
+0.07355892457458742
+0.048606130917669
 '''
 
 # No CNN, no eswald, predict1_0.495 for model2
@@ -80,7 +106,7 @@ name = 'benchmark'
 #sprint removed_features
 log = open('./log/'+ name+'.txt','w')
 removed_feature = ''
-if True:#for removed_feature in removed_features:
+for offsetB,offsetA in [[4,0.04],[5,0.08],[6,0.12],[7,0.16],[8,0.2]][-2:]:#if True:#for removed_feature in removed_features:
     log.write(removed_feature+'\n')
     '''
     added volume
@@ -426,8 +452,8 @@ if True:#for removed_feature in removed_features:
     target1 = 'formation_energy_ev_natom'
     target2 = 'bandgap_energy_ev'
 
-    train[target1] = np.log(1+train[target1])
-    train[target2] = np.log(1+train[target2])
+    train[target1] = np.log(offsetA+train[target1])
+    train[target2] = np.log(offsetB+train[target2])
     train['predict1'] = 0
     test[target1] = 0
     train['predict2'] = 0
@@ -486,7 +512,7 @@ if True:#for removed_feature in removed_features:
         seeds = 10*[1,5516,643,5235,2352,12,5674,19239,41241,1231,151,34,1235,2664,
                  75764,2314,1111,2222,3333,4444,5555,6666,7777,8888,9999,111,222,333,444,555,666,777,888,999,11,22,
                     33,44,55,66,77,88,99,12,23,34,45,56,67,78,89,90]
-        seeds = seeds[repeat*60:(repeat+1)*60]
+        seeds = seeds[repeat*10:(repeat+1)*10]
         train['predict1'] = 0
         test[target1] = 0
         train['predict2'] = 0
@@ -597,6 +623,19 @@ if True:#for removed_feature in removed_features:
         print (a+b)/2
         log.write(str(seeds)+'\n')
         log.write('%s\n%s\n%s\n'%(a,b,(a+b)/2))
+        if True:
+            train['predict1'] = np.log(1+np.exp(train['predict1'])-offsetA)
+            train['predict2'] = np.log(1+np.exp(train['predict2'])-offsetB)
+            train[target1] = np.log(1+np.exp(train[target1])-offsetA )
+            train[target2] = np.log(1+np.exp(train[target2])-offsetB)
+            test[target1] = np.log(1+np.exp(test[target1])-offsetA )
+            test[target2] = np.log(1+np.exp(test[target2])-offsetB )
+            a,b = np.mean((train['predict1']-train[target1])**2)**.5, np.mean((train['predict2']-train[target2])**2)**.5
+            print a
+            print b
+            print (a+b)/2
+            log.write('transform\n')
+            log.write('%s\n%s\n%s\n'%(a,b,(a+b)/2))
     dictt_cols1 = dictt_cols1.fillna(0)
     dictt_cols2 = dictt_cols2.fillna(0)
     for i in range(2,1+len(dictt_cols1.keys())):
@@ -612,8 +651,11 @@ if True:#for removed_feature in removed_features:
         print dictt_cols1[[1,'avg']].sort_values('avg').iloc[-50:]
         print dictt_cols2[[1,'avg']].sort_values('avg').iloc[-50:]
     print list(set(list(dictt_cols1[[1,'avg']].sort_values('avg').iloc[-160:][1])+list(dictt_cols2[[1,'avg']].sort_values('avg').iloc[-160:][1])))
+    # transform back to log(1+x)
+
 
 log.close()
+
 
 def write_files():
     train[target1] = np.exp(train[target1])-1
