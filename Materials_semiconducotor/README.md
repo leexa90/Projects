@@ -20,6 +20,6 @@ Subsampling of col ~ 20% and datapoints 40% was heavily done since it was found 
 
 Predictions was made using 20 fold CV, with 1 validation and 1 test set. 
 
-# CV error : 0.0487
-# Public LB score : 0.0498
-# Private LB score : ???
+ CV error : 0.0487
+ Public LB score : 0.0498
+ Private LB score : ???
