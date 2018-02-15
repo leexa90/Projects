@@ -257,8 +257,8 @@ if True:
     dictt_['RP'] = {'O' :1.406667, 'In': 1.39, 'Al' : 1.5, 'Ga' :1.33}
     dictt_['RS'] = {'O' :1.07, 'In': 1.09, 'Al' : 1.13, 'Ga' :0.99}
     dictt_['VOL'] = {'Al' : 0.5235,'Ga' : 0.9982,'In' :2.2258, 'O' : 11.4927 }
-    train_ele = np.load('INPUT_FILE/Strain_resi.npy').item()
-    test_ele = np.load('INPUT_FILE/test_resi.npy').item()
+    train_ele = np.load('INPUT_FILES/train_resi.npy').item()
+    test_ele = np.load('INPUT_FILES/test_resi.npy').item()
     train['array_ele'] = train['id'].map(train_ele)
     test['array_ele'] = test['id'].map(test_ele)
     def get_all_ele(x,d):
