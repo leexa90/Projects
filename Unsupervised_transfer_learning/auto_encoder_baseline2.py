@@ -12,7 +12,7 @@ http://people.idsia.ch/~ciresan/data/icann2011.pdf
 
 '''
 
-data = np.load('Unlabelled_10%_images.npy')[::10]
+data = np.load('Unlabelled_10%_images.npy')
 Inp0 = Input(shape=(96,96,3),name = 'Input_layer')
 layer0  = keras.layers.Lambda( lambda x : x/128-1) (Inp0) #convert to 0-1
 layer1 = Conv2D(32,(3,3),padding='same',
@@ -77,11 +77,11 @@ except :
     'Model training from scratch'
 train_id = [x for x in range(len(data)) if x%10 != 0]
 test_id = [x for x in range(len(data)) if x%10 == 0]
-die
 print (len(train_id),len(test_id))
-model.fit(data[train_id],data[train_id],256,50,verbose=2,validation_data = (data[test_id],data[test_id]))
+model.fit(data[train_id],data[train_id],256,100,verbose=2,validation_data = (data[test_id],data[test_id]))
 model.save_weights("model2.h5")
-model.fit(data[train_id],data[train_id],256,50,verbose=2,validation_data = (data[test_id],data[test_id]))
+model.fit(data[train_id],data[train_id],256,100,verbose=2,validation_data = (data[test_id],data[test_id]))
 model.save_weights("model2.h5")
-model.fit(data[train_id],data[train_id],256,50,verbose=2,validation_data = (data[test_id],data[test_id]))
+model.fit(data[train_id],data[train_id],256,90,verbose=2,validation_data = (data[test_id],data[test_id]))
 model.save_weights("model2.h5")
+
