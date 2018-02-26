@@ -4,6 +4,7 @@ import pandas as pd
 import random
 import matplotlib.pyplot as plt
 '''
+batch norml is SLOWSLOW
 graph CNN
 https://arxiv.org/abs/1603.00856
 Molecular Graph Convolutions: Moving Beyond Fingerprints
@@ -56,21 +57,33 @@ P_matrix = tf.placeholder(tf.float32, [1,None,None,1]) # distance, Pair-wise fea
 num_atoms =  tf.placeholder(tf.int32,None)
 test[target1] = 0
 ### WEAVE MODULES ###
-def layer_norm2(Adj_matrix,name):
-    #layer normalization because batchsize == 1
-    final = []
-    for i in range(Adj_matrix.shape[-1]):
-        if len(Adj_matrix.get_shape()) == 4:
-            final += [tf.contrib.layers.layer_norm(Adj_matrix[:,:,:,i:i+1],
-                                                   begin_norm_axis=1,
-                                                   begin_params_axis=-1,
-                                                   trainable=False),]
-        elif len(Adj_matrix.get_shape()) ==3:
-            final += [tf.contrib.layers.layer_norm(Adj_matrix[:,:,i:i+1],
-                                                   begin_norm_axis=1,
-                                                   begin_params_axis=-1,
-                                                   trainable=False),]
-    return tf.concat(final,-1,name+'layerNorm')
+
+def layer_norm2(x,name=None,training=training):
+    # this is just batch norm, not layer norm
+    final = tf.layers.batch_normalization(x,training=training)
+    return final
+
+def layer_norm2(x,name=None):
+    epsilon = 1e-7
+    #this is real layer normalization
+    if len(x.get_shape()) == 4:
+        mean,var = tf.nn.moments(x,[0,1,2],keep_dims=False)
+        scale = tf.Variable(tf.ones([x.shape[-1]]))
+        beta = tf.Variable(tf.zeros([x.shape[-1]]))
+        final = tf.nn.batch_normalization(x,mean,var,beta,scale,epsilon)
+    elif len(x.get_shape()) ==3:
+        mean,var = tf.nn.moments(x,[0,1],keep_dims=False)
+        scale = tf.Variable(tf.ones([x.shape[-1]]))
+        beta = tf.Variable(tf.zeros([x.shape[-1]]))
+        final = tf.nn.batch_normalization(x,mean,var,beta,scale,epsilon)
+    elif len(x.get_shape()) ==2:
+        mean,var = tf.nn.moments(x,[1],keep_dims=False)
+        scale = tf.Variable(tf.ones([x.shape[0]]))
+        beta = tf.Variable(tf.zeros([x.shape[0]]))
+        final = tf.nn.batch_normalization(x,mean,var,beta,scale,epsilon)
+    return final
+
+
 
 def P_P (P_matrix,name,activation=tf.nn.relu,depth=50):
     return tf.layers.conv2d(P_matrix,depth,(1,1),padding='same',
@@ -84,7 +97,7 @@ def P_A(P_matrix,name,Adj_matrix=Adj_matrix,activation=tf.nn.relu,depth=50):
     cnn = tf.layers.conv2d(P_matrix,depth,(1,1),padding='same',
                                activation=activation,name=name+'1_P_A')
     temp = []
-    for i in range(Adj_matrix.shape[-1]):
+    for i in range(Adj_matrix.shape[-1]): #SHOULD TRY TO STACK THE IMAGES FIRST
         cnn = tf.multiply(Adj_matrix[:,:,:,i:i+1],cnn,name=name+'2_P_A') #broadcasting in effect
         temp += [cnn,]
     cnn = tf.concat(temp,-1)
