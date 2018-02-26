@@ -34,7 +34,7 @@ train_bond = np.load('nr-ahr.npy.zip')['nr-ahr.npy'].item()
 test_bond = train_bond
 train = pd.read_csv('../nr-ahr.smiles',sep='\t',engine='python',header=None)
 test = train.iloc[:10]
-die
+
 train['P_matrix'] = train['id'].apply(lambda x : np.stack([train_bond[x][0]],-1))
 test['P_matrix'] = test['id'].apply(lambda x : np.stack([test_bond[x][0]],-1))
 train['A_matrix'] = train['id'].apply(lambda x : train_bond[x][1])
@@ -66,21 +66,18 @@ def layer_norm2(x,name=None,training=training):
 def layer_norm2(x,name=None):
     epsilon = 1e-7
     #this is real layer normalization
+    #problematic with zero padding. (std is different
+    #for diferent paddings sizes)
+    # Will be followed by RELU
     if len(x.get_shape()) == 4:
-        mean,var = tf.nn.moments(x,[0,1,2],keep_dims=False)
-        scale = tf.Variable(tf.ones([x.shape[-1]]))
-        beta = tf.Variable(tf.zeros([x.shape[-1]]))
-        final = tf.nn.batch_normalization(x,mean,var,beta,scale,epsilon)
+        mean,var = tf.nn.moments(x,[1,2],keep_dims=True)
+
     elif len(x.get_shape()) ==3:
-        mean,var = tf.nn.moments(x,[0,1],keep_dims=False)
-        scale = tf.Variable(tf.ones([x.shape[-1]]))
-        beta = tf.Variable(tf.zeros([x.shape[-1]]))
-        final = tf.nn.batch_normalization(x,mean,var,beta,scale,epsilon)
-    elif len(x.get_shape()) ==2:
-        mean,var = tf.nn.moments(x,[1],keep_dims=False)
-        scale = tf.Variable(tf.ones([x.shape[0]]))
-        beta = tf.Variable(tf.zeros([x.shape[0]]))
-        final = tf.nn.batch_normalization(x,mean,var,beta,scale,epsilon)
+        mean,var = tf.nn.moments(x,[1],keep_dims=True)
+
+    scale = tf.Variable(tf.ones(mean.shape[-1]))
+    beta = tf.Variable(tf.zeros(mean.shape[-1]))
+    final = tf.nn.batch_normalization(x,mean,var,beta,scale,epsilon)
     return final
 
 
@@ -201,7 +198,7 @@ learning_rate = tf.Variable(0,dtype=tf.float32,name='learning_rate')
 with tf.control_dependencies(update_ops):
         optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate,momentum=0.5).minimize(cost)
 
-
+die
 ### MODEL END ###
 
 init = tf.global_variables_initializer();sess = tf.Session();sess.run(init)
