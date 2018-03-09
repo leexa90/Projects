@@ -1,0 +1,1664 @@
+booster[0]:
+0:[HBD<2.5] yes=1,no=2,missing=1
+	1:leaf=-0.525997
+	2:leaf=-0.622399
+booster[1]:
+0:[HBD<3.5] yes=1,no=2,missing=1
+	1:[LabuteASA<222.079] yes=3,no=4,missing=3
+		3:leaf=-0.469876
+		4:leaf=-0.520686
+	2:leaf=-0.592097
+booster[2]:
+0:[HBD<2.5] yes=1,no=2,missing=1
+	1:[atom_6<21.5] yes=3,no=4,missing=3
+		3:leaf=-0.412485
+		4:leaf=-0.456782
+	2:[TPSA<112.26] yes=5,no=6,missing=5
+		5:leaf=-0.458288
+		6:leaf=-0.527963
+booster[3]:
+0:[HBD<3.5] yes=1,no=2,missing=1
+	1:[TPSA<52.045] yes=3,no=4,missing=3
+		3:leaf=-0.359018
+		4:leaf=-0.40251
+	2:leaf=-0.481653
+booster[4]:
+0:[HBD<2.5] yes=1,no=2,missing=1
+	1:[atom_6<21.5] yes=3,no=4,missing=3
+		3:leaf=-0.332948
+		4:leaf=-0.371865
+	2:[PEOE_VSA12<14.6837] yes=5,no=6,missing=5
+		5:leaf=-0.39292
+		6:leaf=-0.455373
+booster[5]:
+0:[HBD<3.5] yes=1,no=2,missing=1
+	1:[LabuteASA<222.079] yes=3,no=4,missing=3
+		3:[SMR_VSA2<1.2775] yes=7,no=8,missing=7
+			7:leaf=-0.292442
+			8:leaf=-0.324566
+		4:leaf=-0.344237
+	2:[charge_kurtosis<2.40589] yes=5,no=6,missing=5
+		5:leaf=-0.401654
+		6:leaf=-0.283061
+booster[6]:
+0:[HBD<2.5] yes=1,no=2,missing=1
+	1:[atom_6<21.5] yes=3,no=4,missing=3
+		3:[PEOE_VSA13<0.7156] yes=7,no=8,missing=7
+			7:leaf=-0.25711
+			8:leaf=-0.286198
+		4:leaf=-0.301393
+	2:[HBD<5.5] yes=5,no=6,missing=5
+		5:leaf=-0.321428
+		6:leaf=-0.387147
+booster[7]:
+0:[HBD<3.5] yes=1,no=2,missing=1
+	1:[TPSA<47.085] yes=3,no=4,missing=3
+		3:leaf=-0.227885
+		4:[SMR_VSA2<1.2775] yes=7,no=8,missing=7
+			7:leaf=-0.251976
+			8:[TPSA<96.545] yes=11,no=12,missing=11
+				11:leaf=-0.264492
+				12:leaf=-0.3078
+	2:[charge_kurtosis<2.17866] yes=5,no=6,missing=5
+		5:[atom_sum_6<0.47631] yes=9,no=10,missing=9
+			9:leaf=-0.335944
+			10:leaf=-0.19463
+		6:leaf=-0.250235
+booster[8]:
+0:[HBD<2.5] yes=1,no=2,missing=1
+	1:[atom_6<21.5] yes=3,no=4,missing=3
+		3:[VSA_EState10<-6.0945] yes=7,no=8,missing=7
+			7:leaf=-0.175934
+			8:[TPSA<43.385] yes=13,no=14,missing=13
+				13:leaf=-0.199438
+				14:leaf=-0.227851
+		4:leaf=-0.245849
+	2:[PEOE_VSA12<14.2889] yes=5,no=6,missing=5
+		5:[VSA_EState10<-5.90867] yes=9,no=10,missing=9
+			9:leaf=-0.155572
+			10:[charge_skew<-1.79067] yes=15,no=16,missing=15
+				15:leaf=-0.163392
+				16:leaf=-0.262988
+		6:[SMR_VSA2<0.7156] yes=11,no=12,missing=11
+			11:leaf=-0.257266
+			12:leaf=-0.332835
+booster[9]:
+0:[HBD<3.5] yes=1,no=2,missing=1
+	1:[LabuteASA<222.079] yes=3,no=4,missing=3
+		3:[VSA_EState10<-6.08367] yes=7,no=8,missing=7
+			7:leaf=-0.155319
+			8:[TPSA<85.995] yes=13,no=14,missing=13
+				13:[SlogP_VSA2<13.0436] yes=17,no=18,missing=17
+					17:leaf=-0.171866
+					18:leaf=-0.200768
+				14:[atom_sum_7<0.0389267] yes=19,no=20,missing=19
+					19:leaf=-0.190692
+					20:leaf=-0.243247
+		4:[PEOE_VSA14<12.073] yes=9,no=10,missing=9
+			9:[LabuteASA<290.183] yes=15,no=16,missing=15
+				15:leaf=-0.244332
+				16:leaf=-0.197777
+			10:leaf=-0.168702
+	2:[TPSA_norm<1.67131] yes=5,no=6,missing=5
+		5:leaf=-0.189139
+		6:[atom_sum_6<0.47631] yes=11,no=12,missing=11
+			11:leaf=-0.271937
+			12:leaf=-0.156495
+booster[10]:
+0:[HBD<2.5] yes=1,no=2,missing=1
+	1:[PEOE_VSA13<0.7156] yes=3,no=4,missing=3
+		3:[atom_sum_1<0.420526] yes=7,no=8,missing=7
+			7:leaf=-0.153416
+			8:[SMR_VSA9<23.3399] yes=11,no=12,missing=11
+				11:[SMR_VSA1<14.4135] yes=17,no=18,missing=17
+					17:leaf=-0.108149
+					18:leaf=-0.185457
+				12:leaf=-0.127461
+		4:leaf=-0.195613
+	2:[HBD<6.5] yes=5,no=6,missing=5
+		5:[SMR_VSA2<4.77775] yes=9,no=10,missing=9
+			9:[VSA_EState10<-5.90867] yes=13,no=14,missing=13
+				13:leaf=-0.134909
+				14:[SlogP_VSA3<14.3259] yes=19,no=20,missing=19
+					19:leaf=-0.186233
+					20:leaf=-0.219057
+			10:[charge_skew<-1.67434] yes=15,no=16,missing=15
+				15:leaf=-0.116079
+				16:[PEOE_VSA1<15.7788] yes=21,no=22,missing=21
+					21:leaf=-0.297348
+					22:leaf=-0.224541
+		6:leaf=-0.281766
+booster[11]:
+0:[SMR_VSA2<5.3321] yes=1,no=2,missing=1
+	1:[atom_7<6.5] yes=3,no=4,missing=3
+		3:[HBD<0.5] yes=7,no=8,missing=7
+			7:[charge_skew<-1.92332] yes=11,no=12,missing=11
+				11:leaf=-0.161765
+				12:[atom_sum_6<0.352295] yes=17,no=18,missing=17
+					17:leaf=-0.0718727
+					18:leaf=-0.128459
+			8:[SlogP_VSA3<19.0916] yes=13,no=14,missing=13
+				13:[VSA_EState10<-5.90935] yes=19,no=20,missing=19
+					19:leaf=-0.125136
+					20:leaf=-0.16975
+				14:[atom_sum_1<0.534109] yes=21,no=22,missing=21
+					21:leaf=-0.189897
+					22:leaf=-0.105231
+		4:leaf=-0.230796
+	2:[charge_skew<-1.67434] yes=5,no=6,missing=5
+		5:leaf=-0.106129
+		6:[LabuteASA<136.413] yes=9,no=10,missing=9
+			9:leaf=-0.164011
+			10:[PEOE_VSA8<76.063] yes=15,no=16,missing=15
+				15:leaf=-0.248551
+				16:leaf=-0.158054
+booster[12]:
+0:[HBD<2.5] yes=1,no=2,missing=1
+	1:[bond_1<38] yes=3,no=4,missing=3
+		3:[PEOE_VSA1<15.1711] yes=7,no=8,missing=7
+			7:[PEOE_VSA13<0.7156] yes=11,no=12,missing=11
+				11:leaf=-0.131201
+				12:[atom_sum_17<0.0308349] yes=19,no=20,missing=19
+					19:leaf=-0.152564
+					20:leaf=-0.0852872
+			8:[PEOE_VSA14<14.9919] yes=13,no=14,missing=13
+				13:leaf=-0.16016
+				14:leaf=-0.113486
+		4:leaf=-0.188543
+	2:[HBD<6.5] yes=5,no=6,missing=5
+		5:[atom_sum_16<0.0135531] yes=9,no=10,missing=9
+			9:[PEOE_VSA1<15.6006] yes=15,no=16,missing=15
+				15:[PEOE_VSA9<12.9338] yes=21,no=22,missing=21
+					21:leaf=-0.0775059
+					22:leaf=-0.142604
+				16:[charge_skew<-1.78672] yes=23,no=24,missing=23
+					23:leaf=-0.108578
+					24:leaf=-0.172273
+			10:[SMR_VSA2<1.2775] yes=17,no=18,missing=17
+				17:[PEOE_VSA14<13.2249] yes=25,no=26,missing=25
+					25:leaf=-0.158552
+					26:leaf=-0.0727832
+				18:leaf=-0.224696
+		6:leaf=-0.231598
+booster[13]:
+0:[SMR_VSA2<5.3321] yes=1,no=2,missing=1
+	1:[atom_7<6.5] yes=3,no=4,missing=3
+		3:[HBD<0.5] yes=7,no=8,missing=7
+			7:[charge_skew<-1.92332] yes=11,no=12,missing=11
+				11:leaf=-0.132314
+				12:[atom_sum_6<0.352295] yes=15,no=16,missing=15
+					15:leaf=-0.0548891
+					16:leaf=-0.102457
+			8:[TPSA<47.045] yes=13,no=14,missing=13
+				13:[bond_sum_2<0.0548872] yes=17,no=18,missing=17
+					17:leaf=-0.122109
+					18:leaf=-0.0784135
+				14:[VSA_EState10<-6.03457] yes=19,no=20,missing=19
+					19:leaf=-0.118814
+					20:leaf=-0.146266
+		4:leaf=-0.189488
+	2:[charge_skew<-1.32651] yes=5,no=6,missing=5
+		5:leaf=-0.126259
+		6:[SlogP_VSA2<38.5949] yes=9,no=10,missing=9
+			9:leaf=-0.149126
+			10:leaf=-0.215058
+booster[14]:
+0:[TPSA<139.55] yes=1,no=2,missing=1
+	1:[bond_1<38] yes=3,no=4,missing=3
+		3:[SMR_VSA2<1.2775] yes=7,no=8,missing=7
+			7:[SlogP_VSA1<15.2222] yes=15,no=16,missing=15
+				15:[HBA<7.5] yes=21,no=22,missing=21
+					21:leaf=-0.109974
+					22:leaf=-0.0738254
+				16:[VSA_EState10<-3.96462] yes=23,no=24,missing=23
+					23:leaf=-0.0782835
+					24:leaf=-0.135541
+			8:[atom_sum_7<0.0481998] yes=17,no=18,missing=17
+				17:leaf=-0.117689
+				18:[LabuteASA_norm<4.11512] yes=25,no=26,missing=25
+					25:leaf=-0.151414
+					26:leaf=-0.101856
+		4:[bond_1<47] yes=9,no=10,missing=9
+			9:leaf=-0.16992
+			10:leaf=-0.101232
+	2:[TPSA_norm<1.88752] yes=5,no=6,missing=5
+		5:[bond_sum_2<0.0591737] yes=11,no=12,missing=11
+			11:leaf=-0.128579
+			12:leaf=-0.0855864
+		6:[atom_sum_9<0.0180195] yes=13,no=14,missing=13
+			13:[atom_sum_6<0.320306] yes=19,no=20,missing=19
+				19:leaf=-0.143195
+				20:leaf=-0.187903
+			14:leaf=-0.0968671
+booster[15]:
+0:[SMR_VSA2<5.3321] yes=1,no=2,missing=1
+	1:[SlogP_VSA3<15.2991] yes=3,no=4,missing=3
+		3:[VSA_EState10<-5.90867] yes=7,no=8,missing=7
+			7:[VSA_EState9<-17.9293] yes=13,no=14,missing=13
+				13:leaf=-0.0833492
+				14:leaf=-0.0419234
+			8:[TPSA<51.98] yes=15,no=16,missing=15
+				15:[VSA_EState5<77.4655] yes=23,no=24,missing=23
+					23:leaf=-0.0708987
+					24:leaf=-0.100245
+				16:[atom_sum_1<0.416619] yes=25,no=26,missing=25
+					25:leaf=-0.101632
+					26:leaf=-0.122072
+		4:[HBD_norm<0.0459831] yes=9,no=10,missing=9
+			9:[atom_1<40.5] yes=17,no=18,missing=17
+				17:[LabuteASA<187.412] yes=27,no=28,missing=27
+					27:leaf=-0.0916491
+					28:leaf=-0.126795
+				18:[VSA_EState5<388.083] yes=29,no=30,missing=29
+					29:leaf=-0.0705189
+					30:leaf=-0.104107
+			10:[PEOE_VSA10<0.705921] yes=19,no=20,missing=19
+				19:leaf=-0.0880363
+				20:[atom_sum_6<0.320198] yes=31,no=32,missing=31
+					31:leaf=-0.115804
+					32:leaf=-0.160763
+	2:[SMR_VSA10<21.1261] yes=5,no=6,missing=5
+		5:[charge_skew<-1.67434] yes=11,no=12,missing=11
+			11:leaf=-0.0659059
+			12:[SMR_VSA2<6.4404] yes=21,no=22,missing=21
+				21:[VSA_EState9<17.7705] yes=33,no=34,missing=33
+					33:leaf=-0.117674
+					34:leaf=-0.0692455
+				22:leaf=-0.151514
+		6:leaf=-0.19139
+booster[16]:
+0:[SMR_VSA2<5.3321] yes=1,no=2,missing=1
+	1:[atom_7<6.5] yes=3,no=4,missing=3
+		3:[HBD<1.5] yes=7,no=8,missing=7
+			7:[VSA_EState8<-1.79428] yes=13,no=14,missing=13
+				13:leaf=-0.144757
+				14:[atom_1<9.5] yes=19,no=20,missing=19
+					19:leaf=-0.0635715
+					20:leaf=-0.0916617
+			8:[VSA_EState10<-6.08367] yes=15,no=16,missing=15
+				15:[SlogP_VSA3<27.9582] yes=21,no=22,missing=21
+					21:leaf=-0.0725468
+					22:leaf=-0.132628
+				16:[VSA_EState10<-0.162482] yes=23,no=24,missing=23
+					23:leaf=-0.137115
+					24:leaf=-0.104622
+		4:[SMR_VSA5<14.9365] yes=9,no=10,missing=9
+			9:leaf=-0.0969791
+			10:leaf=-0.157792
+	2:[SMR_VSA10<21.1261] yes=5,no=6,missing=5
+		5:[charge_skew<-1.67434] yes=11,no=12,missing=11
+			11:leaf=-0.0602568
+			12:[SlogP_VSA2<34.8007] yes=17,no=18,missing=17
+				17:[PEOE_VSA7<14.8666] yes=25,no=26,missing=25
+					25:leaf=-0.123264
+					26:leaf=-0.0722944
+				18:leaf=-0.13725
+		6:leaf=-0.173049
+booster[17]:
+0:[TPSA<111.93] yes=1,no=2,missing=1
+	1:[SlogP_VSA2<13.0436] yes=3,no=4,missing=3
+		3:[PEOE_VSA10<1.3913] yes=7,no=8,missing=7
+			7:[SMR_VSA7<29.0833] yes=15,no=16,missing=15
+				15:leaf=-0.0331614
+				16:[PEOE_VSA8<13.1289] yes=31,no=32,missing=31
+					31:leaf=-0.0531636
+					32:leaf=-0.0792212
+			8:[LabuteASA_norm<4.07216] yes=17,no=18,missing=17
+				17:leaf=-0.0896128
+				18:leaf=-0.0491808
+		4:[bond_1<38] yes=9,no=10,missing=9
+			9:[atom_sum_1<0.422065] yes=19,no=20,missing=19
+				19:[PEOE_VSA13<0.7156] yes=33,no=34,missing=33
+					33:leaf=-0.0637281
+					34:leaf=-0.0875678
+				20:[atom_sum_16<0.023823] yes=35,no=36,missing=35
+					35:leaf=-0.0906514
+					36:leaf=-0.124092
+			10:[bond_1<47] yes=21,no=22,missing=21
+				21:leaf=-0.128049
+				22:leaf=-0.0678399
+	2:[PEOE_VSA10<7.23826] yes=5,no=6,missing=5
+		5:[SMR_VSA2<0.7156] yes=11,no=12,missing=11
+			11:[PEOE_VSA14<11.1358] yes=23,no=24,missing=23
+				23:leaf=-0.0747186
+				24:leaf=-0.0364906
+			12:[bond_0<155] yes=25,no=26,missing=25
+				25:leaf=-0.106162
+				26:leaf=-0.0655647
+		6:[TPSA_norm<1.90673] yes=13,no=14,missing=13
+			13:[SlogP_VSA8<21.9476] yes=27,no=28,missing=27
+				27:[PEOE_VSA8<111.647] yes=37,no=38,missing=37
+					37:leaf=-0.101874
+					38:leaf=-0.0520989
+				28:leaf=-0.0599743
+			14:[PEOE_VSA6<16.2112] yes=29,no=30,missing=29
+				29:[SlogP_VSA1<10.1498] yes=39,no=40,missing=39
+					39:leaf=-0.133899
+					40:leaf=-0.100865
+				30:leaf=-0.152345
+booster[18]:
+0:[TPSA<137.66] yes=1,no=2,missing=1
+	1:[atom_6<22.5] yes=3,no=4,missing=3
+		3:[HBD_norm<0.0298574] yes=7,no=8,missing=7
+			7:[atom_sum_6<0.343466] yes=15,no=16,missing=15
+				15:leaf=-0.026383
+				16:[VSA_EState9<-6.69675] yes=29,no=30,missing=29
+					29:leaf=-0.0745944
+					30:leaf=-0.0538899
+			8:[PEOE_VSA5<11.5493] yes=17,no=18,missing=17
+				17:[atom_sum_8<0.0299107] yes=31,no=32,missing=31
+					31:leaf=-0.0999279
+					32:leaf=-0.0776017
+				18:leaf=-0.120665
+		4:[atom_1<40.5] yes=9,no=10,missing=9
+			9:[SMR_VSA9<28.8615] yes=19,no=20,missing=19
+				19:[SMR_VSA7<106.978] yes=33,no=34,missing=33
+					33:leaf=-0.104668
+					34:leaf=-0.0586374
+				20:leaf=-0.0349626
+			10:[SlogP_VSA10<2.39727] yes=21,no=22,missing=21
+				21:[bond_0<139] yes=35,no=36,missing=35
+					35:leaf=-0.0449418
+					36:leaf=-0.0886194
+				22:leaf=-0.044137
+	2:[SlogP_VSA5<76.695] yes=5,no=6,missing=5
+		5:[SlogP_VSA3<23.5207] yes=11,no=12,missing=11
+			11:[PEOE_VSA14<11.5938] yes=23,no=24,missing=23
+				23:leaf=-0.11446
+				24:[SlogP_VSA3<17.0333] yes=37,no=38,missing=37
+					37:leaf=-0.0299136
+					38:leaf=-0.0673116
+			12:leaf=-0.154435
+		6:[charge_kurtosis<2.37215] yes=13,no=14,missing=13
+			13:[PEOE_VSA7<35.6439] yes=25,no=26,missing=25
+				25:leaf=-0.0582007
+				26:[VSA_EState9<-21.2228] yes=39,no=40,missing=39
+					39:leaf=-0.0983706
+					40:leaf=-0.0631773
+			14:[SlogP_VSA4<26.5228] yes=27,no=28,missing=27
+				27:leaf=-0.0694028
+				28:leaf=-0.0399777
+booster[19]:
+0:[SMR_VSA2<5.3321] yes=1,no=2,missing=1
+	1:[atom_7<6.5] yes=3,no=4,missing=3
+		3:[PEOE_VSA13<0.7156] yes=7,no=8,missing=7
+			7:[atom_sum_6<0.351458] yes=13,no=14,missing=13
+				13:[PEOE_VSA11<0.705921] yes=19,no=20,missing=19
+					19:leaf=-0.0396581
+					20:leaf=-0.0892133
+				14:[VSA_EState8<-0.218366] yes=21,no=22,missing=21
+					21:leaf=-0.115517
+					22:leaf=-0.0608478
+			8:[atom_sum_6<0.462477] yes=15,no=16,missing=15
+				15:[SlogP_VSA6<27.8417] yes=23,no=24,missing=23
+					23:leaf=-0.0695454
+					24:leaf=-0.0883571
+				16:[bond_sum_2<0.0402576] yes=25,no=26,missing=25
+					25:leaf=-0.0715049
+					26:leaf=-0.0417552
+		4:[SMR_VSA5<9.28737] yes=9,no=10,missing=9
+			9:leaf=-0.0601387
+			10:leaf=-0.116034
+	2:[SMR_VSA10<21.1261] yes=5,no=6,missing=5
+		5:[charge_skew<-1.67434] yes=11,no=12,missing=11
+			11:leaf=-0.0418543
+			12:[SMR_VSA2<6.4404] yes=17,no=18,missing=17
+				17:[PEOE_VSA13<4.95589] yes=27,no=28,missing=27
+					27:leaf=-0.0907414
+					28:leaf=-0.0527031
+				18:[HBD_norm<0.075775] yes=29,no=30,missing=29
+					29:leaf=-0.0636326
+					30:leaf=-0.106625
+		6:leaf=-0.132153
+booster[20]:
+0:[SMR_VSA2<5.3321] yes=1,no=2,missing=1
+	1:[SlogP_VSA1<31.3202] yes=3,no=4,missing=3
+		3:[PEOE_VSA5<11.6814] yes=7,no=8,missing=7
+			7:[bond_1<38] yes=13,no=14,missing=13
+				13:[LabuteASA_norm<3.8861] yes=19,no=20,missing=19
+					19:leaf=-0.0674616
+					20:leaf=-0.0560991
+				14:[atom_6<32] yes=21,no=22,missing=21
+					21:leaf=-0.0966354
+					22:leaf=-0.0529192
+			8:[HBD_norm<0.0440891] yes=15,no=16,missing=15
+				15:[PEOE_VSA4<2.54934] yes=23,no=24,missing=23
+					23:leaf=-0.0397686
+					24:leaf=-0.0818736
+				16:leaf=-0.107255
+		4:leaf=-0.116239
+	2:[SMR_VSA10<21.1261] yes=5,no=6,missing=5
+		5:[HBD_norm<0.137593] yes=9,no=10,missing=9
+			9:[TPSA<142.18] yes=17,no=18,missing=17
+				17:leaf=-0.0548733
+				18:leaf=-0.0847003
+			10:leaf=-0.106011
+		6:[bond_sum_2<0.0719462] yes=11,no=12,missing=11
+			11:leaf=-0.129782
+			12:leaf=-0.0759472
+booster[21]:
+0:[SMR_VSA2<5.3321] yes=1,no=2,missing=1
+	1:[SlogP_VSA1<31.3202] yes=3,no=4,missing=3
+		3:[PEOE_VSA5<11.6814] yes=7,no=8,missing=7
+			7:[bond_1<38] yes=13,no=14,missing=13
+				13:[atom_sum_6<0.348516] yes=21,no=22,missing=21
+					21:leaf=-0.0679578
+					22:leaf=-0.0545817
+				14:[atom_sum_7<0.0665082] yes=23,no=24,missing=23
+					23:leaf=-0.05824
+					24:leaf=-0.0929345
+			8:[PEOE_VSA10<10.0514] yes=15,no=16,missing=15
+				15:leaf=-0.053886
+				16:[PEOE_VSA7<26.5239] yes=25,no=26,missing=25
+					25:leaf=-0.107103
+					26:leaf=-0.0685007
+		4:leaf=-0.105671
+	2:[charge_skew<-1.32651] yes=5,no=6,missing=5
+		5:[PEOE_VSA10<21.0708] yes=9,no=10,missing=9
+			9:leaf=-0.0315371
+			10:leaf=-0.0593932
+		6:[SlogP_VSA3<5.55489] yes=11,no=12,missing=11
+			11:[PEOE_VSA12<5.73715] yes=17,no=18,missing=17
+				17:leaf=-0.0420497
+				18:[PEOE_VSA11<17.0935] yes=27,no=28,missing=27
+					27:leaf=-0.0770647
+					28:leaf=-0.0410384
+			12:[SlogP_VSA1<17.897] yes=19,no=20,missing=19
+				19:leaf=-0.107486
+				20:leaf=-0.0576149
+booster[22]:
+0:[TPSA<137.66] yes=1,no=2,missing=1
+	1:[SMR_VSA2<1.2775] yes=3,no=4,missing=3
+		3:[PEOE_VSA13<5.89358] yes=7,no=8,missing=7
+			7:[SlogP_VSA1<15.2331] yes=15,no=16,missing=15
+				15:[charge_std<0.150357] yes=31,no=32,missing=31
+					31:leaf=-0.0453511
+					32:leaf=-0.0301189
+				16:[SlogP_VSA3<10.3206] yes=33,no=34,missing=33
+					33:leaf=-0.0389864
+					34:leaf=-0.074238
+			8:[PEOE_VSA7<22.3627] yes=17,no=18,missing=17
+				17:[PEOE_VSA6<19.102] yes=35,no=36,missing=35
+					35:leaf=-0.0491837
+					36:leaf=-0.0229794
+				18:[PEOE_VSA8<54.9577] yes=37,no=38,missing=37
+					37:leaf=-0.0765113
+					38:leaf=-0.043479
+		4:[SMR_VSA3<9.58305] yes=9,no=10,missing=9
+			9:[atom_sum_6<0.347246] yes=19,no=20,missing=19
+				19:[PEOE_VSA9<19.5448] yes=39,no=40,missing=39
+					39:leaf=-0.0831518
+					40:leaf=-0.0489047
+				20:[charge_kurtosis<7.44622] yes=41,no=42,missing=41
+					41:leaf=-0.046769
+					42:leaf=-0.0801094
+			10:[SlogP_VSA10<2.19521] yes=21,no=22,missing=21
+				21:[atom_sum_1<0.491167] yes=43,no=44,missing=43
+					43:leaf=-0.0978669
+					44:leaf=-0.0472464
+				22:[charge_skew<-1.03998] yes=45,no=46,missing=45
+					45:leaf=-0.0732439
+					46:leaf=-0.0449847
+	2:[SlogP_VSA5<76.695] yes=5,no=6,missing=5
+		5:[SlogP_VSA3<23.5207] yes=11,no=12,missing=11
+			11:[PEOE_VSA14<11.5938] yes=23,no=24,missing=23
+				23:[PEOE_VSA2<9.54937] yes=47,no=48,missing=47
+					47:leaf=-0.0658855
+					48:leaf=-0.0966322
+				24:[SlogP_VSA3<17.0333] yes=49,no=50,missing=49
+					49:leaf=-0.0125695
+					50:leaf=-0.0440611
+			12:[charge_skew<-0.760829] yes=25,no=26,missing=25
+				25:leaf=-0.120728
+				26:leaf=-0.0691147
+		6:[charge_kurtosis<2.37215] yes=13,no=14,missing=13
+			13:[VSA_EState9<-21.2228] yes=27,no=28,missing=27
+				27:[PEOE_VSA7<39.0134] yes=51,no=52,missing=51
+					51:leaf=-0.0384322
+					52:leaf=-0.0661873
+				28:leaf=-0.0377523
+			14:[SlogP_VSA4<26.5228] yes=29,no=30,missing=29
+				29:leaf=-0.0438473
+				30:leaf=-0.0196901
+booster[23]:
+0:[HBD<4.5] yes=1,no=2,missing=1
+	1:[SlogP_VSA6<60.7504] yes=3,no=4,missing=3
+		3:[PEOE_VSA5<11.6814] yes=7,no=8,missing=7
+			7:[atom_sum_1<0.383797] yes=15,no=16,missing=15
+				15:[bond_sum_1<0.391551] yes=25,no=26,missing=25
+					25:leaf=-0.0244711
+					26:leaf=-0.0423562
+				16:[TPSA_norm<4.41395] yes=27,no=28,missing=27
+					27:leaf=-0.047587
+					28:leaf=-0.0910167
+			8:[HBD_norm<0.0440891] yes=17,no=18,missing=17
+				17:[atom_1<32.5] yes=29,no=30,missing=29
+					29:leaf=-0.0269147
+					30:leaf=-0.0598024
+				18:[VSA_EState9<0.86314] yes=31,no=32,missing=31
+					31:leaf=-0.0567007
+					32:leaf=-0.0914903
+		4:[bond_sum_1<0.226424] yes=9,no=10,missing=9
+			9:[PEOE_VSA10<7.00141] yes=19,no=20,missing=19
+				19:leaf=-0.038272
+				20:leaf=-0.0104218
+			10:[HBD_norm<0.0320184] yes=21,no=22,missing=21
+				21:[SlogP_VSA8<6.34585] yes=33,no=34,missing=33
+					33:leaf=-0.0703421
+					34:leaf=-0.0332984
+				22:[SMR_VSA9<2.87476] yes=35,no=36,missing=35
+					35:leaf=-0.103132
+					36:leaf=-0.0682048
+	2:[HBD_norm<0.0850558] yes=5,no=6,missing=5
+		5:[PEOE_VSA7<34.6296] yes=11,no=12,missing=11
+			11:leaf=-0.0270751
+			12:[SlogP_VSA3<15.0863] yes=23,no=24,missing=23
+				23:leaf=-0.0283224
+				24:leaf=-0.0571404
+		6:[VSA_EState8<2.67774] yes=13,no=14,missing=13
+			13:leaf=-0.102253
+			14:leaf=-0.0617849
+booster[24]:
+0:[HBD<1.5] yes=1,no=2,missing=1
+	1:[VSA_EState8<-1.79428] yes=3,no=4,missing=3
+		3:leaf=-0.085906
+		4:[SMR_VSA7<41.5881] yes=7,no=8,missing=7
+			7:[TPSA_norm<0.656972] yes=13,no=14,missing=13
+				13:leaf=-0.0505604
+				14:[TPSA<38.51] yes=25,no=26,missing=25
+					25:leaf=-0.00701626
+					26:leaf=-0.0317878
+			8:[HBD_norm<0.0377493] yes=15,no=16,missing=15
+				15:[atom_sum_6<0.445114] yes=27,no=28,missing=27
+					27:leaf=-0.0474116
+					28:leaf=-0.0289169
+				16:leaf=-0.0809487
+	2:[SlogP_VSA3<15.4073] yes=5,no=6,missing=5
+		5:[VSA_EState10<-5.20406] yes=9,no=10,missing=9
+			9:[SMR_VSA3<9.12279] yes=17,no=18,missing=17
+				17:[SlogP_VSA6<50.922] yes=29,no=30,missing=29
+					29:leaf=-0.0383446
+					30:leaf=-0.0136142
+				18:[SMR_VSA5<8.82067] yes=31,no=32,missing=31
+					31:leaf=-0.00660485
+					32:leaf=-0.0180347
+			10:[HBD_norm<0.137593] yes=19,no=20,missing=19
+				19:[PEOE_VSA7<19.193] yes=33,no=34,missing=33
+					33:leaf=-0.0346309
+					34:leaf=-0.0518195
+				20:[HBD_norm<0.162281] yes=35,no=36,missing=35
+					35:leaf=-0.0813586
+					36:leaf=-0.0454465
+		6:[SlogP_VSA5<68.7021] yes=11,no=12,missing=11
+			11:[SlogP_VSA2<31.7983] yes=21,no=22,missing=21
+				21:[atom_sum_8<0.0490431] yes=37,no=38,missing=37
+					37:leaf=-0.0237566
+					38:leaf=-0.0548691
+				22:[SlogP_VSA3<19.1205] yes=39,no=40,missing=39
+					39:leaf=-0.0385163
+					40:leaf=-0.0880327
+			12:[bond_sum_1<0.226424] yes=23,no=24,missing=23
+				23:[PEOE_VSA3<4.98819] yes=41,no=42,missing=41
+					41:leaf=-0.0514443
+					42:leaf=-0.0302654
+				24:[SlogP_VSA1<10.5272] yes=43,no=44,missing=43
+					43:leaf=-0.0873544
+					44:leaf=-0.0442169
+booster[25]:
+0:[HBD<4.5] yes=1,no=2,missing=1
+	1:[atom_sum_7<0.0514142] yes=3,no=4,missing=3
+		3:[charge_skew<-2.60471] yes=7,no=8,missing=7
+			7:leaf=-0.0715951
+			8:[SlogP_VSA8<0.7156] yes=15,no=16,missing=15
+				15:[TPSA_norm<0.657398] yes=25,no=26,missing=25
+					25:leaf=-0.0496653
+					26:leaf=-0.0247723
+				16:[SMR_VSA1<41.402] yes=27,no=28,missing=27
+					27:leaf=-0.0279692
+					28:leaf=-0.0507684
+		4:[SMR_VSA2<5.3321] yes=9,no=10,missing=9
+			9:[atom_sum_17<0.0283702] yes=17,no=18,missing=17
+				17:[VSA_EState8<26.8066] yes=29,no=30,missing=29
+					29:leaf=-0.0471051
+					30:leaf=-0.0324736
+				18:[PEOE_VSA12<2.95359] yes=31,no=32,missing=31
+					31:leaf=-0.0319205
+					32:leaf=-0.012234
+			10:[SMR_VSA4<2.85986] yes=19,no=20,missing=19
+				19:leaf=-0.027878
+				20:leaf=-0.0841284
+	2:[HBD_norm<0.0850558] yes=5,no=6,missing=5
+		5:[SlogP_VSA4<29.4698] yes=11,no=12,missing=11
+			11:[SlogP_VSA3<15.0863] yes=21,no=22,missing=21
+				21:leaf=-0.021644
+				22:[charge_kurtosis<1.04514] yes=33,no=34,missing=33
+					33:leaf=-0.0321006
+					34:leaf=-0.0531674
+			12:leaf=-0.0200981
+		6:[VSA_EState8<2.67774] yes=13,no=14,missing=13
+			13:[PEOE_VSA12<19.3835] yes=23,no=24,missing=23
+				23:leaf=-0.0644708
+				24:leaf=-0.104203
+			14:leaf=-0.051127
+booster[26]:
+0:[HBD<1.5] yes=1,no=2,missing=1
+	1:[VSA_EState8<-1.79428] yes=3,no=4,missing=3
+		3:leaf=-0.0742136
+		4:[SMR_VSA7<41.5881] yes=7,no=8,missing=7
+			7:[bond_sum_2<0.070598] yes=13,no=14,missing=13
+				13:[TPSA<107.465] yes=25,no=26,missing=25
+					25:leaf=-0.0213864
+					26:leaf=0.0057748
+				14:[SMR_VSA4<5.80684] yes=27,no=28,missing=27
+					27:leaf=-0.0427458
+					28:leaf=-0.0130677
+			8:[HBD_norm<0.0377493] yes=15,no=16,missing=15
+				15:[atom_sum_6<0.445114] yes=29,no=30,missing=29
+					29:leaf=-0.0385892
+					30:leaf=-0.0226116
+				16:leaf=-0.0695661
+	2:[SlogP_VSA3<15.4073] yes=5,no=6,missing=5
+		5:[atom_sum_8<0.0396078] yes=9,no=10,missing=9
+			9:[SlogP_VSA5<27.6663] yes=17,no=18,missing=17
+				17:[SMR_VSA10<16.7002] yes=31,no=32,missing=31
+					31:leaf=-0.0540765
+					32:leaf=-0.0201966
+				18:[PEOE_VSA9<13.2867] yes=33,no=34,missing=33
+					33:leaf=-0.0391926
+					34:leaf=-0.0683239
+			10:[SlogP_VSA10<11.701] yes=19,no=20,missing=19
+				19:[HBA_norm<0.0971676] yes=35,no=36,missing=35
+					35:leaf=-0.0244318
+					36:leaf=-0.041463
+				20:[LabuteASA<172.598] yes=37,no=38,missing=37
+					37:leaf=0.0169917
+					38:leaf=-0.020464
+		6:[SlogP_VSA5<68.7021] yes=11,no=12,missing=11
+			11:[SMR_VSA10<23.5362] yes=21,no=22,missing=21
+				21:[PEOE_VSA2<7.07809] yes=39,no=40,missing=39
+					39:leaf=-0.06997
+					40:leaf=-0.03571
+				22:[SlogP_VSA2<32.6124] yes=41,no=42,missing=41
+					41:leaf=-0.0330845
+					42:leaf=-0.0796144
+			12:[bond_sum_1<0.226424] yes=23,no=24,missing=23
+				23:[PEOE_VSA1<20.1598] yes=43,no=44,missing=43
+					43:leaf=-0.0186256
+					44:leaf=-0.0408045
+				24:[SMR_VSA2<0.7156] yes=45,no=46,missing=45
+					45:leaf=-0.0361312
+					46:leaf=-0.0735515
+booster[27]:
+0:[SMR_VSA2<1.2775] yes=1,no=2,missing=1
+	1:[atom_16<1.5] yes=3,no=4,missing=3
+		3:[VSA_EState10<-6.03457] yes=7,no=8,missing=7
+			7:[atom_sum_6<0.398925] yes=15,no=16,missing=15
+				15:[SlogP_VSA4<2.90861] yes=29,no=30,missing=29
+					29:leaf=0.0106856
+					30:leaf=-0.0116242
+				16:[atom_8<6.5] yes=31,no=32,missing=31
+					31:leaf=-0.0183595
+					32:leaf=-0.0412534
+			8:[atom_7<3.5] yes=17,no=18,missing=17
+				17:[charge_skew<-2.5832] yes=33,no=34,missing=33
+					33:leaf=-0.0550046
+					34:leaf=-0.0231652
+				18:[PEOE_VSA6<82.5642] yes=35,no=36,missing=35
+					35:leaf=-0.0391238
+					36:leaf=0.000204825
+		4:[SMR_VSA10<39.3515] yes=9,no=10,missing=9
+			9:leaf=-0.0882214
+			10:[atom_6<24.5] yes=19,no=20,missing=19
+				19:leaf=-0.0248534
+				20:leaf=-0.0476528
+	2:[PEOE_VSA12<13.9922] yes=5,no=6,missing=5
+		5:[SlogP_VSA2<20.3736] yes=11,no=12,missing=11
+			11:[SlogP_VSA3<2.36843] yes=21,no=22,missing=21
+				21:[atom_sum_7<0.0318182] yes=37,no=38,missing=37
+					37:leaf=-0.0251938
+					38:leaf=-0.0613146
+				22:[PEOE_VSA10<5.72172] yes=39,no=40,missing=39
+					39:leaf=-0.00490541
+					40:leaf=-0.0228435
+			12:[PEOE_VSA1<9.76079] yes=23,no=24,missing=23
+				23:[SlogP_VSA4<2.90861] yes=41,no=42,missing=41
+					41:leaf=-0.0701301
+					42:leaf=-0.0372941
+				24:[atom_sum_6<0.473389] yes=43,no=44,missing=43
+					43:leaf=-0.0374814
+					44:leaf=-0.0054441
+		6:[SMR_VSA9<31.5347] yes=13,no=14,missing=13
+			13:[SMR_VSA7<101.289] yes=25,no=26,missing=25
+				25:[atom_sum_1<0.488347] yes=45,no=46,missing=45
+					45:leaf=-0.0743866
+					46:leaf=-0.0454033
+				26:leaf=-0.0244588
+			14:[atom_sum_8<0.20943] yes=27,no=28,missing=27
+				27:leaf=-0.0152773
+				28:leaf=-0.0438006
+booster[28]:
+0:[HBD<1.5] yes=1,no=2,missing=1
+	1:[VSA_EState8<-1.79428] yes=3,no=4,missing=3
+		3:leaf=-0.0639921
+		4:[SMR_VSA7<41.5881] yes=7,no=8,missing=7
+			7:[TPSA_norm<0.656972] yes=13,no=14,missing=13
+				13:[PEOE_VSA1<2.36843] yes=23,no=24,missing=23
+					23:leaf=-0.0216474
+					24:leaf=-0.041977
+				14:[HBA<2.5] yes=25,no=26,missing=25
+					25:leaf=0.000803852
+					26:leaf=-0.0196734
+			8:[HBD_norm<0.0377493] yes=15,no=16,missing=15
+				15:[VSA_EState9<6.13752] yes=27,no=28,missing=27
+					27:leaf=-0.0282737
+					28:leaf=-1.33038e-05
+				16:leaf=-0.0587142
+	2:[SlogP_VSA10<11.6036] yes=5,no=6,missing=5
+		5:[atom_sum_7<0.0480031] yes=9,no=10,missing=9
+			9:[LabuteASA<197.129] yes=17,no=18,missing=17
+				17:[SlogP_VSA1<5.59642] yes=29,no=30,missing=29
+					29:leaf=-0.0293806
+					30:leaf=-0.0139114
+				18:[PEOE_VSA8<76.1758] yes=31,no=32,missing=31
+					31:leaf=-0.0430604
+					32:leaf=-0.01754
+			10:[PEOE_VSA10<5.82113] yes=19,no=20,missing=19
+				19:[PEOE_VSA8<26.9531] yes=33,no=34,missing=33
+					33:leaf=-0.0189568
+					34:leaf=-0.0427171
+				20:[atom_8<5.5] yes=35,no=36,missing=35
+					35:leaf=-0.0546983
+					36:leaf=-0.0319355
+		6:[SMR_VSA10<17.4571] yes=11,no=12,missing=11
+			11:leaf=0.00597863
+			12:[SMR_VSA3<9.8287] yes=21,no=22,missing=21
+				21:[LabuteASA_norm<4.03797] yes=37,no=38,missing=37
+					37:leaf=-0.0612507
+					38:leaf=-0.0262028
+				22:[charge_kurtosis<-0.128942] yes=39,no=40,missing=39
+					39:leaf=-0.0346848
+					40:leaf=-0.0135568
+booster[29]:
+0:[HBD_norm<0.138966] yes=1,no=2,missing=1
+	1:[LabuteASA<178.144] yes=3,no=4,missing=3
+		3:[PEOE_VSA6<37.4687] yes=7,no=8,missing=7
+			7:[SMR_VSA9<2.84369] yes=11,no=12,missing=11
+				11:[SlogP_VSA2<18.5005] yes=19,no=20,missing=19
+					19:leaf=-0.0175653
+					20:leaf=-0.0363827
+				12:[PEOE_VSA9<19.3229] yes=21,no=22,missing=21
+					21:leaf=-0.0238987
+					22:leaf=-0.0101475
+			8:[SlogP_VSA3<4.7657] yes=13,no=14,missing=13
+				13:[atom_8<1.5] yes=23,no=24,missing=23
+					23:leaf=-0.0362062
+					24:leaf=-0.0165718
+				14:[charge_skew<-1.76299] yes=25,no=26,missing=25
+					25:leaf=0.0207303
+					26:leaf=-0.00933874
+		4:[atom_sum_16<0.0215079] yes=9,no=10,missing=9
+			9:[SMR_VSA2<0.7156] yes=15,no=16,missing=15
+				15:[bond_sum_2<0.0332474] yes=27,no=28,missing=27
+					27:leaf=-0.0344916
+					28:leaf=-0.019189
+				16:[SlogP_VSA4<11.4828] yes=29,no=30,missing=29
+					29:leaf=-0.0417137
+					30:leaf=-0.0256855
+			10:[charge_std<0.17625] yes=17,no=18,missing=17
+				17:[charge_std<0.157168] yes=31,no=32,missing=31
+					31:leaf=-0.0457399
+					32:leaf=-0.0791303
+				18:leaf=-0.0274685
+	2:[HBD_norm<0.17029] yes=5,no=6,missing=5
+		5:leaf=-0.0624771
+		6:leaf=-0.0253289
+booster[30]:
+0:[HBD_norm<0.0264912] yes=1,no=2,missing=1
+	1:[VSA_EState8<-1.79428] yes=3,no=4,missing=3
+		3:leaf=-0.0574797
+		4:[VSA_EState9<-6.69675] yes=7,no=8,missing=7
+			7:[SMR_VSA6<5.74687] yes=13,no=14,missing=13
+				13:[TPSA<55.76] yes=25,no=26,missing=25
+					25:leaf=-0.0201981
+					26:leaf=-0.046072
+				14:[SMR_VSA7<41.2396] yes=27,no=28,missing=27
+					27:leaf=-0.0107903
+					28:leaf=-0.0226166
+			8:[SMR_VSA5<25.5002] yes=15,no=16,missing=15
+				15:[SMR_VSA9<20.0356] yes=29,no=30,missing=29
+					29:leaf=-0.00785063
+					30:leaf=-0.0240256
+				16:leaf=0.0195457
+	2:[SlogP_VSA3<15.4073] yes=5,no=6,missing=5
+		5:[HBD_norm<0.137593] yes=9,no=10,missing=9
+			9:[atom_sum_8<0.0291986] yes=17,no=18,missing=17
+				17:[PEOE_VSA8<18.3117] yes=31,no=32,missing=31
+					31:leaf=-0.0153492
+					32:leaf=-0.044982
+				18:[atom_sum_9<0.034997] yes=33,no=34,missing=33
+					33:leaf=-0.022577
+					34:leaf=-0.00451821
+			10:[HBD_norm<0.17029] yes=19,no=20,missing=19
+				19:leaf=-0.0513837
+				20:leaf=-0.0230774
+		6:[SlogP_VSA1<10.4856] yes=11,no=12,missing=11
+			11:[LabuteASA<145.517] yes=21,no=22,missing=21
+				21:leaf=-0.0143353
+				22:[SMR_VSA4<13.7809] yes=35,no=36,missing=35
+					35:leaf=-0.0575565
+					36:leaf=-0.0285235
+			12:[SlogP_VSA7<8.15868] yes=23,no=24,missing=23
+				23:[HBA_norm<0.060024] yes=37,no=38,missing=37
+					37:leaf=0.000775316
+					38:leaf=-0.027243
+				24:[bond_sum_0<0.77269] yes=39,no=40,missing=39
+					39:leaf=-0.0274089
+					40:leaf=-0.0693582
+booster[31]:
+0:[HBD<6.5] yes=1,no=2,missing=1
+	1:[bond_1<38] yes=3,no=4,missing=3
+		3:[TPSA_norm<3.58492] yes=7,no=8,missing=7
+			7:[PEOE_VSA9<7.05925] yes=13,no=14,missing=13
+				13:[TPSA_norm<0.67711] yes=19,no=20,missing=19
+					19:leaf=-0.0249168
+					20:leaf=0.00267463
+				14:[atom_sum_1<0.383797] yes=21,no=22,missing=21
+					21:leaf=-0.0124475
+					22:leaf=-0.0226051
+			8:[PEOE_VSA9<19.2739] yes=15,no=16,missing=15
+				15:[bond_sum_2<0.0669643] yes=23,no=24,missing=23
+					23:leaf=-0.0249732
+					24:leaf=-0.0480955
+				16:leaf=-0.00684866
+		4:[bond_1<47] yes=9,no=10,missing=9
+			9:[SMR_VSA1<57.6681] yes=17,no=18,missing=17
+				17:[PEOE_VSA14<3.04662] yes=25,no=26,missing=25
+					25:leaf=-0.0559571
+					26:leaf=-0.0314897
+				18:[SMR_VSA1<65.6401] yes=27,no=28,missing=27
+					27:leaf=-0.00252802
+					28:leaf=-0.0371093
+			10:leaf=-0.00884156
+	2:[atom_sum_6<0.384159] yes=5,no=6,missing=5
+		5:[VSA_EState8<5.50681] yes=11,no=12,missing=11
+			11:leaf=-0.0604051
+			12:leaf=-0.0229217
+		6:leaf=-0.0154012
+booster[32]:
+0:[TPSA_norm<1.7121] yes=1,no=2,missing=1
+	1:[bond_sum_2<0.0479059] yes=3,no=4,missing=3
+		3:[charge_skew<-2.60471] yes=7,no=8,missing=7
+			7:leaf=-0.0456309
+			8:[PEOE_VSA7<42.7972] yes=15,no=16,missing=15
+				15:[bond_sum_1<0.184129] yes=29,no=30,missing=29
+					29:leaf=-0.00344381
+					30:leaf=-0.0182797
+				16:[atom_sum_7<0.0529825] yes=31,no=32,missing=31
+					31:leaf=-0.0171187
+					32:leaf=-0.0364867
+		4:[charge_skew<-1.151] yes=9,no=10,missing=9
+			9:[SlogP_VSA4<26.5228] yes=17,no=18,missing=17
+				17:[PEOE_VSA9<25.101] yes=33,no=34,missing=33
+					33:leaf=-0.0396568
+					34:leaf=-0.014475
+				18:[SMR_VSA4<28.9908] yes=35,no=36,missing=35
+					35:leaf=0.0092597
+					36:leaf=-0.0076228
+			10:[atom_sum_9<0.0183502] yes=19,no=20,missing=19
+				19:[SMR_VSA4<5.80684] yes=37,no=38,missing=37
+					37:leaf=0.00580651
+					38:leaf=0.0187282
+				20:leaf=-0.00641385
+	2:[VSA_EState10<0.677575] yes=5,no=6,missing=5
+		5:[SlogP_VSA10<11.6036] yes=11,no=12,missing=11
+			11:[HBD_norm<0.0291986] yes=21,no=22,missing=21
+				21:[SlogP_VSA3<28.6807] yes=39,no=40,missing=39
+					39:leaf=-0.00388389
+					40:leaf=-0.0287016
+				22:[SMR_VSA5<6.43489] yes=41,no=42,missing=41
+					41:leaf=-0.0192354
+					42:leaf=-0.0323693
+			12:[LabuteASA<166.462] yes=23,no=24,missing=23
+				23:[PEOE_VSA7<18.623] yes=43,no=44,missing=43
+					43:leaf=0.0217336
+					44:leaf=0.00124222
+				24:[SMR_VSA3<9.8287] yes=45,no=46,missing=45
+					45:leaf=-0.0279367
+					46:leaf=-0.0085119
+		6:[TPSA<91.61] yes=13,no=14,missing=13
+			13:[HBD<1.5] yes=25,no=26,missing=25
+				25:leaf=-0.00393053
+				26:[TPSA_norm<2.719] yes=47,no=48,missing=47
+					47:leaf=0.0182291
+					48:leaf=0.00416972
+			14:[SlogP_VSA4<5.40865] yes=27,no=28,missing=27
+				27:leaf=-0.0268908
+				28:leaf=-0.00226866
+booster[33]:
+0:[HBD_norm<0.138966] yes=1,no=2,missing=1
+	1:[atom_7<6.5] yes=3,no=4,missing=3
+		3:[SMR_VSA10<5.93337] yes=7,no=8,missing=7
+			7:[PEOE_VSA5<2.61326] yes=13,no=14,missing=13
+				13:[atom_sum_6<0.439614] yes=19,no=20,missing=19
+					19:leaf=-0.0148045
+					20:leaf=0.00541787
+				14:[SMR_VSA3<2.44995] yes=21,no=22,missing=21
+					21:leaf=0.000661768
+					22:leaf=0.0228871
+			8:[SlogP_VSA10<2.19521] yes=15,no=16,missing=15
+				15:[SlogP_VSA2<20.5527] yes=23,no=24,missing=23
+					23:leaf=-0.0114966
+					24:leaf=-0.0244876
+				16:[atom_1<40.5] yes=25,no=26,missing=25
+					25:leaf=-0.0158749
+					26:leaf=0.00695525
+		4:[SMR_VSA3<15.8482] yes=9,no=10,missing=9
+			9:leaf=-0.0126662
+			10:[PEOE_VSA7<53.483] yes=17,no=18,missing=17
+				17:leaf=-0.0518907
+				18:leaf=-0.0198758
+	2:[HBD_norm<0.17029] yes=5,no=6,missing=5
+		5:[atom_sum_6<0.369932] yes=11,no=12,missing=11
+			11:leaf=-0.0519706
+			12:leaf=-0.0291526
+		6:leaf=-0.0157323
+booster[34]:
+0:[HBD_norm<0.0245408] yes=1,no=2,missing=1
+	1:[VSA_EState8<-1.79428] yes=3,no=4,missing=3
+		3:leaf=-0.0460919
+		4:[PEOE_VSA8<34.6646] yes=7,no=8,missing=7
+			7:[charge_kurtosis<5.88149] yes=13,no=14,missing=13
+				13:[PEOE_VSA6<45.0762] yes=25,no=26,missing=25
+					25:leaf=-0.00448488
+					26:leaf=-0.0284306
+				14:leaf=0.0173644
+			8:[PEOE_VSA1<14.044] yes=15,no=16,missing=15
+				15:[SlogP_VSA1<10.4108] yes=27,no=28,missing=27
+					27:leaf=-0.0259375
+					28:leaf=0.00799147
+				16:[SMR_VSA1<64.3709] yes=29,no=30,missing=29
+					29:leaf=-0.000127027
+					30:leaf=-0.0161721
+	2:[SlogP_VSA3<15.4073] yes=5,no=6,missing=5
+		5:[VSA_EState10<-5.20406] yes=9,no=10,missing=9
+			9:[VSA_EState9<-17.9293] yes=17,no=18,missing=17
+				17:[SlogP_VSA5<48.8378] yes=31,no=32,missing=31
+					31:leaf=-0.0124232
+					32:leaf=0.00362786
+				18:[HBD_norm<0.0583019] yes=33,no=34,missing=33
+					33:leaf=0.0156723
+					34:leaf=-0.00165517
+			10:[VSA_EState10<0.677575] yes=19,no=20,missing=19
+				19:[atom_sum_7<0.0631649] yes=35,no=36,missing=35
+					35:leaf=-0.0141126
+					36:leaf=-0.0264988
+				20:[SlogP_VSA7<6.49971] yes=37,no=38,missing=37
+					37:leaf=0.0118287
+					38:leaf=-0.0108233
+		6:[SlogP_VSA5<68.7021] yes=11,no=12,missing=11
+			11:[SMR_VSA10<23.5362] yes=21,no=22,missing=21
+				21:[PEOE_VSA2<6.99371] yes=39,no=40,missing=39
+					39:leaf=-0.0332811
+					40:leaf=-0.012586
+				22:[SlogP_VSA2<31.5395] yes=41,no=42,missing=41
+					41:leaf=-0.0110321
+					42:leaf=-0.0469206
+			12:[bond_sum_1<0.226424] yes=23,no=24,missing=23
+				23:[HBD_norm<0.0878274] yes=43,no=44,missing=43
+					43:leaf=-0.0133646
+					44:leaf=-0.0415763
+				24:[SlogP_VSA10<2.19521] yes=45,no=46,missing=45
+					45:leaf=-0.0456626
+					46:leaf=-0.0143636
+booster[35]:
+0:[HBD_norm<0.138966] yes=1,no=2,missing=1
+	1:[LabuteASA<177.286] yes=3,no=4,missing=3
+		3:[PEOE_VSA6<37.8783] yes=7,no=8,missing=7
+			7:[SMR_VSA9<2.84369] yes=13,no=14,missing=13
+				13:[SlogP_VSA2<18.5005] yes=21,no=22,missing=21
+					21:leaf=-0.00781818
+					22:leaf=-0.0225608
+				14:[PEOE_VSA9<19.3229] yes=23,no=24,missing=23
+					23:leaf=-0.0123835
+					24:leaf=-0.00117248
+			8:[SlogP_VSA3<4.7657] yes=15,no=16,missing=15
+				15:[PEOE_VSA10<9.93044] yes=25,no=26,missing=25
+					25:leaf=-0.0254789
+					26:leaf=-0.0085383
+				16:[charge_skew<-1.76299] yes=27,no=28,missing=27
+					27:leaf=0.0275659
+					28:leaf=-0.000765277
+		4:[atom_sum_16<0.0215079] yes=9,no=10,missing=9
+			9:[SMR_VSA2<0.7156] yes=17,no=18,missing=17
+				17:[bond_sum_2<0.0332474] yes=29,no=30,missing=29
+					29:leaf=-0.0206792
+					30:leaf=-0.00783402
+				18:[PEOE_VSA9<46.501] yes=31,no=32,missing=31
+					31:leaf=-0.0238387
+					32:leaf=-0.0101289
+			10:[charge_std<0.17625] yes=19,no=20,missing=19
+				19:[charge_std<0.157168] yes=33,no=34,missing=33
+					33:leaf=-0.0312726
+					34:leaf=-0.0581306
+				20:leaf=-0.0126191
+	2:[HBD_norm<0.17029] yes=5,no=6,missing=5
+		5:[atom_sum_6<0.369932] yes=11,no=12,missing=11
+			11:leaf=-0.0450515
+			12:leaf=-0.0254442
+		6:leaf=-0.013189
+booster[36]:
+0:[TPSA<239.62] yes=1,no=2,missing=1
+	1:[VSA_EState10<-8.24382] yes=3,no=4,missing=3
+		3:leaf=-0.0418413
+		4:[charge_skew<-2.60471] yes=7,no=8,missing=7
+			7:leaf=-0.0361885
+			8:[HBD_norm<0.0245408] yes=9,no=10,missing=9
+				9:[PEOE_VSA9<18.0193] yes=11,no=12,missing=11
+					11:leaf=-0.0152809
+					12:leaf=-0.00562672
+				10:[SlogP_VSA10<2.19521] yes=13,no=14,missing=13
+					13:leaf=-0.0171945
+					14:leaf=-0.0106791
+	2:[charge_skew<-1.07734] yes=5,no=6,missing=5
+		5:leaf=-0.0141309
+		6:leaf=-0.0463208
+booster[37]:
+0:[SMR_VSA3<36.6344] yes=1,no=2,missing=1
+	1:[HBD_norm<0.138966] yes=3,no=4,missing=3
+		3:[PEOE_VSA9<7.1647] yes=5,no=6,missing=5
+			5:[TPSA_norm<0.67711] yes=9,no=10,missing=9
+				9:[PEOE_VSA2<2.39727] yes=15,no=16,missing=15
+					15:leaf=-0.0219736
+					16:leaf=-0.00799385
+				10:[SMR_VSA6<5.71234] yes=17,no=18,missing=17
+					17:leaf=-0.00415092
+					18:leaf=0.0131304
+			6:[atom_sum_16<0.0235327] yes=11,no=12,missing=11
+				11:[VSA_EState8<-1.79428] yes=19,no=20,missing=19
+					19:leaf=-0.0372076
+					20:leaf=-0.0109051
+				12:[bond_0<49] yes=21,no=22,missing=21
+					21:leaf=-0.00775483
+					22:leaf=-0.0326293
+		4:[HBD_norm<0.17029] yes=7,no=8,missing=7
+			7:[SMR_VSA5<18.6484] yes=13,no=14,missing=13
+				13:leaf=-0.0262258
+				14:leaf=-0.0437333
+			8:leaf=-0.0107055
+	2:leaf=-0.0427901
+booster[38]:
+0:[TPSA_norm<1.7121] yes=1,no=2,missing=1
+	1:[bond_sum_2<0.0479059] yes=3,no=4,missing=3
+		3:[atom_sum_1<0.515707] yes=7,no=8,missing=7
+			7:[atom_sum_6<0.381966] yes=15,no=16,missing=15
+				15:[charge_skew<-1.21085] yes=31,no=32,missing=31
+					31:leaf=-0.049561
+					32:leaf=-0.0113215
+				16:[SMR_VSA7<39.8856] yes=33,no=34,missing=33
+					33:leaf=-0.000165295
+					34:leaf=-0.0143292
+			8:[PEOE_VSA10<19.3029] yes=17,no=18,missing=17
+				17:[PEOE_VSA12<5.42818] yes=35,no=36,missing=35
+					35:leaf=-0.0142977
+					36:leaf=0.00458985
+				18:[TPSA<58.615] yes=37,no=38,missing=37
+					37:leaf=0.0217849
+					38:leaf=-0.00812074
+		4:[charge_skew<-1.151] yes=9,no=10,missing=9
+			9:[SlogP_VSA4<24.3472] yes=19,no=20,missing=19
+				19:[atom_1<16.5] yes=39,no=40,missing=39
+					39:leaf=-0.000554068
+					40:leaf=-0.0224888
+				20:[HBD_norm<0.0250627] yes=41,no=42,missing=41
+					41:leaf=-0.000341001
+					42:leaf=0.0162301
+			10:[VSA_EState8<16.2567] yes=21,no=22,missing=21
+				21:[SMR_VSA4<5.80684] yes=43,no=44,missing=43
+					43:leaf=0.0107927
+					44:leaf=0.023542
+				22:leaf=-0.0011588
+	2:[VSA_EState10<0.677575] yes=5,no=6,missing=5
+		5:[PEOE_VSA6<21.264] yes=11,no=12,missing=11
+			11:[VSA_EState8<27.577] yes=23,no=24,missing=23
+				23:[HBD<0.5] yes=45,no=46,missing=45
+					45:leaf=0.00801646
+					46:leaf=-0.0147734
+				24:[PEOE_VSA7<28.0914] yes=47,no=48,missing=47
+					47:leaf=0.0204736
+					48:leaf=-0.00513656
+			12:[PEOE_VSA13<10.7389] yes=25,no=26,missing=25
+				25:[bond_sum_0<0.616516] yes=49,no=50,missing=49
+					49:leaf=-0.0134565
+					50:leaf=-0.0286764
+				26:[PEOE_VSA3<4.59248] yes=51,no=52,missing=51
+					51:leaf=-0.00720038
+					52:leaf=0.00794152
+		6:[PEOE_VSA9<27.7419] yes=13,no=14,missing=13
+			13:[atom_sum_17<0.0389805] yes=27,no=28,missing=27
+				27:[HBD_norm<0.0393519] yes=53,no=54,missing=53
+					53:leaf=0.00715787
+					54:leaf=0.020636
+				28:leaf=-0.00338212
+			14:[atom_sum_7<0.0559468] yes=29,no=30,missing=29
+				29:leaf=0.00180317
+				30:leaf=-0.0224809
+booster[39]:
+0:[SMR_VSA3<36.4295] yes=1,no=2,missing=1
+	1:[HBD_norm<0.138966] yes=3,no=4,missing=3
+		3:[SMR_VSA10<5.93337] yes=5,no=6,missing=5
+			5:[PEOE_VSA5<2.61326] yes=9,no=10,missing=9
+				9:[PEOE_VSA8<54.541] yes=15,no=16,missing=15
+					15:leaf=-0.00664127
+					16:leaf=0.0133019
+				10:[atom_sum_7<0.0233062] yes=17,no=18,missing=17
+					17:leaf=0.00516703
+					18:leaf=0.0239654
+			6:[charge_skew<-2.5832] yes=11,no=12,missing=11
+				11:leaf=-0.0351832
+				12:[PEOE_VSA7<44.8164] yes=19,no=20,missing=19
+					19:leaf=-0.00797021
+					20:leaf=-0.0137863
+		4:[HBD_norm<0.17029] yes=7,no=8,missing=7
+			7:[SMR_VSA5<18.6484] yes=13,no=14,missing=13
+				13:leaf=-0.0224675
+				14:leaf=-0.0388577
+			8:leaf=-0.0088204
+	2:leaf=-0.0357855
+booster[40]:
+0:[HBD_norm<0.0245408] yes=1,no=2,missing=1
+	1:[VSA_EState8<-1.79428] yes=3,no=4,missing=3
+		3:leaf=-0.0324042
+		4:[atom_7<6.5] yes=7,no=8,missing=7
+			7:[PEOE_VSA9<18.0193] yes=13,no=14,missing=13
+				13:[LabuteASA<164.078] yes=23,no=24,missing=23
+					23:leaf=-0.00229342
+					24:leaf=-0.0211558
+				14:[SMR_VSA7<41.2396] yes=25,no=26,missing=25
+					25:leaf=0.00643913
+					26:leaf=-0.00438195
+			8:leaf=-0.0265231
+	2:[SlogP_VSA3<15.4073] yes=5,no=6,missing=5
+		5:[bond_sum_2<0.0404082] yes=9,no=10,missing=9
+			9:[SMR_VSA7<53.0006] yes=15,no=16,missing=15
+				15:[SlogP_VSA7<4.25488] yes=27,no=28,missing=27
+					27:leaf=-0.00996248
+					28:leaf=0.00796184
+				16:[charge_skew<-1.70588] yes=29,no=30,missing=29
+					29:leaf=-0.00286061
+					30:leaf=-0.0228081
+			10:[PEOE_VSA6<11.4689] yes=17,no=18,missing=17
+				17:[SlogP_VSA4<11.1425] yes=31,no=32,missing=31
+					31:leaf=-0.0236076
+					32:leaf=0.000736568
+				18:[SlogP_VSA1<5.59243] yes=33,no=34,missing=33
+					33:leaf=0.00965627
+					34:leaf=-0.00402636
+		6:[bond_sum_1<0.196187] yes=11,no=12,missing=11
+			11:[charge_std<0.165616] yes=19,no=20,missing=19
+				19:[charge_std<0.15831] yes=35,no=36,missing=35
+					35:leaf=-0.00856795
+					36:leaf=0.0118665
+				20:[SlogP_VSA10<2.19521] yes=37,no=38,missing=37
+					37:leaf=-0.0286569
+					38:leaf=-0.00442081
+			12:[charge_kurtosis<2.42002] yes=21,no=22,missing=21
+				21:[TPSA_norm<1.74219] yes=39,no=40,missing=39
+					39:leaf=0.0070618
+					40:leaf=-0.0215088
+				22:[PEOE_VSA8<47.6835] yes=41,no=42,missing=41
+					41:leaf=-0.0524324
+					42:leaf=-0.0241716
+booster[41]:
+0:[HBA_norm<0.218071] yes=1,no=2,missing=1
+	1:[VSA_EState5<109.035] yes=3,no=4,missing=3
+		3:[PEOE_VSA8<23.5123] yes=7,no=8,missing=7
+			7:[LabuteASA<128.464] yes=13,no=14,missing=13
+				13:[HBA_norm<0.137147] yes=23,no=24,missing=23
+					23:leaf=0.00115578
+					24:leaf=-0.0133292
+				14:[bond_sum_0<0.573593] yes=25,no=26,missing=25
+					25:leaf=0.0042482
+					26:leaf=0.0173373
+			8:[PEOE_VSA9<15.5907] yes=15,no=16,missing=15
+				15:[SlogP_VSA5<25.2383] yes=27,no=28,missing=27
+					27:leaf=-0.00960089
+					28:leaf=0.00860932
+				16:[atom_17<0.5] yes=29,no=30,missing=29
+					29:leaf=-0.0361747
+					30:leaf=-0.00518213
+		4:[HBD_norm<0.0711125] yes=9,no=10,missing=9
+			9:[atom_sum_16<0.0294372] yes=17,no=18,missing=17
+				17:[charge_kurtosis<0.163438] yes=31,no=32,missing=31
+					31:leaf=0.00614277
+					32:leaf=-0.00770975
+				18:leaf=-0.0347432
+			10:[SlogP_VSA1<26.754] yes=19,no=20,missing=19
+				19:[SlogP_VSA1<16.1962] yes=33,no=34,missing=33
+					33:leaf=-0.0185737
+					34:leaf=-0.00203958
+				20:leaf=-0.0421381
+	2:[VSA_EState5<75.1503] yes=5,no=6,missing=5
+		5:leaf=-0.0370754
+		6:[LabuteASA<185.119] yes=11,no=12,missing=11
+			11:[SMR_VSA1<39.3332] yes=21,no=22,missing=21
+				21:leaf=-0.0141405
+				22:leaf=0.0173493
+			12:leaf=-0.0292683
+booster[42]:
+0:[HBD_norm<0.0245408] yes=1,no=2,missing=1
+	1:[charge_std<0.194693] yes=3,no=4,missing=3
+		3:[SlogP_VSA8<11.0013] yes=7,no=8,missing=7
+			7:[VSA_EState10<-6.50357] yes=13,no=14,missing=13
+				13:[atom_sum_7<0.0650338] yes=25,no=26,missing=25
+					25:leaf=-0.030607
+					26:leaf=-0.0123506
+				14:[LabuteASA<290.183] yes=27,no=28,missing=27
+					27:leaf=-0.00588759
+					28:leaf=0.0111992
+			8:[TPSA_norm<1.76812] yes=15,no=16,missing=15
+				15:[bond_sum_2<0.0172465] yes=29,no=30,missing=29
+					29:leaf=0.013537
+					30:leaf=-0.00337901
+				16:[SMR_VSA5<28.365] yes=31,no=32,missing=31
+					31:leaf=0.00722404
+					32:leaf=0.02499
+		4:leaf=-0.0292725
+	2:[atom_sum_7<0.0480031] yes=5,no=6,missing=5
+		5:[bond_sum_2<0.0180195] yes=9,no=10,missing=9
+			9:[VSA_EState5<83.0538] yes=17,no=18,missing=17
+				17:leaf=0.0100764
+				18:[LabuteASA_norm<3.49366] yes=33,no=34,missing=33
+					33:leaf=-0.00261035
+					34:leaf=-0.023248
+			10:[atom_sum_8<0.0493902] yes=19,no=20,missing=19
+				19:[PEOE_VSA7<59.9546] yes=35,no=36,missing=35
+					35:leaf=0.020246
+					36:leaf=-0.000453356
+				20:[PEOE_VSA12<5.73715] yes=37,no=38,missing=37
+					37:leaf=0.00115481
+					38:leaf=-0.0111755
+		6:[SlogP_VSA1<2.35756] yes=11,no=12,missing=11
+			11:[TPSA_norm<2.2064] yes=21,no=22,missing=21
+				21:leaf=-0.0489205
+				22:leaf=-0.0116491
+			12:[PEOE_VSA10<6.77692] yes=23,no=24,missing=23
+				23:[PEOE_VSA10<5.52985] yes=39,no=40,missing=39
+					39:leaf=-0.00886762
+					40:leaf=0.00324632
+				24:[SMR_VSA5<43.5787] yes=41,no=42,missing=41
+					41:leaf=-0.0183922
+					42:leaf=-0.00590419
+booster[43]:
+0:[VSA_EState8<-1.79428] yes=1,no=2,missing=1
+	1:leaf=-0.0268921
+	2:[HBD_norm<0.0245408] yes=3,no=4,missing=3
+		3:[atom_7<6.5] yes=5,no=6,missing=5
+			5:[SMR_VSA7<91.507] yes=9,no=10,missing=9
+				9:[PEOE_VSA6<56.7576] yes=15,no=16,missing=15
+					15:leaf=-0.00207676
+					16:leaf=-0.0179968
+				10:leaf=0.017524
+			6:leaf=-0.0229022
+		4:[SlogP_VSA3<15.4073] yes=7,no=8,missing=7
+			7:[atom_sum_8<0.0396078] yes=11,no=12,missing=11
+				11:[atom_6<15.5] yes=17,no=18,missing=17
+					17:leaf=-0.00573358
+					18:leaf=-0.0223859
+				12:[SlogP_VSA10<19.1912] yes=19,no=20,missing=19
+					19:leaf=-0.0050095
+					20:leaf=0.0178878
+			8:[bond_sum_1<0.196187] yes=13,no=14,missing=13
+				13:[atom_sum_6<0.397131] yes=21,no=22,missing=21
+					21:leaf=-0.00932553
+					22:leaf=0.0115407
+				14:[charge_kurtosis<2.42002] yes=23,no=24,missing=23
+					23:leaf=-0.0136156
+					24:leaf=-0.0363836
+booster[44]:
+0:[SlogP_VSA10<2.19521] yes=1,no=2,missing=1
+	1:[PEOE_VSA14<5.86268] yes=3,no=4,missing=3
+		3:[SlogP_VSA7<6.49971] yes=7,no=8,missing=7
+			7:[SMR_VSA7<91.6541] yes=15,no=16,missing=15
+				15:[SMR_VSA7<77.1194] yes=31,no=32,missing=31
+					31:leaf=-0.00355287
+					32:leaf=-0.0295268
+				16:[TPSA<101.895] yes=33,no=34,missing=33
+					33:leaf=0.0247241
+					34:leaf=0.00273525
+			8:[SlogP_VSA5<20.3602] yes=17,no=18,missing=17
+				17:leaf=0.00127162
+				18:[PEOE_VSA8<34.356] yes=35,no=36,missing=35
+					35:leaf=-0.037656
+					36:leaf=-0.00790739
+		4:[SlogP_VSA2<17.6342] yes=9,no=10,missing=9
+			9:[charge_std<0.155444] yes=19,no=20,missing=19
+				19:leaf=0.0168552
+				20:leaf=-0.0101569
+			10:[atom_6<32.5] yes=21,no=22,missing=21
+				21:[LabuteASA<185.768] yes=37,no=38,missing=37
+					37:leaf=-0.0103767
+					38:leaf=-0.0294437
+				22:[SMR_VSA7<67.5929] yes=39,no=40,missing=39
+					39:leaf=-0.00706609
+					40:leaf=0.00633519
+	2:[HBA_norm<0.108893] yes=5,no=6,missing=5
+		5:[atom_1<40.5] yes=11,no=12,missing=11
+			11:[VSA_EState5<134.441] yes=23,no=24,missing=23
+				23:[PEOE_VSA7<36.9288] yes=41,no=42,missing=41
+					41:leaf=0.00751687
+					42:leaf=-0.0146806
+				24:[SMR_VSA5<56.9704] yes=43,no=44,missing=43
+					43:leaf=-0.0148571
+					44:leaf=0.00115483
+			12:[SlogP_VSA3<25.641] yes=25,no=26,missing=25
+				25:leaf=0.0192384
+				26:leaf=0.00292776
+		6:[TPSA_norm<3.15003] yes=13,no=14,missing=13
+			13:[VSA_EState10<-6.5635] yes=27,no=28,missing=27
+				27:[atom_sum_7<0.0655298] yes=45,no=46,missing=45
+					45:leaf=-0.026251
+					46:leaf=-0.00992396
+				28:[atom_sum_8<0.082483] yes=47,no=48,missing=47
+					47:leaf=-7.13368e-05
+					48:leaf=0.0119
+			14:[PEOE_VSA1<7.96867] yes=29,no=30,missing=29
+				29:leaf=-0.0351073
+				30:[SMR_VSA3<17.5578] yes=49,no=50,missing=49
+					49:leaf=-0.00220272
+					50:leaf=-0.0171213
+booster[45]:
+0:[charge_skew<-2.60471] yes=1,no=2,missing=1
+	1:leaf=-0.0231948
+	2:[PEOE_VSA13<0.7156] yes=3,no=4,missing=3
+		3:[charge_kurtosis<3.16683] yes=5,no=6,missing=5
+			5:[atom_sum_1<0.473986] yes=9,no=10,missing=9
+				9:[SMR_VSA4<5.05871] yes=17,no=18,missing=17
+					17:leaf=0.0027462
+					18:leaf=-0.00645112
+				10:[atom_6<15.5] yes=19,no=20,missing=19
+					19:leaf=-0.0225346
+					20:leaf=-0.00742271
+			6:[SMR_VSA5<19.0343] yes=11,no=12,missing=11
+				11:[HBD_norm<0.0304147] yes=21,no=22,missing=21
+					21:leaf=-0.00647915
+					22:leaf=-0.0273134
+				12:[TPSA_norm<0.67711] yes=23,no=24,missing=23
+					23:leaf=-0.00664856
+					24:leaf=0.00951829
+		4:[charge_kurtosis<3.48485] yes=7,no=8,missing=7
+			7:[charge_skew<-0.654969] yes=13,no=14,missing=13
+				13:[PEOE_VSA13<3.578] yes=25,no=26,missing=25
+					25:leaf=-0.00993829
+					26:leaf=-0.000890118
+				14:[HBD_norm<0.0690476] yes=27,no=28,missing=27
+					27:leaf=-0.00836386
+					28:leaf=-0.0309688
+			8:[PEOE_VSA9<12.8998] yes=15,no=16,missing=15
+				15:[atom_sum_1<0.551573] yes=29,no=30,missing=29
+					29:leaf=0.00404776
+					30:leaf=-0.008111
+				16:[PEOE_VSA10<6.66637] yes=31,no=32,missing=31
+					31:leaf=-0.0422127
+					32:leaf=-0.0107602
+booster[46]:
+0:[SMR_VSA6<5.71234] yes=1,no=2,missing=1
+	1:[VSA_EState10<0.0538515] yes=3,no=4,missing=3
+		3:[SMR_VSA10<11.5805] yes=7,no=8,missing=7
+			7:[PEOE_VSA10<24.0103] yes=15,no=16,missing=15
+				15:[charge_std<0.145229] yes=27,no=28,missing=27
+					27:leaf=-0.000829983
+					28:leaf=-0.0137716
+				16:[PEOE_VSA9<13.1026] yes=29,no=30,missing=29
+					29:leaf=-0.00217772
+					30:leaf=0.0132802
+			8:[SMR_VSA7<67.5128] yes=17,no=18,missing=17
+				17:[PEOE_VSA10<2.09722] yes=31,no=32,missing=31
+					31:leaf=-0.0333201
+					32:leaf=-0.0159794
+				18:[PEOE_VSA12<5.9936] yes=33,no=34,missing=33
+					33:leaf=-0.000316997
+					34:leaf=-0.0224971
+		4:[bond_sum_2<0.0278638] yes=9,no=10,missing=9
+			9:leaf=-0.0130231
+			10:[PEOE_VSA8<9.41888] yes=19,no=20,missing=19
+				19:leaf=0.00369441
+				20:[SlogP_VSA3<9.96349] yes=35,no=36,missing=35
+					35:leaf=0.0207771
+					36:leaf=0.00910526
+	2:[SMR_VSA6<13.0869] yes=5,no=6,missing=5
+		5:[atom_7<3.5] yes=11,no=12,missing=11
+			11:[SMR_VSA6<10.4856] yes=21,no=22,missing=21
+				21:[PEOE_VSA12<5.73715] yes=37,no=38,missing=37
+					37:leaf=0.00562187
+					38:leaf=-0.00438232
+				22:[SlogP_VSA1<4.72599] yes=39,no=40,missing=39
+					39:leaf=-0.00788405
+					40:leaf=0.0154285
+			12:[PEOE_VSA13<0.7156] yes=23,no=24,missing=23
+				23:[SMR_VSA4<6.34777] yes=41,no=42,missing=41
+					41:leaf=0.00110943
+					42:leaf=-0.0202844
+				24:[SlogP_VSA1<10.8246] yes=43,no=44,missing=43
+					43:leaf=-0.0272712
+					44:leaf=-0.00571102
+		6:[SlogP_VSA1<30.2338] yes=13,no=14,missing=13
+			13:[HBD_norm<0.0258075] yes=25,no=26,missing=25
+				25:[PEOE_VSA10<24.785] yes=45,no=46,missing=45
+					45:leaf=-0.000961539
+					46:leaf=-0.0171123
+				26:[SlogP_VSA1<15.9839] yes=47,no=48,missing=47
+					47:leaf=-0.0119921
+					48:leaf=0.000664209
+			14:leaf=-0.032199
+booster[47]:
+0:[charge_skew<-2.60471] yes=1,no=2,missing=1
+	1:leaf=-0.0205631
+	2:[SMR_VSA6<5.71234] yes=3,no=4,missing=3
+		3:[VSA_EState10<0.0538515] yes=5,no=6,missing=5
+			5:[SMR_VSA10<11.5805] yes=9,no=10,missing=9
+				9:[PEOE_VSA10<24.0103] yes=17,no=18,missing=17
+					17:leaf=-0.00598671
+					18:leaf=0.00540318
+				10:[SMR_VSA7<67.5128] yes=19,no=20,missing=19
+					19:leaf=-0.0194573
+					20:leaf=-0.0055557
+			6:[bond_sum_2<0.0278638] yes=11,no=12,missing=11
+				11:leaf=-0.0119068
+				12:[LabuteASA_norm<4.45273] yes=21,no=22,missing=21
+					21:leaf=0.0165436
+					22:leaf=0.00482401
+		4:[PEOE_VSA7<46.1077] yes=7,no=8,missing=7
+			7:[PEOE_VSA14<0.7156] yes=13,no=14,missing=13
+				13:[PEOE_VSA8<15.6303] yes=23,no=24,missing=23
+					23:leaf=-0.0117394
+					24:leaf=-0.001527
+				14:[PEOE_VSA10<5.81754] yes=25,no=26,missing=25
+					25:leaf=0.0102891
+					26:leaf=-0.000622536
+			8:[PEOE_VSA7<60.8784] yes=15,no=16,missing=15
+				15:[atom_sum_6<0.365619] yes=27,no=28,missing=27
+					27:leaf=-0.0321306
+					28:leaf=-0.00814205
+				16:[PEOE_VSA11<7.12715] yes=29,no=30,missing=29
+					29:leaf=-0.0064007
+					30:leaf=0.00605624
+booster[48]:
+0:[VSA_EState8<-1.79428] yes=1,no=2,missing=1
+	1:leaf=-0.0209773
+	2:[VSA_EState8<-0.400577] yes=3,no=4,missing=3
+		3:[SMR_VSA10<31.1461] yes=5,no=6,missing=5
+			5:leaf=0.0176591
+			6:[charge_skew<-0.919279] yes=9,no=10,missing=9
+				9:leaf=0.0119998
+				10:leaf=-0.0186498
+		4:[atom_sum_7<0.0559468] yes=7,no=8,missing=7
+			7:[charge_kurtosis<-0.316285] yes=11,no=12,missing=11
+				11:[PEOE_VSA8<14.7521] yes=15,no=16,missing=15
+					15:leaf=-0.022784
+					16:leaf=-0.00727032
+				12:[PEOE_VSA7<18.2925] yes=17,no=18,missing=17
+					17:leaf=0.0047885
+					18:leaf=-0.00275967
+			8:[atom_6<22.5] yes=13,no=14,missing=13
+				13:[VSA_EState10<-6.08367] yes=19,no=20,missing=19
+					19:leaf=0.00504617
+					20:leaf=-0.00567392
+				14:[PEOE_VSA11<7.85365] yes=21,no=22,missing=21
+					21:leaf=-0.0186326
+					22:leaf=-0.00448691
+booster[49]:
+0:[SMR_VSA3<36.4295] yes=1,no=2,missing=1
+	1:[charge_kurtosis<9.57039] yes=3,no=4,missing=3
+		3:[TPSA_norm<1.7121] yes=5,no=6,missing=5
+			5:[PEOE_VSA10<12.0979] yes=7,no=8,missing=7
+				7:[atom_sum_6<0.340087] yes=11,no=12,missing=11
+					11:leaf=0.0164143
+					12:leaf=-0.00406087
+				8:[atom_sum_1<0.487011] yes=13,no=14,missing=13
+					13:leaf=-0.0030646
+					14:leaf=0.00957375
+			6:[VSA_EState10<0.677575] yes=9,no=10,missing=9
+				9:[PEOE_VSA6<19.8372] yes=15,no=16,missing=15
+					15:leaf=-0.00342377
+					16:leaf=-0.0102558
+				10:[PEOE_VSA9<27.7419] yes=17,no=18,missing=17
+					17:leaf=0.0110984
+					18:leaf=-0.00366904
+		4:leaf=-0.018547
+	2:leaf=-0.0215096
+booster[50]:
+0:[VSA_EState9<25.8978] yes=1,no=2,missing=1
+	1:[SlogP_VSA11<31.6223] yes=3,no=4,missing=3
+		3:[PEOE_VSA14<12.073] yes=5,no=6,missing=5
+			5:[PEOE_VSA12<5.73715] yes=9,no=10,missing=9
+				9:[atom_sum_7<0.0699714] yes=13,no=14,missing=13
+					13:leaf=0.00114884
+					14:leaf=-0.00694045
+				10:[charge_std<0.141158] yes=15,no=16,missing=15
+					15:leaf=-0.000615294
+					16:leaf=-0.00819092
+			6:[VSA_EState8<15.8971] yes=11,no=12,missing=11
+				11:leaf=0.0158932
+				12:[PEOE_VSA2<11.93] yes=17,no=18,missing=17
+					17:leaf=0.00808661
+					18:leaf=-0.00661994
+		4:[SlogP_VSA3<10.2918] yes=7,no=8,missing=7
+			7:leaf=0.0189206
+			8:leaf=0.00350966
+	2:leaf=-0.0175778
+booster[51]:
+0:[charge_skew<-2.60471] yes=1,no=2,missing=1
+	1:leaf=-0.0171563
+	2:[VSA_EState10<-8.24382] yes=3,no=4,missing=3
+		3:leaf=-0.0185365
+		4:[SlogP_VSA10<2.19521] yes=5,no=6,missing=5
+			5:[SMR_VSA6<43.591] yes=7,no=8,missing=7
+				7:[SMR_VSA6<34.888] yes=11,no=12,missing=11
+					11:leaf=-0.00405143
+					12:leaf=0.0139901
+				8:[charge_kurtosis<3.66264] yes=13,no=14,missing=13
+					13:leaf=-0.0400352
+					14:leaf=0.00714992
+			6:[LabuteASA<290.183] yes=9,no=10,missing=9
+				9:[PEOE_VSA7<42.7804] yes=15,no=16,missing=15
+					15:leaf=0.00122639
+					16:leaf=-0.00650657
+				10:[PEOE_VSA4<8.37293] yes=17,no=18,missing=17
+					17:leaf=0.0160666
+					18:leaf=-0.00279005
+booster[52]:
+0:[VSA_EState8<-1.79428] yes=1,no=2,missing=1
+	1:leaf=-0.0181337
+	2:[HBD<0.5] yes=3,no=4,missing=3
+		3:[atom_sum_8<0.0459327] yes=5,no=6,missing=5
+			5:[PEOE_VSA8<27.0872] yes=9,no=10,missing=9
+				9:[charge_std<0.0965404] yes=17,no=18,missing=17
+					17:leaf=0.0220983
+					18:leaf=0.000842218
+				10:[PEOE_VSA8<37.398] yes=19,no=20,missing=19
+					19:leaf=-0.00392804
+					20:leaf=-0.0155846
+			6:[PEOE_VSA10<13.9684] yes=11,no=12,missing=11
+				11:[charge_skew<-2.05048] yes=21,no=22,missing=21
+					21:leaf=-0.00125104
+					22:leaf=0.0166114
+				12:[PEOE_VSA9<39.108] yes=23,no=24,missing=23
+					23:leaf=-0.00943898
+					24:leaf=0.00150964
+		4:[SMR_VSA6<44.456] yes=7,no=8,missing=7
+			7:[SMR_VSA6<5.71234] yes=13,no=14,missing=13
+				13:[VSA_EState10<0.0538515] yes=25,no=26,missing=25
+					25:leaf=-0.00805008
+					26:leaf=0.00679455
+				14:[atom_sum_16<0.0235327] yes=27,no=28,missing=27
+					27:leaf=-0.00038995
+					28:leaf=-0.00889968
+			8:[SlogP_VSA10<2.39727] yes=15,no=16,missing=15
+				15:[bond_0<136] yes=29,no=30,missing=29
+					29:leaf=-0.0414021
+					30:leaf=-0.0170009
+				16:[SMR_VSA10<40.3794] yes=31,no=32,missing=31
+					31:leaf=-0.00916853
+					32:leaf=0.0137912
+booster[53]:
+0:[LabuteASA<177.286] yes=1,no=2,missing=1
+	1:[SMR_VSA3<15.7665] yes=3,no=4,missing=3
+		3:[SlogP_VSA2<50.0268] yes=7,no=8,missing=7
+			7:[bond_sum_2<0.0693665] yes=15,no=16,missing=15
+				15:[SlogP_VSA5<57.673] yes=25,no=26,missing=25
+					25:leaf=-0.000647114
+					26:leaf=0.00894012
+				16:[VSA_EState10<-5.01058] yes=27,no=28,missing=27
+					27:leaf=0.00887668
+					28:leaf=-0.0116504
+			8:[SlogP_VSA2<54.0042] yes=17,no=18,missing=17
+				17:leaf=0.0221186
+				18:[atom_1<20.5] yes=29,no=30,missing=29
+					29:leaf=-0.00366201
+					30:leaf=0.0088131
+		4:[TPSA<88.095] yes=9,no=10,missing=9
+			9:leaf=0.00331533
+			10:leaf=-0.024838
+	2:[PEOE_VSA1<10.4376] yes=5,no=6,missing=5
+		5:[TPSA<47.365] yes=11,no=12,missing=11
+			11:[charge_std<0.0939348] yes=19,no=20,missing=19
+				19:leaf=0.0110718
+				20:[atom_sum_1<0.468736] yes=31,no=32,missing=31
+					31:leaf=-0.00512952
+					32:leaf=-0.0100859
+			12:[atom_sum_8<0.0582579] yes=21,no=22,missing=21
+				21:[SlogP_VSA3<16.1428] yes=33,no=34,missing=33
+					33:leaf=-0.0333036
+					34:leaf=-0.015078
+				22:[SMR_VSA10<35.8264] yes=35,no=36,missing=35
+					35:leaf=0.00826046
+					36:leaf=-0.0230758
+		6:[charge_kurtosis<9.29538] yes=13,no=14,missing=13
+			13:[atom_sum_1<0.534109] yes=23,no=24,missing=23
+				23:[SMR_VSA3<10.7013] yes=37,no=38,missing=37
+					37:leaf=-0.00687796
+					38:leaf=-0.000565203
+				24:[atom_sum_6<0.366026] yes=39,no=40,missing=39
+					39:leaf=0.001897
+					40:leaf=0.0227417
+			14:leaf=-0.029313
+booster[54]:
+0:[SlogP_VSA1<34.0952] yes=1,no=2,missing=1
+	1:[SlogP_VSA6<84.4771] yes=3,no=4,missing=3
+		3:[charge_kurtosis<9.57039] yes=5,no=6,missing=5
+			5:[SlogP_VSA8<22.5996] yes=9,no=10,missing=9
+				9:[SMR_VSA7<76.6595] yes=13,no=14,missing=13
+					13:leaf=-0.00129523
+					14:leaf=-0.00835465
+				10:[HBA_norm<0.103234] yes=15,no=16,missing=15
+					15:leaf=-0.0272355
+					16:leaf=-0.00647945
+			6:leaf=-0.0209477
+		4:[PEOE_VSA10<5.70914] yes=7,no=8,missing=7
+			7:leaf=-0.0132502
+			8:[bond_sum_0<0.76632] yes=11,no=12,missing=11
+				11:[SlogP_VSA8<5.86973] yes=17,no=18,missing=17
+					17:leaf=0.00690926
+					18:leaf=0.0259647
+				12:leaf=-0.000227094
+	2:leaf=-0.0196585
