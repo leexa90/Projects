@@ -1,9 +1,8 @@
 import numpy  as np
-data = np.load('bonds2.npy.zip')['bonds2.npy']
+data = np.load('bonds2.npy.zip')['bonds2.npy'][::1]
 import time
 atom2Id = np.load('atom2Id.npy').item()
 Id2atom = { atom2Id[x]:x for x in atom2Id.keys()  }
-die
 import numpy as np
 import tensorflow as tf
 import random
@@ -16,8 +15,8 @@ train = z.iloc[:-len(z)//10]
 valid = z.iloc[-len(z)//10:]
 
 # Step 4: Build and train a skip-gram model.
-vocabulary_size = 82
-batch_size = 128
+vocabulary_size = len(atom2Id)
+batch_size = 1280
 embedding_size = 8  # Dimension of the embedding vector.
 skip_window = 1  # How many words to consider left and right.
 num_skips = 2  # How many times to reuse an input to generate a label.
@@ -102,8 +101,8 @@ with graph.as_default():
   num_steps = 12
   for step in xrange(num_steps):
       train = train.sample(n=len(train)).reset_index(drop=True)
-      for batch_id in range(0,len(train)-128,128):
-        batch_inputs, batch_labels = train.iloc[batch_id:batch_id+128]['A'], train.iloc[batch_id:batch_id+128]['B']
+      for batch_id in range(0,len(train)-batch_size,batch_size):
+        batch_inputs, batch_labels = train.iloc[batch_id:batch_id+batch_size]['A'], train.iloc[batch_id:batch_id+batch_size]['B']
         feed_dict = {train_inputs: batch_inputs, train_labels: batch_labels}
         run_metadata = tf.RunMetadata()
         _, summary, loss_val = session.run(
@@ -122,7 +121,7 @@ with graph.as_default():
 
 
       if step > 0:
-        average_loss /= len(range(0,len(train)-128,128))
+        average_loss /= len(range(0,len(train)-batch_size,batch_size))
         # The average loss is an estimate of the loss over the last 2000 batches.
         print('Average loss at step ', step, ': ', average_loss)
       average_loss = 0
@@ -131,9 +130,9 @@ with graph.as_default():
           for i in xrange(valid_size):
             top_k = 8  # number of nearest neighbors
             nearest = (-sim[i, :]).argsort()[1:top_k + 1]
-            log_str = 'Nearest to %s:' % valid_examples[i]
+            log_str = 'Nearest to %s:' % str(Id2atom[valid_examples[i]])
             for k in xrange(top_k):
-              log_str = '%s %s,' % (log_str, nearest[k])
+              log_str = '%s %s,' % (log_str, Id2atom[nearest[k]])
             print(log_str)
           final_embeddings = session.run(normalized_embeddings)
 np.save('final_embeddings.npy',final_embeddings)
