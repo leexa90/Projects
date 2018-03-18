@@ -42,13 +42,16 @@ for iii in range(len(train)):
                 neighbours_i =     np.concatenate(np.argwhere(adj[i]==1))
                 bond_i = list(map(lambda x : mol.GetBondBetweenAtoms(i,int(x)).GetBondTypeAsDouble()  ,neighbours_i))
                 neighbours_i = list(map(lambda x : atoms[x],neighbours_i))
-                for bond_,atom_ in zip(sorted(bond_i,key = lambda x :  ),sorted(neighbours_i)):
+                #for bond_,atom_ in zip(bond_i, neighbours_i):
+                temp = [atoms[i],]
+                for j in np.argsort(neighbours_i):
+                        bond_ = bond_i[j]
+                        atom_ = neighbours_i[j]
                         temp += [bond_,atom_]
                 try:
                         x = atom2Id[tuple(temp)]
                 except :
                         atom2Id[tuple(temp)] = len(atom2Id)
-                temp = [atoms[i],] + temp
                 atomsIndex += [atom2Id[tuple(temp)],]
             #associated_words = [ [mol.GetAtomWithIdx(i).GetAtomicNum(),]+\
             #                     sorted([(x.GetAtomicNum(),x.GetBonds()) for x in mol.GetAtomWithIdx(i).GetNeighbors()],reverse=True) \
@@ -68,4 +71,4 @@ for iii in range(len(train)):
 
         except :
             print ('errror',counter,smile);
-            print (len(all2),len(tuple(set(all2))))
+            print (len(all2),len(tuple(set(all2))),len(atom2Id))
