@@ -1,0 +1,73 @@
+type,descriptions,SMARTSa,Log P,obsd,MR,obsd 
+C1 ,"1o, 2o aliphatic ","‘[CH4]', ‘[CH3]C', ‘[CH2](C)C' ",0.1441,5080,2.503,2560
+C2 ,"3o, 4o aliphatic ","‘[CH](C)(C)C', ‘[C](C)(C)(C)C' ",0,1014,2.433,587
+C3b ,"1o, 2o  heteroatom ","‘[CH3][(N,O,P,S,F,Cl,Br,I)]'  ‘[CH2X4](N,O,P,S,F,Cl,Br,I)]' ",-0.2035 ,5452,2.753,1513
+C4c ,"3o, 4o heteroatom ","‘[CH1X4][(N,O,P,S,F,Cl,Br,I)]' ‘[CH0X4][(N,O,P,S,F,Cl,Br,I)]' ",-0.2051 ,2431,2.731,847
+C5 ,C = heteroatom ,‘[C] = [A#X]' ,-0.2783 ,5758,5.007,961
+C6 ,C = C aliphatic ,"‘[CH2] = C', ‘[CH1](=C)A', ‘[CH0](=C)(A)A',‘[C](=C)=C' ",0.1551,1062,3.513,570
+C7 ,"acetylene, nitrile ",‘[CX2]#A' ,0.0017,465,3.888,215
+C8 ,1o aromatic carbon ,‘[CH3]c' ,0.08452,1085,2.464,231
+C9 ,1o aromatic heteroatom ,‘[CH3][a#X]' ,-0.1444 ,200,2.412,9
+C10 ,2o aromatic ,‘[CH2X4]a' ,-0.0516 ,2016,2.488,247
+C11 ,3o aromatic ,‘[CHX4]a' ,0.1193,825,2.582,114
+C12 ,4o aromatic ,‘[CH0X4]a' ,-0.0967 ,456,2.576,36
+C13d ,aromatic heteroatom ,"‘[cH0]-[!(C,N,O,S,F,Cl,Br,I)]' ",-0.5443 ,30,4.041,33
+C14 ,aromatic halide ,‘[c][#9]' ,0,350,3.257,25
+C15 ,aromatic halide ,‘[c][#17]' ,0.245,1329,3.564,61
+C16 ,aromatic halide ,‘[c][#35]' ,0.198,298,3.18,47
+C17 ,aromatic halide ,‘[c][#53]' ,0,124,3.104,19
+C18 ,aromatic ,‘[cH]' ,0.1581,7915,3.35,926
+C19 ,aromatic bridgehead ,‘[c](:a)(:a):a' ,0.2955,1179,4.346,64
+C20 ,4o aromatic ,‘[c](:a)(:a)-a' ,0.2713,514,3.904,19
+C21 ,4o aromatic ,‘[c](:a)(:a)-C' ,0.136,5050,3.509,703
+C22 ,4o aromatic ,‘[c](:a)(:a)-N' ,0.4619,3428,4.067,95
+C23 ,4o aromatic ,‘[c](:a)(:a)-O' ,0.5437,2427,3.853,167
+C24 ,4o aromatic ,‘[c](:a)(:a)-S' ,0.1893,851,2.673,21
+C25 ,4o aromatic ,"‘[c](:a)(:a) = C', ‘[c](:a)(:a) = N', ‘[c](:a)(:a) = O' ",-0.8186 ,661,3.135,4
+C26 ,C = C aromatic ,"‘[C](=C)(a)A', ‘[C](=C)(c)a', ‘[CH](= C)a', ‘[C] = c' ",0.264,344,4.305,57
+C27e ,aliphatic heteroatom ,"‘[CX4][!(C,N,O,P,S,F,Cl,Br,I)]' ",0.2148,24,2.693,101
+CS ,carbon supplemental ,‘[#6]' not matching any basic C type ,0.08129,0,3.243,0
+H1 ,hydrocarbon ,"‘[#1][#6]', ‘[#1][#1]' ",0.123,9852,1.057,3361
+H2f ,alcohol ,"‘[#1]O[CX4]', ‘[#1]Oc', ‘[#1]O[!(C,N,O,S)]', ‘[#1][!C,N,O)]' ",-0.2677 ,1744,1.395,493
+H3 ,amine ,"‘[#1][#7]', ‘[#1]O[#7]' ",0.2142,4954,0.9627,216
+H4 ,acid ,"‘[#1]OC = [#6]', ‘[#1]OC = [#7]', ‘[#1]OC = O', ‘[#1]OC = S', ‘[#1]OO', ‘[#1]OS' ",0.298,622,1.805,81
+HS ,hydrogen supplemental ,‘[#1]' not matching any basic H type ,0.1125,0,1.112,0
+N1 ,1o amine ,‘[NH2+0]A' ,-1.0190 ,1014,2.262,70
+N2 ,2o amine ,‘[NH+0](A)A' ,-0.7096 ,2040,2.173,81
+N3 ,1o aromatic amine ,‘[NH2+0]a' ,-1.0270 ,696,2.827,30
+N4 ,2o aromatic amine ,"‘[NH+0](A)a', ‘[NH+0](a)a' ",-0.5188 ,1346,3,21
+N5 ,imine ,"‘[NH+0] = A', ‘[NH+0] = a' ",0.08387,48,1.757,2
+N6 ,substituted imine ,"‘[N+0](=A)A', ‘[N+0](=A)a', ‘[N+0](=a)A', ‘[N+0](=a)a' ",0.1836,1010,2.428,40
+N7 ,3o amine ,‘[N+0](A)(A)A' ,-0.3187 ,1720,1.839,99
+N8 ,3o aromatic amine ,"‘[N+0](a)(A)A', ‘[N+0](a)(a)A', ‘[N+0](a)(a)a' ",-0.4458 ,492,2.819,21
+N9 ,nitrile ,‘[N+0]#A' ,0.01508,382,1.725,72
+N10 ,protonated amine ,"‘[NH3+*]', ‘[NH2+*]', ‘[NH+*]' ",-1.950 ,189,,0
+N11 ,unprotonated aromatic ,‘[n+0]' ,-0.3239 ,2819,2.202,96
+N12 ,protonated aromatic ,‘[n+*]' ,-1.119 ,104,,0
+N13 ,4o amine ,"‘[NH0+*](A)(A)(A)A', ‘[NH0+*](=A)(A)A', ‘[NH0+*](=A)(A)a', ‘[NH0+*](=[#6])=[#7]' ",-0.3396 ,1075,0.2604,75
+N14 ,other ionized nitrogen ,"‘[N+*]#A', ‘[N-*]', ‘[N+*](=[N-*])=N' ",0.2887,17,3.359,4
+NS ,nitrogen supplemental ,‘[#7]' not matching any basic N type ,-0.4806 ,0,2.134,0
+O1 ,aromatic ,‘[o]' ,0.1552,413,1.08,56
+O2 ,alcohol ,"‘[OH]', ‘[OH2]' ",-0.2893 ,2317,0.8238,526
+O3 ,aliphatic ether ,"‘[O](C)C', ‘[O](C)[A#X]', ‘[O]([A#X])[A#X]' ",-0.0684 ,2376,1.085,925
+O4 ,aromatic ether ,"‘[O](A)a',‘[O](a)a' ",-0.4195 ,1957,1.182,130
+O5 ,oxide ,"‘[O]=[#8]', ‘[O]=[#7]', ‘[OX1-*][#7]' ",0.0335,1272,3.367,88
+O6 ,oxide ,‘[OX1-*][#16]' ,-0.3339 ,718,0.7774,34
+O7g ,oxide ,"‘[OX1-*][!(N,S)]' ",-1.189 ,138,0,24
+O8 ,aromatic carbonyl ,‘[O]=c' ,0.1788,657,3.135,4
+O9 ,carbonyl aliphatic ,"‘[O]=[CH]C', ‘[O]=C(C)C', ‘[O]=C(C)[A#X]',‘[O]=[CH]N', ‘[O]=[CH]O',‘[O]=[CH2]', ‘[O]=[CX2]=O' ",-0.1526 ,3163,0,767
+O10 ,carbonyl aromatic ,"‘[O]=[CH]c', ‘[O]=C(C)c', ‘[O]=C(c)c', ‘[O]=C(c)[a#X]', ‘[O]=C(c)[A#X]', ‘[O]=C(C)[a#X]' ",0.1129,1534,0.2215,125
+O11 ,carbonyl heteroatom ,"‘[O]=C([A#X])[A#X]', ‘[O]=C([A#X])[a#X]', ‘[O]=C([a#X])[a#X]' ",0.4833,1063,0.389,43
+O12 ,acid ,‘[O-1]C(=O)' ,-1.326 ,187,,0
+OS ,oxygen supplemental ,‘[#8]' not matching any basic O type ,-0.1188 ,0,0.6865,0
+F ,fluorine ,‘[#9-0]' ,0.4202,814,1.108,120
+Cl ,chlorine ,‘[#17-0]' ,0.6895,1613,5.853,630
+Br ,bromine ,‘[#35-0]' ,0.8456,366,8.927,250
+I ,iodine ,‘[#53-0]' ,0.8857,137,14.02,61
+Halh ,ionic halogens ,"‘[#9-*]', ‘[#17-*]', ‘[#35-*]', [#53-*]' ‘[#53+*]' ",-2.996 ,19,,0
+P ,phosphorous ,‘[#15]' ,0.8612,202,6.92,40
+S1 ,aliphatic ,‘[S-0]' ,0.6482,849,7.591,119
+S2 ,ionic sulfur ,"‘[S-*]', ‘[S+*]' ",-0.0024 ,781,7.365,37
+S3 ,aromatic ,‘[s]' ,0.6237,295,6.691,37
+Me1i ,all remaining p-block elements ,,-0.3808 ,40,5.754,139
+Me2j ,all remaining d-block elements ,,-0.0025 ,29,,0
