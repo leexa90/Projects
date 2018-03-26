@@ -3,6 +3,9 @@ import xgboost as xgb
 import numpy as np
 target = 'permability'
 train = pd.read_csv('peptide_permability_features.csv')
+#test = pd.read_csv('atsp7041_permability_features.csv')
+#test = pd.read_csv('val_permability_features.csv')
+test = pd.read_csv('stapled_peptide_permability_features.csv')
 def remove_highly_pos(seq):
     total = len(seq)
     count = 0.0
@@ -81,7 +84,18 @@ if True:
                 u'atom_size', u'PEOE_VSA12', u'SlogP_VSA2', u'SlogP_VSA1', u'TPSA',
                 u'PEOE_VSA1', u'PEOE_VSA2', u'PEOE_VSA11', u'SMR_VSA2', u'SMR_VSA6',
                 u'atom_sum_16', u'VSA_EState10']
+    features = [u'PEOE_VSA14', u'atom_16', u'PEOE_VSA4', u'TPSA_norm', u'charge_std',
+                u'VSA_EState5', u'SlogP_VSA2', u'VSA_EState9', u'atom_6', u'HBA_norm',
+                u'SlogP_VSA8', u'atom_len', u'atom_sum_6', u'Rotatable_num', u'SlogP_VSA7',
+                u'atom_1', u'LabuteASA_norm', u'HBD', u'atom_sum_1', u'VSA_EState10',
+                u'atom_7', u'PEOE_VSA9', u'PEOE_VSA7', u'LabuteASA', u'SlogP_VSA5', u'HBA',
+                u'atom_size', u'PEOE_VSA8', u'SMR_VSA7', u'SlogP_VSA3', u'SlogP_VSA6',
+                u'SMR_VSA1', u'atom_sum_7', u'SMR_VSA5', u'atom_8', u'PEOE_VSA6', u'SMR_VSA6',
+                u'SlogP_VSA1', u'SMR_VSA4', u'TPSA', u'charge_skew', u'SMR_VSA10', u'SMR_VSA3',
+                u'SMR_VSA2', u'atom_sum_8', u'PEOE_VSA2', u'SlogP_VSA4', u'PEOE_VSA11', u'PEOE_VSA1',
+                u'PEOE_VSA12', u'PEOE_VSA10']
     features = sorted(features)
+if False:
     corr = np.zeros((len(features),len(features)))
     for idI in range(len(features)):
         for idJ in range(idI,len(features)):
@@ -93,14 +107,14 @@ if True:
                 print i,j,val
 from scipy.cluster.hierarchy import dendrogram, linkage
 import scipy.cluster.hierarchy as sch
-xgbfile= pd.read_csv('XgbFeatureInteractions-20tree.csv')
-for i in range(len(features)):
-    print features[i],
-    print np.mean(xgbfile[xgbfile['Interaction'].isin(np.array(features)[np.argsort(corr[i])][-5:])]['Gain']),
-    print np.mean(xgbfile[xgbfile['Interaction'].isin(np.array(features)[corr[i] > 1.5])]['Gain'])
-for i in range(len(features)):
-    print features[i],
-    print 
+##xgbfile= pd.read_csv('XgbFeatureInteractions-20tree.csv')
+##for i in range(len(features)):
+##    print features[i],
+##    print np.mean(xgbfile[xgbfile['Interaction'].isin(np.array(features)[np.argsort(corr[i])][-5:])]['Gain']),
+##    print np.mean(xgbfile[xgbfile['Interaction'].isin(np.array(features)[corr[i] > 1.5])]['Gain'])
+##for i in range(len(features)):
+##    print features[i],
+##    print 
     
 if True:
     D = corr
@@ -183,28 +197,173 @@ for repeat in range(0,1):
         watchlist  = [ (xgtrain,'train'),(xgtest,'test')]
         model1=xgb.train(plst,xgtrain,200,watchlist,early_stopping_rounds=200,
                          evals_result=model1_a,maximize=False,verbose_eval=100)
+        xgtest = xgb.DMatrix(test[features].values,                
+                                missing=np.NAN,feature_names=features)
+        test['pred'] = model1.predict(xgtest)
+        plt.plot(np.log10(test['pred']),test[target],'ro');plt.title('floursnce vs log predict of xgboost');plt.savefig('WithFITC.png')
+
+feature1_score = {}
+for repeat in range(0,1):
+    test['pred'] = 0
+    for fold in range(5):
+        train_id = [x for x in range(len(train)) if x%5!=fold]
+        val_id = [x for x in range(len(train)) if x%5==fold]
+        xgtest = xgb.DMatrix(train[features].iloc[val_id].values,
+                             label=train[target].iloc[val_id].values,
+                             missing=np.NAN,feature_names=features)
+        xgtrain = xgb.DMatrix(train[features].iloc[train_id].values,
+                              label=train[target].iloc[train_id].values,
+                              missing=np.NAN,feature_names=features)
+        model1_a = {}
+        watchlist  = [ (xgtrain,'train'),(xgtest,'test')]
+        model1=xgb.train(plst,xgtrain,100,watchlist,early_stopping_rounds=200,
+                         evals_result=model1_a,maximize=False,verbose_eval=100)
+        xgtest = xgb.DMatrix(test[features].values,                
+                                missing=np.NAN,feature_names=features)
+        test['pred'] = model1.predict(xgtest)/5+test['pred']
+    plt.plot(np.log10(test['pred']),test[target],'ro');plt.title('floursnce vs log predict of xgboost');plt.savefig('WithFITC.png')
+if True:
+    test['good'] = 2000*np.log10(test['pred'])+4500
+    plt.plot(np.log10(test['pred']),test[target],'ro');plt.title('linear model vs log predict of xgboost');
+    plt.plot(np.log10(test['pred']),test['good'],'bo');plt.ylim(0,5000);
+    test['good2'] = 100*np.log10(test['pred'])+1000
+    plt.plot(np.log10(test['pred']),test['good2'],'go')
+    plt.savefig('linear_model.png');plt.show()
+#SVM
+if True:
+    plt.plot([800,950],[-200,-700])
+    plt.plot(test[target]-test['good2'],test[target]-test['good'],'ro');plt.show()
+    x2,x1=800,950
+    y2,y1=-200,-700
+    test['svm_distance'] = ((y2-y1)*(test[target]-test['good2']) - (x2-x1)*(test[target]-test['good']) + x2*y1-y2*x1)/(((y2-y1)**2+(x2-x1))**2)**.5
+    test['cluster'] = (test['svm_distance'] >0)*1
+    plt.plot(np.log10(test[test['cluster'] == 1]['pred']),test[test['cluster'] == 1][target],'ro');
+    plt.plot(np.log10(test[test['cluster'] == 0]['pred']),test[test['cluster'] == 0][target],'go');plt.show()
+    plt.plot(np.log10(test[test['cluster'] == 1]['pred']),test[test['cluster'] == 1][target],'go');plt.plot(np.log10(test[test['cluster'] == 0]['pred']),test[test['cluster'] == 0][target],'bo');plt.plot(np.log10(test['pred']),test['good2'],'ro');plt.plot(np.log10(test['pred']),test['good'],'ro');plt.ylim(0,5000);plt.title('flourscence vs actual predictions from peptide model');plt.savefig('linear_clusters.png');plt.show()
+for i in features:
+    x= test.groupby('cluster')[i].apply(list)
+    pval = stats.ks_2samp(x[0], x[1])[1]
+    y1= list(plt.hist(x[0],bins=20,normed=True))
+    y2= list(plt.hist(x[1],bins=20,normed=True))
+    y1[0] = np.append(y1[0],0)
+    y2[0] = np.append(y2[0],0)
+    plt.close()
+    plt.boxplot((x[0],x[1]))
+    plt.plot([0.0,]*20,y2[1][:20],'c')
+    plt.plot([0.0,]*20,y1[1][:20],'c')
+    plt.plot(0.0+0.5*(y1[0]/max(y1[0])),y1[1][:],'b')
+    plt.plot(0.0+0.5*(y2[0]/max(y2[0])),y2[1][:],'r')
+    
+    plt.plot([1.1,]*20,y1[1][:20],'b')
+    plt.plot(1.1+0.5*(y1[0]/max(y1[0])),y1[1][:],'b')
+    plt.plot(2.1+0.5*(y2[0]/max(y2[0])),y2[1][:],'r')
+    plt.plot([2.1,]*20,y2[1][:20],'r')
+    plt.title(pval)
+    plt.ylabel(i)
+    plt.xlim(0,3)
+    plt.savefig('test/'+str(i)+'_test_.png')
+    plt.close()
+if True:
+    feature1_score = {}
+    test = test.sort_values('cluster').reset_index(drop=True)
+    for i in range(len(features)):
+            for fold in range(1):
+                print features[i]
+                temp_f = [features[i],]
+                train_id = [x for x in range(len(test)) if x%2!=fold]
+                val_id = [x for x in range(len(test)) if x%2==fold]
+                xgtest = xgb.DMatrix(test[temp_f].iloc[val_id].values,
+                                     label=test['cluster'].iloc[val_id].values,
+                                     missing=np.NAN)
+                xgtrain = xgb.DMatrix(test[temp_f].iloc[train_id].values,
+                                      label=test['cluster'].iloc[train_id].values,
+                                      missing=np.NAN)
+                model1_a = {}
+                watchlist  = [ (xgtrain,'train'),(xgtest,'test')]
+                model1=xgb.train(plst,xgtrain,10,watchlist,early_stopping_rounds=50,
+                                 evals_result=model1_a,maximize=False,verbose_eval=500)
+                score2= roc_auc_score(xgtest.get_label(),model1.predict(xgtest,ntree_limit=model1.best_ntree_limit))
+                print score2
+                feature1_score[features[i]] = score2
+    print sorted([(feature1_score[x],x) for x in feature1_score.keys()])[-10:]
+for  i in sorted(test.keys()):
+    try:
+        plt.close()
+        plt.plot(test[i], test[target] - test['good'],'ro')
+        plt.savefig('Good_Staple'+i+'.png')
+    except :
+         None
+if True:
+    plt.close()
+    test['staple'] = map(lambda x : tuple([i for i in x if i in ['R8','R5','S5','S8','B5','B8']]),test['1'].apply(process_string))
+    for i in pd.unique(test['staple']):
+        temp = test[test['staple']==i]
+        plt.plot(np.log10(temp['pred']),temp[target],'o',label=i)
+    plt.legend();plt.savefig('staple_type.png')
+if True:
+    plt.close()
+    plt.plot(np.log10(test[test['7']==2]['pred']),test[test['7']==2][target],'ro',label = 'i,i+4')
+    plt.plot(np.log10(test[test['7']==3]['pred']),test[test['7']==3][target],'bo',label = 'i,i+7')
+    plt.plot(np.log10(test[test['7']==4]['pred']),test[test['7']==4][target],'go',label = 'i,i+4/11')
+    plt.plot(np.log10(test[test['7']==1]['pred']),test[test['7']==1][target],'mo',label = 'wild')
+    plt.legend()
+    plt.savefig('predict_vs_permability.png')
+def process_string(str):
+    result = []
+    special_resi = False
+    for i in str:
+        if i =='(':
+            return result
+        elif special_resi and i !='-': #inside special residue
+            temp += i
+        elif i =='-':
+            if special_resi : #closing of special residue
+                result += [temp,]
+                special_resi = False
+                temp  = ''
+            else: #starting of special residue
+                special_resi = True 
+                temp = ''
+        else: #normal residue
+            result += [i,]
+    return result
+from sklearn.metrics import roc_auc_score
 feature1_score = {}
 for i in range(len(features)):
-    for repeat in range(0,1):
         for fold in range(1):
-            print features[i],
+            print features[i]
+            temp_f = [features[i],]
             train_id = [x for x in range(len(train)) if x%5!=fold]
             val_id = [x for x in range(len(train)) if x%5==fold]
-            xgtest = xgb.DMatrix(train[features[i:i+1]].iloc[val_id].values,
+            xgtest = xgb.DMatrix(train[temp_f].iloc[val_id].values,
                                  label=train[target].iloc[val_id].values,
                                  missing=np.NAN)
-            xgtrain = xgb.DMatrix(train[features[i:i+1]].iloc[train_id].values,
+            xgtrain = xgb.DMatrix(train[temp_f].iloc[train_id].values,
                                   label=train[target].iloc[train_id].values,
                                   missing=np.NAN)
             model1_a = {}
             watchlist  = [ (xgtrain,'train'),(xgtest,'test')]
             model1=xgb.train(plst,xgtrain,300,watchlist,early_stopping_rounds=50,
                              evals_result=model1_a,maximize=False,verbose_eval=500)
-            model1=xgb.train(plst,xgtrain,model1.best_ntree_limit,watchlist,early_stopping_rounds=50,
-                             evals_result=model1_a,maximize=False,verbose_eval=500)
-            feature1_score[features[i]] = (model1.best_score,model1,xgtest)
+            score2= roc_auc_score(xgtest.get_label(),model1.predict(xgtest,ntree_limit=model1.best_ntree_limit))
+            print score2
+            feature1_score[features[i]] = score2
+sorted([(feature1_score[x],x) for x in feature1_score.keys()])
 feature2_score = {}
 from sklearn.metrics import roc_auc_score
+# get likelihood maxisation
+
+if True:
+    grad =[10,30,100,300,1000,3000]
+    c = [10,30,100,300,1000,3000,5000]
+    for i1 in grad:
+        for j1 in c:
+            for i2 in grad:
+                for j2 in c:
+                    test['temp1'] = (test[target]-i1*np.log10(test['pred'])+j1)**2 #error
+                    test['temp1']
+                    test['temp2'] = (test[target]-i2*np.log10(test['pred'])+j2)**2
+                    die
 
 for i in range(len(features)):
     for j in range(i+1,len(features)):
@@ -234,6 +393,29 @@ plt.plot(range(59),map(lambda x : feature1_score[x][0],sorted(feature1_score.key
 plt.plot([ feature2_score[x][-1][0] for x in  feature2_score.keys()],
 	 [feature2_score[x][-1][-1] for x in feature2_score.keys()],'ro');plt.show()
 WC = pd.read_csv('wildmen_crippen.csv')
+charge_csv = pd.read_csv('geister_charge.csv')
+bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
+        0.15,  0.2 ,  0.25,  0.3 ,999]
+if True:
+    counter = 1
+    mmff = pd.read_csv('MMFF.csv')
+    for i in range(len(bins)-1):
+        print counter,
+        temp = charge_csv[(charge_csv['charge'] > bins[i])  & (charge_csv['charge'] < bins[i+1])]
+        x = temp.groupby('atoms')['charge'].apply(list)
+        plt.close()
+        try:
+            plt.boxplot([x[i] for i in x.keys()],labels = x.keys())
+            strings = [str(list(mmff[mmff['Numeric'].isin([num,])]['Symbolic'].values))+'\n' for num in x.keys()]
+            new = ''
+            for ii in strings:
+                new = new + ii
+            plt.title(new)
+            plt.xlabel('PEOE_VSA_%i\n'%counter+str(map(len,x.values)))
+            plt.savefig('Z_PEOE_VSA_%i.png'%counter, bbox_inches='tight')
+        except : print counter,'error'
+        counter += 1
+    
 WC[(WC['MR'] > 1.29) & (WC['MR'] < 1.82) ][['type','descriptions']].values
 
 WC[(WC['MR'] > 1.82) & (WC['MR'] < 2.24) ][['type','descriptions']].values
