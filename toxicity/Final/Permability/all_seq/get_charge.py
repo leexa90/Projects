@@ -1,7 +1,8 @@
 import pandas as pd
-train = pd.read_csv('peptide_permability.csv')
+train = pd.read_csv('stapled_peptide_permability_features.csv')
+                    #peptide_permability.csv')
 from rdkit import Chem
-from rdkit.Chem import PandasTools
+#from rdkit.Chem import PandasTools
 from rdkit.Chem import AllChem
 from rdkit.Chem import Descriptors
 import  numpy as np
@@ -21,6 +22,7 @@ def make_info(x,num=None):
     mol0 = Chem.MolFromSmiles(x)
     mol = Chem.AddHs(mol0)
     AllChem.Compute2DCoords(mol)
+    adj = Chem.GetAdjacencyMatrix(mol)*1.0
     molMMFF = AllChem.MMFFGetMoleculeProperties(mol)
     atoms = list(
                             map(lambda x: molMMFF.GetMMFFAtomType(x),
@@ -29,9 +31,19 @@ def make_info(x,num=None):
                             )
     AllChem.ComputeGasteigerCharges(mol)
     charges = [float(mol.GetAtomWithIdx(x).GetProp('_GasteigerCharge')) for x in range(len(atoms))]
-    return [atoms,charges]
+    return [atoms,charges,adj*np.array(atoms)]
 
 train['all']= train['SMILES'].apply(lambda x : make_info(x))
+if True:
+    MMFF = pd.DataFrame(None)
+    MMFF['atom'] = np.concatenate(train['all'].apply(lambda x : x[0]).values,0)
+    MMFF['charge'] = np.concatenate(train['all'].apply(lambda x : x[1]).values,0)
+    bonds =[]
+    for adj in [x for x in train['all'].apply(lambda x : x[2]).values]:
+        for j in adj:
+            bonds += [sorted(j[j>=1]),]            
+    MMFF['bond'] = bonds
+    MMFF.to_csv('stapled_peptide_geisteiger_charge.csv',index=0)
 die
 train['atoms']= train['all'].apply(lambda x : x[2])
 #train['bond']= train['all'].apply(lambda x : x[1][:,:,-3:])

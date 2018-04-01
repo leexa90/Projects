@@ -222,21 +222,40 @@ for seed in range(0,100):
     for repeat in range(0,1):
         test['pred'] = 0
         train2['pred_xgb'] = 0
-        for fold in range(1):
-            xgtest = xgb.DMatrix(train2[features].values,
-                                 label=train2[target].values,
-                                 missing=np.NAN,feature_names=features)
-            xgtrain = xgb.DMatrix(train1[features].values,
-                                  label=train1[target].values,
-                                  missing=np.NAN,feature_names=features)
-            model1_a = {}
-            watchlist  = [ (xgtrain,'train'),(xgtest,'test')]
-            model1=xgb.train(plst,xgtrain,500,watchlist,early_stopping_rounds=200,
-                             evals_result=model1_a,maximize=False,verbose_eval=100)
-            train2 = train2.set_value(train2.index,'pred_xgb',model1.predict(xgtest))
-            xgtest = xgb.DMatrix(test[features].values,                
-                                    missing=np.NAN,feature_names=features)
-            test['pred'] = model1.predict(xgtest)
+        for alpha in (0.003,0.01,0.03,0.1,0.3,1,3):
+            from sklearn.linear_model import LogisticRegression
+            clf = LogisticRegression(penalty='l1',C=alpha**-1,class_weight='balanced')
+            temptrain  = StandardScaler().fit(train1[features]).transform(train1[features])
+            preds = clf.fit(temptrain,train1[target]).predict_proba(temptrain)[:,1]
+            temptrain  = StandardScaler().fit(train1[features]).transform(train2[features])
+            preds2 = clf.predict_proba(temptrain)[:,1]
+            a,b = roc_auc_score(train1[target],preds),roc_auc_score(train2[target],preds2)
+            temptrain  = StandardScaler().fit(train[features]).transform(test[features])
+            preds3 = clf.fit(StandardScaler().fit(train[features]).transform(train[features]),
+                             train[target]).predict_proba(temptrain)
+            D = pd.DataFrame(features);D['a']=clf.coef_[0,:]
+            train2 = train2.set_value(train2.index,'pred_xgb',preds2)
+            test['pred'] = preds3
+            print D[D['a']!=0].sort_values('a').values,a,b
+            if True:
+                features2 = D[D['a']!=0].sort_values('a')[0].values
+                temptrain  = StandardScaler().fit(train[features2]).transform(train[features2])
+                preds4 = clf.fit(StandardScaler().fit(train[features2]).transform(train[features2]),
+                                 train[target]).predict_proba(temptrain)
+                X_design = np.hstack((np.ones(shape = temptrain.shape[0:1]+(1,)), temptrain))
+                V = np.matrix(np.zeros(shape = (X_design.shape[0], X_design.shape[0])))
+                np.fill_diagonal(V, np.multiply(preds4[:,0], preds4[:,1]))
+                covLogit = np.linalg.inv(X_design * V * X_design.T)
+                B = np.concatenate([clf.intercept_,clf.coef_[0]])
+                X = X_design
+                Y = train[target].values
+                def logL(B,X=X,Y=Y): #log likelihood objective funtion
+                    temp = np.sum(Y*(np.matmul(X_design,B)))
+                    temp += np.sum(np.log(1+np.exp(np.matmul(X_design,B))))
+                    return temp
+                h = 0.005
+                (logL(B)-2*logL(B-h)+logL(B-2h))/h**2
+                    
         #plt.plot(np.log10(test['pred']),test[target],'ro');plt.title('flourescence vs log predict of xgboost');plt.savefig('WithFITC.png')
 
     # linear peptide model against linear peptides
@@ -328,6 +347,24 @@ if True:
         clf = linear_model.Lasso(alpha=alpha)
         temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
         preds = clf.fit(temptrain,np.log10(test['10'])).predict(temptrain)
+        se = np.sum((preds-np.log10(test['10']))**2)/np.sum((temptrain-np.mean(temptrain))**2)
+        se = 2*(se/215)**.5
+        if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :
+            results += [(i,np.corrcoef(preds,np.log10(test['10']))[0,1],
+                         clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se]),]
+    print sorted(results,key =  lambda x : x[1])
+if True:
+    results = []
+    for i in features:#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
+        X,Y1,Y2 = [],[],[]
+        from sklearn import linear_model,preprocessing ,decomposition
+        from sklearn.decomposition import PCA
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.linear_model import Lasso
+        alpha =0.00#alpha#10**alpha
+        clf = LogisticRegression(class_weight='balanced')
+        temptrain  = StandardScaler().fit(train[[i,]]).transform(train[[i,]])
+        preds = clf.fit(temptrain,train[target]).predict_prob(temptrain)
         se = np.sum((preds-np.log10(test['10']))**2)/np.sum((temptrain-np.mean(temptrain))**2)
         se = 2*(se/215)**.5
         if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :

@@ -1,7 +1,7 @@
 import pandas as pd
 train = pd.read_csv('stapled_200.csv')
 from rdkit import Chem
-from rdkit.Chem import PandasTools
+#from rdkit.Chem import PandasTools
 from rdkit.Chem import AllChem
 from rdkit.Chem import Descriptors
 import  numpy as np
@@ -125,7 +125,7 @@ if True:
     del train['SMILES_temp']
     del train['charges']
     train['permability'] = train['10']
-    train.to_csv('stapled_noFITC_peptide_permability_features.csv',index=0)
+    train.to_csv('stapled_peptide_permability_features.csv',index=0)
 if True:
     from scipy import histogram, digitize, stats, mean, std
     import matplotlib.pyplot as plt
