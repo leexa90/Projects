@@ -564,9 +564,12 @@ plt.plot([ feature2_score[x][-1][0] for x in  feature2_score.keys()],
 	 [feature2_score[x][-1][-1] for x in feature2_score.keys()],'ro');plt.show()
 WC = pd.read_csv('wildmen_crippen.csv')
 charge_csv = pd.read_csv('geister_charge.csv')
-bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
-        0.15,  0.2 ,  0.25,  0.3 ,999]
+charge_csv = pd.read_csv('stapled_peptide_geisteiger_charge.csv')
+charge_csv[(charge_csv['atoms'] ==2)& (charge_csv['charge'] >= -.05 ) & (charge_csv['charge'] < -0.)].groupby(['atoms','bond1','bond2','origin']).apply(len)
+
 if True:
+    bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
+        0.15,  0.2 ,  0.25,  0.3 ,999]
     counter = 1
     mmff = pd.read_csv('MMFF.csv')
     for i in range(len(bins)-1):

@@ -22,7 +22,8 @@ def make_info(x,num=None):
     mol0 = Chem.MolFromSmiles(x)
     mol = Chem.AddHs(mol0)
     AllChem.Compute2DCoords(mol)
-    adj = Chem.GetAdjacencyMatrix(mol)*1.0
+    adj = (Chem.GetDistanceMatrix(mol)==1)*1
+    adj2 = (Chem.GetDistanceMatrix(mol)==2)*1
     molMMFF = AllChem.MMFFGetMoleculeProperties(mol)
     atoms = list(
                             map(lambda x: molMMFF.GetMMFFAtomType(x),
@@ -31,18 +32,26 @@ def make_info(x,num=None):
                             )
     AllChem.ComputeGasteigerCharges(mol)
     charges = [float(mol.GetAtomWithIdx(x).GetProp('_GasteigerCharge')) for x in range(len(atoms))]
-    return [atoms,charges,adj*np.array(atoms)]
+    return [atoms,charges,np.stack((adj*np.array(atoms),adj2*np.array(atoms)),-1)]
 
 train['all']= train['SMILES'].apply(lambda x : make_info(x))
 if True:
+    train['id'] = train.index
+    train['len'] = train['all'].apply(lambda x : len(x[0]))
+    train['ids'] = list(map(lambda x : [x[0],]*x[1],train[['id','len']].values))
+if True:
     MMFF = pd.DataFrame(None)
-    MMFF['atom'] = np.concatenate(train['all'].apply(lambda x : x[0]).values,0)
+    MMFF['atoms'] = np.concatenate(train['all'].apply(lambda x : x[0]).values,0)
     MMFF['charge'] = np.concatenate(train['all'].apply(lambda x : x[1]).values,0)
-    bonds =[]
+    MMFF['origin'] = np.concatenate(train['ids'].apply(lambda x : x).values,0)
+    bonds1 =[]
+    bonds2 =[]
     for adj in [x for x in train['all'].apply(lambda x : x[2]).values]:
         for j in adj:
-            bonds += [sorted(j[j>=1]),]            
-    MMFF['bond'] = bonds
+            bonds1 += [sorted(j[:,0][j[:,0]>=1]),]
+            bonds2 += [sorted(j[:,1][j[:,1]>=1]),]  
+    MMFF['bond1'] = bonds1
+    MMFF['bond2'] = bonds2
     MMFF.to_csv('stapled_peptide_geisteiger_charge.csv',index=0)
 die
 train['atoms']= train['all'].apply(lambda x : x[2])

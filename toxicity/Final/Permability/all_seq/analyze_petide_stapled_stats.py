@@ -6,7 +6,7 @@ train = pd.read_csv('peptide_permability_features.csv')
 #test = pd.read_csv('atsp7041_permability_features.csv')
 #test = pd.read_csv('val_permability_features.csv')
 test = pd.read_csv('stapled_peptide_permability_features.csv')
-test = test[test['7']!=1]
+#test = test[test['7']!=1]
 for feats in ['SMR_VSA','PEOE_VSA','SlogP_VSA']:
     feat_all = [ x for x in train.keys() if feats in x]
     for feat in feat_all:
@@ -806,8 +806,10 @@ if True:
     WC = pd.read_csv('wildmen_crippen.csv')
     charge_csv = pd.read_csv('geister_charge.csv')
     charge_csv =pd.read_csv('stapled_peptide_geisteiger_charge.csv')
+    charge_csv[(charge_csv['atoms'] ==2)& (charge_csv['charge'] >= -.05 ) & (charge_csv['charge'] < -0.)].groupby(['atoms','bond1','bond2','origin']).apply(len)
 
 bins = [-999,-0.4,-0.2,0,0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.6,999]
+
 if True:
     bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
         0.15,  0.2 ,  0.25,  0.3 ,999]

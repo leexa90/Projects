@@ -25,16 +25,16 @@ dictt = {'AC':'CC(=O)',
          'V':'N[C@H](C(C))C(=O)',
          'W':'N[C@H](Cc1c[nH]c2ccccc12)C(=O)',
          'Y':'N[C@H](Cc1ccc(O)cc1)C(=O)',
-         'S5':'N[C@](CCCC=2)(C)C(=O)',
-         'S8':'N[C@](CCCCCCC=2)(C)C(=O)',
-         'R5':'N[C@@](CCCC=2)(C)C(=O)',
-         'R8':'N[C@@](CCCCCCC=2)(C)C(=O)',
-         'S53':'N[C@](CCCC=3)(C)C(=O)',
-         'S83':'N[C@](CCCCCCC=3)(C)C(=O)',
-         'R53':'N[C@@](CCCC=3)(C)C(=O)',
-         'R83':'N[C@@](CCCCCCC=3)(C)C(=O)',
-         'B8':'NC(CCCC=2)(CCCC=3)C(=O)', #???
-         'B5':'NC(CCCC=2)(CCCC=3)C(=O)',#'S8':'N[C@](CCCCCCC=3)(C)C(=O)' for S8
+         'S5':'N[C@](CCCC=3)(C)C(=O)',
+         'S8':'N[C@](CCCCCCC=3)(C)C(=O)',
+         'R5':'N[C@@](CCCC=3)(C)C(=O)',
+         'R8':'N[C@@](CCCCCCC=3)(C)C(=O)',
+         'S53':'N[C@](CCCC=4)(C)C(=O)',
+         'S83':'N[C@](CCCCCCC=4)(C)C(=O)',
+         'R53':'N[C@@](CCCC=4)(C)C(=O)',
+         'R83':'N[C@@](CCCCCCC=4)(C)C(=O)',
+         'B8':'NC(CCCC=3)(CCCC=4)C(=O)', #???
+         'B5':'NC(CCCC=3)(CCCC=4)C(=O)',#'S8':'N[C@](CCCCCCC=3)(C)C(=O)' for S8
          'BAla':'NCCC(=O)',
          'PEG1':'NCCOCCOCC(=O)',
          'PEG':'NCCOCCOCC(=O)',
@@ -85,11 +85,11 @@ def save_smile(i,counter ):
             second_ii = 0.5
     smile_str += '[O-]'
     try:
-##        mol0 = Chem.MolFromSmiles(smile_str)
-##        mol = Chem.AddHs(mol0)
-##        AllChem.Compute2DCoords(mol)
-##        #AllChem.EmbedMolecule(mol,AllChem.ETKDG())
-##        open('temp_%s.sdf'%(counter),'w').write(Chem.MolToMolBlock(mol))
+        #mol0 = Chem.MolFromSmiles(smile_str)
+        #mol = Chem.AddHs(mol0)
+        #AllChem.Compute2DCoords(mol)
+        #AllChem.EmbedMolecule(mol,AllChem.ETKDG())
+        #open('temp_%s.sdf'%(counter),'w').write(Chem.MolToMolBlock(mol))
         return smile_str
     except :
         print (counter,smile_str)

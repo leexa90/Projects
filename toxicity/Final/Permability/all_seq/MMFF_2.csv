@@ -1,0 +1,203 @@
+Symbolic,Numeric,Definition [coordination_number] {formal charge}
+CR,1,Alkyl carbon [4]
+c=c,2,Vinylic carbon [3]
+CSP2,2,Generic sp2  carbon [3]
+c=o,3,Generic carbonyl carbon [3]
+C=N,3,Imine-type carbon [3]
+CGD,3,Guanidine carbon [3]
+C=OR,3,Ketone or aldehyde_carbonyl carbon [3]
+C=ON,3,Amide carbonyl carbon [3]
+coo,3,Carboxylic acid or ester_carbonyl carbon [3]
+COON,3,Carbamate carbonyl carbon [31]
+COOO,3,Carbonic acid or ester carbonyl carbon [3]
+c=os,3,Thioester carbonyl carbon double bonded to O
+c=s,3,Thioester carbon_bonded to S [3]
+C=SN,3,Thioamide carbon bonded to S  [3]
+cs02,3,Carbon in  > C = SO  [3]
+cs=o,3,Sulfinyl carbon in > C = S = 0  [3]
+css,3,Thiocarboxylic acid or_ester carbon [3]
+C=P,3,Carbon doubly bonded to P [3]
+CSP,3,Acetylenic carbon [2]
+=C=,4,Allenic carbon [2]
+HC,5,Hydrogen attached to carbon 
+HSI,5,Hydrogen attached to silicon [I]
+-0-,6,Generic divalent oxygen [2]
+OR,6,Ether oxygen [2]
+oc=o,6,Carboxylic acid or ester oxygen [2] 
+oc=c,6,Enolic or phenolic_oxygen [2]
+OC=N,6,Oxygen in 4 - C = N -moiety  [2]
+oc=s,6,Divalent oxygen in thioacid_or ester [2]
+ON02,6,Divalent nitrate “ether”_oxygen [2]
+ON=O,6,Divalent nitrate “ether”_oxygen 12]
+OS03,6,Divalent oxygen in sulfate_group [2]
+oso,6,One of two divalent oxygens attached to sulfur [2]
+os=o,6,Divalent oxygen in R(R0)S = 0 [2]
+-0s,6,Other divalent oxygen_attached to sulfur [2]
+OP03,6,Divalent oxygen in_phosphate group [2]
+OP02,6,Divalent oxygen in_phosphite group [2]
+OPO,6,Divalent oxygen_two oxygens attached to P [2]
+-0P,6,Other divalent oxygen attached to phosphorus [21]
+o=c,6,Generic carbonyl oxygen [1]
+O=CN,7,Carbonyl oxygen in amides  [1]
+O=CR,7,Carbonyl oxygen in aldehydes and ketones [1]
+o=co,7,Carbonyl oxygen in_acids and esters [1]
+O=N,7,Nitroso oxygen [1]
+o=s,7,Doubly bonded sulfoxide oxygen [1]
+o=s=,7,O=S  on sulfur doubly bonded to eg. C [1]
+NR,8,Amine nitrogen [3]
+N=C,9,lmine nitrogen [2]
+N=N,9,Azo-group nitrogen [2]
+NC=O,10,Amide nitrogen [3]
+NC=S,10,Thioamide nitrogen 13]
+NN=C,10,Nitrogen in N - N=C  moiety with deloc. Ip [3]
+NN=N,10,Nitrogen in N - N = N moiety_with deloc. Ip [3]
+F,11,Fluorine [1]
+CI,12,Chlorine [ 1]
+Br,13,Bromine [1]
+I,14,Iodine [1]
+S,15,Thiol,sulfide, disulphide sulphur[2]
+s=c,16,Sulfur doubly bonded to carbon[1]
+s=o,17, Sulfoxide sulfur [3]
+>S=N,17,Tricoordinate sulfur doubly_bonded to N [3]
+so,2,18,Sulfone sulfur [4]
+S02N,18,Sulfonamide sulfur [4]
+SO3,18,Sulfonate group sulfur [4]
+SO4,18,Sulfate group sulfur [4]
+=so,2,18,Sulfone sulfur_to carbon[3]
+SNO,18,Sulfur in nitrogen analog of_a sulfone
+SI,19,Silicon [4]
+CR4R,20,Aliphatic carbon in_4-membered ring 14]
+HOR,21,Hydroxyl hydrogen in_alcohols [1]
+HO,21,Generic hydroxyl_hydrogen [1]
+CR3R,21,Aliphatic carbon in_3-membered ring [4]
+HNR,21,Generic hydrogen on sp3 nitrogen [1]
+HPYL,21,Hydrogen on nitrogen in_pyrrole [ 1]
+H3N,23,Hydrogen in ammonia [ 1]
+HNOX,23,Hydrogen on N in a N-oxide [1]
+HOCO,24,Hydroxyl hydrogen in_carboxylic acids [ 1 ]
+HOP,24,Hydroxyl hydrogen in_H - 0 - P moiety [ 1]
+PO4,24,Phosphate group_phosphorus [4]
+PO3,25,Phosphorus with 3 attached_oxygens [4]
+PO2,25,Phosphorus with 2 attached_oxygens [4]
+PO,25,Phosphine oxide_phosphorus [4]
+PTET,25,General tetracoordinate_phosphorus [4]
+P,25,Phosphorus in_phosphines 13]
+HN=C,25,Hydrogen on imine_nitrogen [1]
+HN=N,25,Hydrogen on azo_nitrogen [ 1]
+HNCO,28,Hydrogen on amide_nitrogen [1]
+HNCS,28,Hydrogen on thioamide_nitrogen [1]
+HNCC,28,Hydrogen on enamine_nitrogen [ 1 ]
+HNCN,28,Hydrogen in H - N - C=  N_moiety [1]
+HNNC,28,Hydrogen in H - N - N=C_moiety [1]
+HNNN,28,Hydrogen in H - N - N = N_moiety [1]
+HNSO,28,Hydrogen on NSO_or NS03 nitrogen [1]
+HNC%,28,Hydrogen on N triply bonded_to c [1]
+HSP2,28,Generic hydrogen on sp_nitrogen [1]
+HOCC,29,Enolic or phenolic hydroxyl_hydrogen [1]
+HOCN,29,Hydroxyl hydrogen in HO-C=N [1]
+CR4E,30,Olefinic carbon in_4-membered ring [3]
+HOH,31,Hydroxyl hydrogen in_water [1] {-1/2}
+02CM,32,Oxygen in carboxylate_group [1]
+ONX,32,Oxygen in N-oxides [1]
+O=N,32,Oxygen in nitroso group [1]
+02N,32,Oxygen in nitro group [ 1]
+02N0,32,Nitro-group oxygen in_nitrate [1]
+03N,32,Nitrate anion oxygen [1] {-1/3}
+0-s,32,Single terminal 0 on tetra-_coordinate sulfur [1]
+02s,32,One of 2 terminal 0’s on sulfur [1] {variable}
+03s,32,One of 3 terminal 0’s on sulfur [1] {variable}
+04s,32,Terminal 0 in sulfate anion [1] {-1/2}
+OSMS,32,Terminal oxygen in thiosulfinate anion  [1] {-1/2}
+OP,32,Oxygen in phosphine_oxide [1]
+02P,32,One of 2 terminal 0’s on P [1] {variable}
+03P,32,One of 3 terminal 0’s on P [1] {variable}
+04P,32,One of 4 terminal 0’s on P [1] {variable}
+04CI,32,Oxygen in perchlorate anion [1] {-1/4}
+HOS,33,Hydrogen on oxygen attached to sulfur [1]
+NR +,33,Quaternary nitrogen [4] {1}
+OM,35,Oxide oxygen on sp3 carbon [1] {-1}
+OM2,35,Oxide oxygen on sp2 carbon [1] {-1}
+HNR+,36,Hydrogen on quaternary_nitrogen [1]
+HIM +,36,Hydrogen on imidazolium_nitrogen [1]
+HPD+,36,Hydrogen on pyridinium nitrogen [1]
+HNN +,36,Hydrogen on amidinium nitrogen [1]
+HNC +,36,Hydrogen on protonated imine nitrogen [1]
+HGD +,36,Hydrogen on guanidinium_nitrogen [i]
+CB,37,Aromatic carbon_benzene [3]
+NPYD,38,Aromatic nitrogen with pi lone pair [2]
+NPYL,39,Aromatic 5-ring nitrogen with pi lone pair [2]
+NC=C,40,Enamine or aniline nitrogen_deloc. Ip [3]
+NC=N,40,Nitrogen in N - C=N  with_deloc. Ip [3]
+NC=N,40,Nitrogen in N - C = P with_deloc. Ip [3]
+NC%C,40,Nitrogen attached to C - C_triple bond [3]
+C02M,40,Carbon in carboxylate_anion [3]
+CS2M,40,Carbon in thiocarboxylate_anion [3]
+NSP,42,Triply bonded nitrogen [1]
+NS02,43,Sulfonamide nitrogen [3]
+NS03,43,Sulfonamide nitrogen [3]
+NC%N,43,Nitrogen attached to_cyano group [3]
+STHI,43,Aromatic 5-ring sulfur with_T lone pair [2]
+NO2,43,Nitrogen in nitro group [3]
+NO3,45,Nitrogen in nitrate group [3]
+N=O,46,Nitrogen in nitroso group [2]
+NAZT,47,Terminal nitrogen in azido or_diazo group [1]
+NSO,48,Divalent nitrogen replacing monovalent O in SO2 group [2]
+O+,49,Oxonium oxygen [3] {1}
+HO+,50,Hydrogen on oxonium_oxygen [1]
+0=+,51,Oxenium oxygen [2] {1}
+HO=+,52,Hydrogen on oxenium oxygen [1]
+=N=,Central nitrogen in C=N  = N_or N=N=N    [2]
+N +=C,54,lminium nitroaen [3] {1}
+N +=N,54,Positively charged nitrogen
+NCN +,55,Either nitrogen in doubly bonded to N [3] {1/2}
+NGD+,56,N+=C-N:_Guanidinium nitrogen [3] {1/3}
+CGD+,56,Guanidinium carbon [3]
+CNN +,57,Carbon in +N=C-N: resonance structures [3]
+NPD +,58,Aromatic nitrogen in pyridinium [3] {1}
+OFUR,59,Aromatic 5-ring oxygen with pi lone pair [2]
+C%-,59,lsonitrile carbon [1]
+NR%,61,Isonitrile nitrogen [2]
+NM,62,Anionic divalent nitrogen [2] {-1}
+C5A,63,Aromatic 5-ring C, alpha to N:, O:, or S: [3]
+C5B,64,Aromatic 5-ring C, beta to N:, O:, or S: [3]
+N5A,65,Aromatic 5-ring N, alpha to N:, O:, or S: [3]
+N5B,66,Aromatic 5-ring N, beta to N:, O:, or S: [3]
+N20X,67,sp2-hybridized N-oxide_nitrogen [3]
+N30X,68,sp 3-hybridizedN-oxide nitrogen [4]
+NPOX,69,Pyridinium N-oxide nitrogen [3]
+OH2,70,Oxygen in water [2]
+HS,71,Hydrogen attached to_sulfur [1]
+HS=N,71,Hydrogen attached to  > S = sulfur doubly bonded to N [1]
+HP,71,Hydrogen attached to phosphorus  [1]
+s-P,72,Terminal sulfur bonded to_P [1]
+SM,72,Anionic terminal sulfur [1] {-1}
+SSMO,72,Terminal sulfur in thiosulfinate_group [1] {-1/2}
+S02M,73,Sulfur in anionic sulfinate_group [3]
+SSOM,73,Tricoordinate sulfur in anionic thiosulfinate group [3]
+=S=O,74,Sulfinyl sulfur c=s=o
+-P=C,75,Phosphorus doubly bonded_to C [3]
+N5M,76,Nitrogen in 5-ring aromatic_anion [2] {variable}
+CL04,77,Perchlorate anion chlorine [4]
+c5,78,General carbon in 5-membered_heteroaromatic ring [3]
+N5,79,General nitrogen in_5-membered heteroaromatic ring [2]
+CIM+,80,Aromatic carbon between N’s in imidazolium [3]
+NIM+,81,Aromatic nitrogen in imidazolium [3] {-1/2}
+N5A+,81,Positive nitrogen in 5-ring alpha position [3] {1}
+N5B+,81,Positive nitrogen in 5-ring alpha position [3] {1}
+N5+,81,Positive nitrogen in other_5-ring position [3] (1}
+N5AX,82,N-oxide nitrogen in_5-ring alpha position [3]
+N5BX,82,N-oxide nitrogen in_5-ring beta position [3]
+N50X,82,N-oxide nitrogen in other_5-ring position [3]
+FE+2,87,Dipositive iron cation [O] {2}
+FE+3,88,Tripositive iron cation [OI {3}
+F-,89,Floride anion [O] {-1}
+CL-,90,Chloride anion [O]  {-1}
+BR-,91,Bromide anion [O] {-1}
+LI+,92,Lithium cation [O] {1}
+NA+,93,Sodium cation [OI {1}
+K+,94,Potassium cation [OI {1}
+ZN+2,95,Dipositive zinc cation_[O] {2}
+CA+2,96,Dipositive calcium_cation [0] {2}
+CU+l,96,Monopositive copper_cation [0] {1}
+cu+2,98,Dipositive copper_cation [0] {2}
+MG+2,99,Dipositive magnesium_cation [O] {2}
