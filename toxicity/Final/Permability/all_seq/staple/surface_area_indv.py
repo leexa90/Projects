@@ -10,6 +10,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Descriptors
 import matplotlib.pyplot as plt
+import collections
 for line in open('../bond_lengths.csv','r'):
     all += [line.split(),]
 bond_L= pd.DataFrame(all[1:],columns=all[0])
@@ -23,7 +24,7 @@ for feats in ['SMR_VSA','PEOE_VSA','SlogP_VSA']:
     feat_all = [ x for x in test.keys() if feats in x]
     for feat in feat_all:
         test[feat+'_norm']=test[feat]/np.sum(test[feat_all],1)
-def process_string(str):
+def process_string(str,len=len):
     result = []
     special_resi = False
     for i in str:
@@ -41,10 +42,14 @@ def process_string(str):
                 temp = ''
         else: #normal residue
             result += [i,]
-            if i in ['Q','N']:
-                result += [i,]
+            #if i in ['Q','N']:
+                #result += [i,]
     return len(result)
-test['len']=test['1'].apply(process_string)
+if True:
+    test['len']=test['1'].apply(process_string)
+    test['res_list']=test['1'].apply(lambda x : process_string(x,list))
+    test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
+    test['res_list']=test['res_list'].apply(len)
 def get_surface_area(smile):
     print (smile[-25:])
     mol0 = Chem.MolFromSmiles(smile)
@@ -70,7 +75,8 @@ if True:
     charge_csv =pd.read_csv('../stapled_peptide_geisteiger_charge.csv')
     for atom in [35, 71, 15, 11, 66, 39, 23, 34, 64, 16, 21, 63,  2, 29, 41, 57, 32,
             6, 56, 36,  7, 10,  3, 28, 37,  1,  5]:
-        bins = histogram(charge_csv[charge_csv['atoms']==atom]['charge'].values,10)[1]
+        bins = histogram(charge_csv[charge_csv['atoms']==atom]['charge'].values,20)[1]
+        bins = np.append(bins[:-1],999)
         for i in range(len(bins)-1):
             def func(x,atom=atom):
                 sum_ =  np.sum(x[1][(x[0]  >= bins[i] )&(x[0]  <= bins[i+1] ) &(np.array(x[2])==atom)])
@@ -99,7 +105,8 @@ if True:
     test['num'] = test['num'].fillna(0)
     plt.plot(test['num'],np.log10(test['permability']),'ro');plt.show()
     del test['num']
-charge_csv[(charge_csv['atoms'] == 28)].groupby(['bond1','bond2'])['charge'].apply(
+
+charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[1, 7, 10]') & (charge_csv['bond2'] == '[1, 1, 5, 10, 28] ')].groupby(['bond1','bond2'])['charge'].apply(
     lambda x : list(map(lambda x : round(x,4),(len(x),min(x),max(x),mean(x),std(x))))).reset_index()
 
 #print reuslts
@@ -122,21 +129,58 @@ if True:
                 results += [(i,np.corrcoef(preds,np.log10(test['10']))[0,1],
                              clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se]),]
         except : print (i)
-    print (sorted(results,key =  lambda x : x[1]))
+    print ([x[:2] for x in sorted(results,key =  lambda x : x[1])[-20:-2]])
 #test[''] = 
 plt.plot(test['charge_norm_7_-0.27398123963107096_-0.27251541490535375'],np.log10(test['permability']),'ro');plt.show()
 '''
-[('charge_norm_32_-0.5501702476405683_-0.549912333580245', 0.3963576040491148, -0.09874573632951715),
+
+for i in sorted(results,key =  lambda x : x[1])[-17:-2]:
+	print (i[0:1]+tuple(map(lambda x:np.round(x,3),i[1:4])))
+
 
 # RELATING TO SIZE BEING SMALLER molecules (total surface area)
-('charge_norm_41_0.06415049310865131_0.06666999388438306', 0.3979022597040567, 0.09913056093856876),
-('charge_norm_3_0.21503863174046248_0.24619849559912854', 0.40792828210874027, -0.10162837340562553),
-('charge_norm_28_0.16300020569822835_0.1639752966596217', 0.44530923007222073, -0.11094119897940165),
-('charge_norm_7_-0.27398123963107096_-0.27251541490535375', 0.44950482365016764, -0.11198645955460311),
-('charge_norm_28_0.16348775117892503_0.1639752966596217', 0.4495856145482003, -0.11200658722878785),
-('charge_norm_7_-0.27544706435678823_-0.27251541490535375', 0.45333406533731424, -0.11294044980511977)]
+('charge_norm_1_0.10431742603390584_0.11737113959967935', 0.374, -0.093, 0.032)
+('charge_41_0.06415049310865131_0.06666999388438306', 0.375, 0.093, 0.032)
+('PEOE_VSA12_norm', 0.384, -0.096, 0.031)
+('PEOE_VSA1_norm', 0.385, -0.096, 0.031)
+('charge_norm_3_0.2306185636697955_0.24619849559912854', 0.386, -0.096, 0.031)
+('SMR_VSA10_norm', 0.388, -0.097, 0.031)
+('charge_norm_41_0.041474986127065495_0.04399448690279725', 0.396, -0.099, 0.031)
+('charge_norm_32_-0.5501702476405683_-0.549912333580245', 0.396, -0.099, 0.031)
+('charge_norm_32_-0.5501702476405683_-0.5500412906104066', 0.396, -0.099, 0.031)
+('charge_norm_41_0.06415049310865131_0.06666999388438306', 0.398, 0.099, 0.031)
+('charge_norm_3_0.21503863174046248_0.24619849559912854', 0.408, -0.102, 0.031)
+('charge_norm_28_0.16300020569822835_0.1639752966596217', 0.445, -0.111, 0.03)
+('charge_norm_7_-0.27398123963107096_-0.27251541490535375', 0.45, -0.112, 0.03)
+('charge_norm_28_0.16348775117892503_0.1639752966596217', 0.45, -0.112, 0.03)
+('charge_norm_7_-0.27544706435678823_-0.27251541490535375', 0.453, -0.113, 0.03)
 '''
-
+import collections
+for ii in sorted(results,key =  lambda x : x[1])[-17:-2]:
+    def func3(ii):
+        if 'charge_norm_41' in ii[0]:
+            print (ii),
+            i = list(map(float,ii[0].split('_')[-3:]))
+            atom=int(i[0])
+            print (i)
+            temp = charge_csv[(charge_csv['atoms'] == atom)].groupby(['bond1','bond2'])['charge'].apply(
+            lambda x : list(map(lambda x : round(x,6),(len(x),min(x),max(x),mean(x),std(x))))).reset_index()
+            def func2(x,i=i[1:]): # function to get records within max and min of the feature range
+                x =x[1:]
+                if (x[1] >= i[0] and x[1] <= i[1]) or (x[0] >= i[0] and x[0] <= i[1]) or\
+                   (i[1] >= x[0] and i[1] <= x[1]) or (i[0] >= x[0] and i[0] <= x[1]):
+                    return 1
+                else: return 0
+            temp =  temp[temp['charge'].apply(func2)==1]
+            #print (pd.merge(temp,MMFF_dictt,'left',on=['bond1','bond2']).sort_values('origin'))
+            print (collections.Counter(
+                pd.merge(temp,MMFF_dictt,'left',on=['bond1','bond2']).sort_values('origin')['origin'].values)
+                   ,'\n')
+            return pd.merge(temp,MMFF_dictt,'left',on=['bond1','bond2']).sort_values('origin')
+    func3(ii=ii)
+    
+    
+MMFF_dictt = pd.read_csv('res_charge.csv')
 dictt = {'AC':'CC(=O)',
          'A':'N[C@H](C)C(=O)',
          'C':'N[C@H](CS)C(=O)',
@@ -178,3 +222,6 @@ dictt = {'AC':'CC(=O)',
          'pff':'N[C@@H](Cc1c(F)c(F)c(F)c(F)c1(F))C(=O)',
          'FITC':'C(NC1=CC=C2C(=C1)C4(OC2=O)C3=C(C=C(C=C3)O)OC5=C4C=CC(=C5)O)(=S)'}
          
+data_dictt=pd.DataFrame(None)
+data_dictt['res']=dictt.key()
+data_dictt['SMILES']=dictt.values()
