@@ -75,16 +75,16 @@ if True:
     charge_csv =pd.read_csv('../stapled_peptide_geisteiger_charge.csv')
     for atom in [35, 71, 15, 11, 66, 39, 23, 34, 64, 16, 21, 63,  2, 29, 41, 57, 32,
             6, 56, 36,  7, 10,  3, 28, 37,  1,  5]:
-        bins = histogram(charge_csv[charge_csv['atoms']==atom]['charge'].values,20)[1]
-        bins = np.append(bins[:-1],999)
+        bins = histogram(charge_csv[charge_csv['atoms']==atom]['charge'].values,4)[1]
+        bins[-1] = bins[-1]+0.001
         for i in range(len(bins)-1):
-            def func(x,atom=atom):
+            def func(x,i=i,atom=atom):
                 sum_ =  np.sum(x[1][(x[0]  >= bins[i] )&(x[0]  <= bins[i+1] ) &(np.array(x[2])==atom)])
                 if sum_ >= 0:
                     return sum_
                 else :
                     return 0.0
-            def func_norm(x,atom=atom):
+            def func_norm(x,i=i,atom=atom):
                 sum_ =  np.sum(x[1][(x[0]  >= bins[i] )&(x[0]  <= bins[i+1] ) &(np.array(x[2])==atom)])
                 if sum_ >= 0:
                     return sum_/np.sum(x[1])
@@ -112,6 +112,7 @@ charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[1, 7, 10]') &
 #print reuslts
 if True:
     results = []
+    from sklearn.metrics import r2_score
     for i in test.keys()[10:]:#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
         try:
             X,Y1,Y2 = [],[],[]
@@ -120,18 +121,18 @@ if True:
             from sklearn.preprocessing import StandardScaler
             from sklearn.linear_model import Lasso
             alpha =0.00#alpha#10**alpha
-            clf = linear_model.Lasso(alpha=alpha)
+            clf = linear_model.LinearRegression()
             temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
             preds = clf.fit(temptrain,np.log10(test['10'])).predict(temptrain)
             se = np.sum((preds-np.log10(test['10']))**2)/np.sum((temptrain-np.mean(temptrain))**2)
             se = 2*(se/215)**.5
             if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :
-                results += [(i,np.corrcoef(preds,np.log10(test['10']))[0,1],
+                results += [(i,r2_score(np.log10(test['10']),preds),
                              clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se]),]
         except : print (i)
     print ([x[:2] for x in sorted(results,key =  lambda x : x[1])[-20:-2]])
 #test[''] = 
-plt.plot(test['charge_norm_7_-0.27398123963107096_-0.27251541490535375'],np.log10(test['permability']),'ro');plt.show()
+#plt.plot(test['charge_norm_7_-0.27398123963107096_-0.27251541490535375'],np.log10(test['permability']),'ro');plt.show()
 '''
 
 for i in sorted(results,key =  lambda x : x[1])[-17:-2]:
@@ -155,6 +156,7 @@ for i in sorted(results,key =  lambda x : x[1])[-17:-2]:
 ('charge_norm_28_0.16348775117892503_0.1639752966596217', 0.45, -0.112, 0.03)
 ('charge_norm_7_-0.27544706435678823_-0.27251541490535375', 0.453, -0.113, 0.03)
 '''
+MMFF_dictt = pd.read_csv('res_charge.csv')
 import collections
 for ii in sorted(results,key =  lambda x : x[1])[-17:-2]:
     def func3(ii):
