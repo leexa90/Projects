@@ -48,8 +48,71 @@ def process_string(str,len=len):
 if True:
     test['len']=test['1'].apply(process_string)
     test['res_list']=test['1'].apply(lambda x : process_string(x,list))
+    test['list']=test['1'].apply(lambda x : np.array(process_string(x,list)))
     test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
     test['res_list']=test['res_list'].apply(len)
+    dictt = collections.Counter(np.concatenate(test['list'].values))
+print (dictt)
+impt = []
+#single res
+for res in dictt.keys():
+    if dictt[res] >= 20:
+        test['%s_num' %res] = test['list'].apply(lambda x : len(x[x==res]))
+        test['%s_norm' %res] = 1.0*test['%s_num'%res]/test['res_list']
+        impt += ['%s_norm' %res,'%s_num' %res]
+#double res
+def func_compare2(x,gap,res):
+    for i in range(len(res)):
+        if i==0:
+            value = (x[:-gap]==res[i])*1
+        else:
+            value = value * ([x[gap:]==res[i]])
+    return np.sum(value)
+    
+for gap in [1,2,3,4,5]:
+    for res1 in dictt.keys():
+        if dictt[res1] >= 20:
+            for res2 in dictt.keys():
+                if dictt[res2] >= 20:
+                    test['%s_%s_%s_num' %(res1,res2,gap)] = test['list'].apply(lambda x : func_compare2(x,gap,(res1,res2)))
+                    test['%s_%s_%s_norm' %(res1,res2,gap)] = test['%s_%s_%s_num' %(res1,res2,gap)]/test['res_list']
+                    impt += ['%s_%s_%s_num' %(res1,res2,gap),'%s_%s_%s_norm' %(res1,res2,gap)]
+for i in tuple(impt):
+    if 'norm' in i :
+        test[i+'_cat'] = (test[i] != 0)*1
+        impt  +=  [i+'_cat',]
+if True:
+    results = []
+    from sklearn.metrics import r2_score
+    for i in impt:#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
+        try:
+            X,Y1,Y2 = [],[],[]
+            from sklearn import linear_model,preprocessing ,decomposition
+            from sklearn.decomposition import PCA
+            from sklearn.preprocessing import StandardScaler
+            from sklearn.linear_model import Lasso
+            alpha =0.00#alpha#10**alpha
+            clf = linear_model.LinearRegression()
+            temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
+            preds = clf.fit(temptrain,np.log10(test['10'])).predict(temptrain)
+            se = np.sum((preds-np.log10(test['10']))**2)/np.sum((temptrain-np.mean(temptrain))**2)
+            se = 2*(se/215)**.5
+            ids_non_zero = test[test[i]!=0].index
+            if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :
+                results += [(i,r2_score(np.log10(test['10']),preds),
+                             clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
+        except : print (i)
+    print ([x[:3] for x in sorted(results,key =  lambda x : x[1])[-20:]])
+reg_coef = pd.DataFrame(results,columns= \
+                        ['name','simple LR model R2','corr coef','Se','CI','present in ids']).\
+                        sort_values('simple LR model R2').reset_index(drop=True)
+
+
+reg_coef['num'] = reg_coef['present in ids'].map(len)
+reg_coef = reg_coef[reg_coef['num']  >= 10].reset_index()
+
+die
+
 def get_surface_area(smile):
     print (smile[-25:])
     mol0 = Chem.MolFromSmiles(smile)
@@ -185,7 +248,7 @@ for i in sorted(results,key =  lambda x : x[1])[-17:-2]:
 '''
 MMFF_dictt = pd.read_csv('res_charge.csv')
 import collections
-for ii in sorted(results,key =  lambda x : x[1])[-17:-2]:
+for ii in sorted(results,key =  lambda x : x[1])[-27:-2]:
     def func3(ii):
         if '.' in ii:
             print (ii),
