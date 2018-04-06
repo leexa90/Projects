@@ -109,8 +109,12 @@ reg_coef = pd.DataFrame(results,columns= \
 
 
 reg_coef['num'] = reg_coef['present in ids'].map(len)
-reg_coef = reg_coef[reg_coef['num']  >= 10].reset_index()
-
+reg_coef = reg_coef[reg_coef['num']  >= 30].reset_index()
+def func(x):
+    if collections.Counter(x)['_'] >=3 :
+        return 1
+    else: return 0
+regr_coef3 = reg_coef[reg_coef['name'].apply(func)==1]
 die
 
 def get_surface_area(smile):

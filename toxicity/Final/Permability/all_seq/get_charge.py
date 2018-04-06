@@ -24,6 +24,7 @@ def make_info(x,num=None):
     AllChem.Compute2DCoords(mol)
     adj = (Chem.GetDistanceMatrix(mol)==1)*1
     adj2 = (Chem.GetDistanceMatrix(mol)==2)*1
+    adj3 = ((Chem.GetDistanceMatrix(mol)!=1)*(Chem.GetDistanceMatrix(mol)==3))*1
     molMMFF = AllChem.MMFFGetMoleculeProperties(mol)
     atoms = list(
                             map(lambda x: molMMFF.GetMMFFAtomType(x),
@@ -32,7 +33,7 @@ def make_info(x,num=None):
                             )
     AllChem.ComputeGasteigerCharges(mol)
     charges = [float(mol.GetAtomWithIdx(x).GetProp('_GasteigerCharge')) for x in range(len(atoms))]
-    return [atoms,charges,np.stack((adj*np.array(atoms),adj2*np.array(atoms)),-1)]
+    return [atoms,charges,np.stack((adj*np.array(atoms),adj2*np.array(atoms),adj3*np.array(atoms)),-1)]
 
 train['all']= train['SMILES'].apply(lambda x : make_info(x))
 if True:
@@ -46,12 +47,15 @@ if True:
     MMFF['origin'] = np.concatenate(train['ids'].apply(lambda x : x).values,0)
     bonds1 =[]
     bonds2 =[]
+    bonds3 =[]
     for adj in [x for x in train['all'].apply(lambda x : x[2]).values]:
         for j in adj:
             bonds1 += [sorted(j[:,0][j[:,0]>=1]),]
-            bonds2 += [sorted(j[:,1][j[:,1]>=1]),]  
+            bonds2 += [sorted(j[:,1][j[:,1]>=1]),]
+            bonds3 += [sorted(j[:,2][j[:,2]>=1]),] 
     MMFF['bond1'] = bonds1
     MMFF['bond2'] = bonds2
+    MMFF['bond3'] = bonds3
     MMFF.to_csv('stapled_peptide_geisteiger_charge.csv',index=0)
 die
 train['atoms']= train['all'].apply(lambda x : x[2])
