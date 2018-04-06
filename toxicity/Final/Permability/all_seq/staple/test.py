@@ -89,7 +89,7 @@ if True:
 
 # get which cluster is it in as a intercept #
 for i in [1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
-    test['cluster_%s'%i] = test.set_value(index,'cluster_%s'%i,fcluster(Y,i, criterion='distance'))['cluster']
+    test['cluster_%s'%i] = test.set_value(index,'cluster_%s'%i,fcluster(Y,i, criterion='distance'))['cluster_%s'%i]
     print (i,max(fcluster(Y,i, criterion='distance')))
     #class the small clusters into -1 
     temp = test.groupby('cluster_%s'%i).apply(len).reset_index()
@@ -157,7 +157,9 @@ for i in tuple(impt):
     if 'norm' in i :
         test[i+'_cat'] = (test[i] != 0)*1
         impt  +=  [i+'_cat',]
-die
+for i in impt:
+    if np.std(test[i])==0:
+        del test[i]
 if True:
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
@@ -174,13 +176,13 @@ if True:
                 clf = linear_model.LinearRegression()
                 temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
                 dummie = pd.get_dummies(test[cluster].values,drop_first= True).values
-                np.concatenate([dummie,temptrain],1).shape
+                temptrain = np.concatenate([dummie,temptrain],1)
                 preds = clf.fit(temptrain,np.log10(test['10'])).predict(temptrain)
-                se = np.sum((preds-np.log10(test['10']))**2)/np.sum((temptrain-np.mean(temptrain))**2)
-                se = 2*(se/215)**.5
+                se = np.sum((preds-np.log10(test['10']))**2)/np.matmul(temptrain.T,temptrain)[-1,-1]
+                se = 3*(se/215)**.5
                 ids_non_zero = test[test[i]!=0].index
                 if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :
-                    results += [(i+cluster,r2_score(np.log10(test['10']),preds),
+                    results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds),
                                  clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
             except : print (i)
     print ([x[:3] for x in sorted(results,key =  lambda x : x[1])[-20:]])
