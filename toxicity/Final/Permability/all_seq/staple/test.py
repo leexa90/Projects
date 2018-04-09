@@ -82,13 +82,20 @@ if True:
     plt.close()
     plt.xticks(range(len(index)),sorted_keys,rotation='vertical', fontsize=2)
     plt.yticks(range(len(index)),sorted_keys, fontsize=2)
-    plt.imshow(D);plt.savefig('cluster_peptide.png',dpi=500, bbox_inches='tight');plt.show()
+    plt.imshow(D);plt.savefig('cluster_peptide.png',dpi=500, bbox_inches='tight');#plt.show()
     Z = sch.dendrogram(Y,orientation='right')
     plt.yticks(np.array(range(1,1+len(index)))*10-5,sorted_keys, fontsize=2)
     plt.savefig('cluster_peptide.png',dpi=500)
 
+
+#weight matrix
+if True:
+    cluster = fcluster(Y, .66, criterion='distance')
+    test = test.set_value(test.index,'weight0',cluster)
+    test['weight'] = 1.0/test['weight0'].map(collections.Counter(fcluster(Y, .7, criterion='distance')))
+
 # get which cluster is it in as a intercept #
-for i in [1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
+for i in [3,]:#[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
     test['cluster_%s'%i] = test.set_value(index,'cluster_%s'%i,fcluster(Y,i, criterion='distance'))['cluster_%s'%i]
     print (i,max(fcluster(Y,i, criterion='distance')))
     #class the small clusters into -1 
@@ -130,19 +137,24 @@ if True:
     dictt = collections.Counter(np.concatenate(test['list'].values))
 print (dictt)
 impt = []
+for i in [('W','F','Y','pff'),('N','Q'),('L','I','V','NL'),
+          ('S8','R8','B8'),('R5','S5'),('PEG2','PEG5','PEG1'),
+          ('H','R','K'),('S','T'),('S8','R8'),('S8','B8'),('R8','B8')]:
+    dictt[i] = 999
+          
 #single res
 for res in dictt.keys():
     if dictt[res] >= 20:
-        test['%s_num' %res] = test['list'].apply(lambda x : len(x[x==res]))
-        test['%s_norm' %res] = 1.0*test['%s_num'%res]/test['res_list']
-        impt += ['%s_norm' %res,'%s_num' %res]
+        test['%s_num' %str(res)] = test['list'].apply(lambda x : sum(np.in1d(x,np.array(res))))
+        test['%s_norm' %str(res)] = 1.0*test['%s_num'%str(res)]/test['res_list']
+        impt += ['%s_norm' %str(res),'%s_num' %str(res)]
 #double res
-def func_compare2(x,gap,res):
+def func_compare2(x,gap,res): #find motiffs
     for i in range(len(res)):
         if i==0:
-            value = (x[:-gap]==res[i])*1
+            value = np.in1d(x,np.array(res[0]))*1
         else:
-            value = value * ([x[gap:]==res[i]])
+            value = np.in1d(x,np.array(res[1]))*1
     return np.sum(value)
     
 for gap in [1,2,3,4,5]:
@@ -150,16 +162,17 @@ for gap in [1,2,3,4,5]:
         if dictt[res1] >= 20:
             for res2 in dictt.keys():
                 if dictt[res2] >= 20:
-                    test['%s_%s_%s_num' %(res1,res2,gap)] = test['list'].apply(lambda x : func_compare2(x,gap,(res1,res2)))
-                    test['%s_%s_%s_norm' %(res1,res2,gap)] = test['%s_%s_%s_num' %(res1,res2,gap)]/test['res_list']
-                    impt += ['%s_%s_%s_num' %(res1,res2,gap),'%s_%s_%s_norm' %(res1,res2,gap)]
-for i in tuple(impt):
-    if 'norm' in i :
-        test[i+'_cat'] = (test[i] != 0)*1
-        impt  +=  [i+'_cat',]
+                    test['%s__%s_%s_num' %(res1,res2,gap)] = test['list'].apply(lambda x : func_compare2(x,gap,(res1,res2)))
+                    test['%s__%s_%s_norm' %(res1,res2,gap)] = test['%s__%s_%s_num' %(res1,res2,gap)]/test['res_list']
+                    impt += ['%s__%s_%s_num' %(res1,res2,gap),'%s__%s_%s_norm' %(res1,res2,gap)]
+##for i in tuple(impt):
+##    if 'norm' in i :
+##        test[i+'_cat'] = (test[i] != 0)*1
+##        impt  +=  [i+'_cat',]
 for i in impt:
     if np.std(test[i])==0:
         del test[i]
+dictt_name = {}
 if True:
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
@@ -177,18 +190,55 @@ if True:
                 temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
                 dummie = pd.get_dummies(test[cluster].values,drop_first= True).values
                 temptrain = np.concatenate([dummie,temptrain],1)
-                preds = clf.fit(temptrain,np.log10(test['10'])).predict(temptrain)
+                preds = clf.fit(temptrain,np.log10(test['10']),sample_weight=test['weight']).predict(temptrain)
                 se = np.sum((preds-np.log10(test['10']))**2)/np.matmul(temptrain.T,temptrain)[-1,-1]
-                se = 3*(se/215)**.5
+                se = 2*(se/np.sum(test['weight']))**.5
                 ids_non_zero = test[test[i]!=0].index
-                if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :
+                if len(i.split('_')) == 2:
+                    dictt_name[i] = (i+'_'+cluster,r2_score(np.log10(test['10']),preds),
+                             clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)
                     results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds),
                                  clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
+                if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :
+                    if '__' in i:
+                        if sum(
+                            np.array((dictt_name[i.split('_')[0]+'_norm'][2],
+                                         dictt_name[i.split('_')[2]+'_norm'][2]))
+                            >= r2_score(np.log10(test['10']),preds)
+                            ):
+                            results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds),
+                                     clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
             except : print (i)
     print ([x[:3] for x in sorted(results,key =  lambda x : x[1])[-20:]])
+print (dictt_name)
 reg_coef = pd.DataFrame(results,columns= \
                         ['name','simple LR model R2','corr coef','Se','CI','present in ids']).\
                         sort_values('simple LR model R2').reset_index(drop=True)
 
 
-
+for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-60:]]:
+	if i[2] >= 0:
+		print (i[0][:-9]+str(i[2])[0:5])
+for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-60:]]:
+	if i[2] <= 0:
+		print (i[0][:-9]+str(i[2])[0:6])
+def log12(x):
+	return np.log10(x)/np.log10(1.5)
+test['int']=(log12(test['10']).values-13).astype(np.int32)
+if True:
+    f1=open('/media/leexa/97ba6a6b-3f4d-4528-84ca-50200ba4594f/Projects/toxicity/Final/Permability/all_seq/staple/j3/miserables2.json','w')
+    f1.write("""{\n "nodes":[\n""")
+    for i in range(0,len(test['1'])):
+        if i != len(test)-1:
+            text = '''    {"name":"%s_%s","chemName":"%s","group":%s},\n''' %(str(i),test['1'].iloc[i],test['1'].iloc[i],test['int'].iloc[i])
+        else: text = '''    {"name":"%s_%s","chemName":"%s","group":%s}\n''' %(str(i),test['1'].iloc[i],test['1'].iloc[i],test['int'].iloc[i])
+        f1.write(text)
+    f1.write('  ],\n  "links":[\n')
+    for i in range(len(test)-1):
+        for j in range(i+1,len(test)):
+            if i == len(test)-2:
+                f1.write('''    {"source":%s,"target":%s,"value":%s}\n'''%(i,j,corr_mat[i,j]))
+            else:
+                f1.write('''    {"source":%s,"target":%s,"value":%s},\n'''%(i,j,corr_mat[i,j]))
+    f1.write('''  ]\n}''')
+    f1.close()
