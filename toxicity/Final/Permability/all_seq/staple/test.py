@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import collections
+from rdkit import Chem
+from rdkit.Chem import AllChem
+from rdkit.Chem import Descriptors
+from scipy import histogram, digitize, stats, mean, std
 charge_csv =pd.read_csv('../stapled_peptide_geisteiger_charge.csv')
 x=charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[10]')\
              & (charge_csv['bond2'] == '[1, 3]') \
@@ -87,12 +91,84 @@ if True:
     plt.yticks(np.array(range(1,1+len(index)))*10-5,sorted_keys, fontsize=2)
     plt.savefig('cluster_peptide.png',dpi=500)
 
+def get_surface_area(smile):
+    print (smile[-25:])
+    mol0 = Chem.MolFromSmiles(smile)
+    mol = Chem.AddHs(mol0)
+    AllChem.Compute2DCoords(mol)
+    adj = (Chem.GetDistanceMatrix(mol)==1)*1
+    adj2 = (Chem.GetDistanceMatrix(mol)==2)*1
+    molMMFF = AllChem.MMFFGetMoleculeProperties(mol)
+    # Chem.MolSurf._LabuteHelper(mol) indiv contribution of surface area
+    atoms = list(
+                            map(lambda x: molMMFF.GetMMFFAtomType(x),
+                                range(len(mol.GetAtoms()))
+                                 )
+                            )
+    AllChem.ComputeGasteigerCharges(mol)
+    charges = np.array([float(mol.GetAtomWithIdx(x).GetProp('_GasteigerCharge')) for x in range(len(atoms))])
+    surf= np.array(Chem.MolSurf._LabuteHelper(mol))
+    return (charges,surf[1:],atoms)
+test['charge_surf'] = test['SMILES'].apply( get_surface_area)
+bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
+        0.15,  0.2 ,  0.25,  0.3 ,999]
+if True:
+    MMFF_dictt = pd.read_csv('res_charge.csv')
+    charge_csv =pd.read_csv('../stapled_peptide_geisteiger_charge.csv')
+    for atom in [35, 71, 15, 11, 66, 39, 23, 34, 64, 16, 21, 63,  2, 29, 41, 57, 32,
+            6, 56, 36,  7, 10,  3, 28, 37,  1,  5]:
+        x=plt.hist(charge_csv[charge_csv['atoms']==atom]['charge'].values,50)
+        plt.xticks(x[1], rotation='vertical',fontsize=7)
+        plt.savefig('1_'+str(atom)+'.png',bbox_inches='tight',dpi3=500);plt.close()
+        for num in [3,4,5,8,11,15,50,]:
+            if num ==50:
+                bins = histogram(charge_csv[charge_csv['atoms']==atom]['charge'].values,num)
+                def process_bins(bins):
+                    num = bins[0]
+                    gaps = bins[1]
+                    gaps[-1] = gaps[-1]+0.001
+                    gaps = list(map(lambda x :np.round(x,6),gaps))
+                    result,temp = [],[]
+                    for i in range(len(num)):
+                        if num[i] != 0:
+                            temp += [gaps[i],gaps[i+1],]
+                        else:
+                            if temp != []:
+                                result += [[temp[0],temp[-1]],]
+                            temp = []
+                    return result
+                bins2= process_bins(bins)
+            else:
+                bins = histogram(charge_csv[charge_csv['atoms']==atom]['charge'].values,num)[1]
+                bins[-1] = bins[-1] + 0.001
+                bins = list(map(lambda x :np.round(x,4),bins))
+                bins2 = []
+                for i in range(len(bins)-1):
+                    bins2 += [[bins[i],bins[i+1]],]
+            for i in bins2:
+                def func(x,i=i,atom=atom):
+                    sum_ =  np.sum(x[1][(x[0]  >= i[0] )&(x[0]  <= i[1] ) &(np.array(x[2])==atom)])
+                    if sum_ >= 0:
+                        return sum_
+                    else :
+                        return 0.0
+                def func_norm(x,i=i,atom=atom):
+                    sum_ =  np.sum(x[1][(x[0]  >= i[0] )&(x[0]  <= i[1] ) &(np.array(x[2])==atom)])
+                    if sum_ >= 0:
+                        return sum_/np.sum(x[1])
+                    else :
+                        return 0.0
+                test['charge_%s_%s_%s'%(atom,i[0],i[1])] = test['charge_surf'].apply(func)
+                test['charge_norm_%s_%s_%s'%(atom,i[0],i[1])] = test['charge_surf'].apply(func_norm)
+                if np.mean(test['charge_%s_%s_%s'%(atom,i[0],i[1])])==0:
+                    del test['charge_%s_%s_%s'%(atom,i[0],i[1])]
+                    print ('charge_%s_%s_%s'%(atom,i[0],i[1]))
 
 #weight matrix
 if True:
     cluster = fcluster(Y, .66, criterion='distance')
     test = test.set_value(test.index,'weight0',cluster)
-    test['weight'] = 1.0/test['weight0'].map(collections.Counter(fcluster(Y, .7, criterion='distance')))
+    test['weight'] = 1.0/test['weight0'].map(collections.Counter(fcluster(Y, .66, criterion='distance')))
 
 # get which cluster is it in as a intercept #
 for i in [3,]:#[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
@@ -157,14 +233,14 @@ def func_compare2(x,gap,res): #find motiffs
             value = np.in1d(x,np.array(res[1]))*1
     return np.sum(value)
     
-for gap in [1,2,3,4,5]:
-    for res1 in dictt.keys():
-        if dictt[res1] >= 20:
-            for res2 in dictt.keys():
-                if dictt[res2] >= 20:
-                    test['%s__%s_%s_num' %(res1,res2,gap)] = test['list'].apply(lambda x : func_compare2(x,gap,(res1,res2)))
-                    test['%s__%s_%s_norm' %(res1,res2,gap)] = test['%s__%s_%s_num' %(res1,res2,gap)]/test['res_list']
-                    impt += ['%s__%s_%s_num' %(res1,res2,gap),'%s__%s_%s_norm' %(res1,res2,gap)]
+##for gap in [1,2,3,4,5]:
+##    for res1 in dictt.keys():
+##        if dictt[res1] >= 20:
+##            for res2 in dictt.keys():
+##                if dictt[res2] >= 20:
+##                    test['%s__%s_%s_num' %(res1,res2,gap)] = test['list'].apply(lambda x : func_compare2(x,gap,(res1,res2)))
+##                    test['%s__%s_%s_norm' %(res1,res2,gap)] = test['%s__%s_%s_num' %(res1,res2,gap)]/test['res_list']
+##                    impt += ['%s__%s_%s_num' %(res1,res2,gap),'%s__%s_%s_norm' %(res1,res2,gap)]
 ##for i in tuple(impt):
 ##    if 'norm' in i :
 ##        test[i+'_cat'] = (test[i] != 0)*1
@@ -177,7 +253,12 @@ if True:
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
     from sklearn.metrics import r2_score
-    for i in impt:#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
+##    def r2_score(y_true,y_pred,sample_weight):
+##        mean = sum(y_true*sample_weight)/sum(sample_weight)
+##        r2_model = sum(sample_weight*(y_true-y_pred)**2)
+##        r2_all = sum(sample_weight*(y_true-mean)**2)
+##        return 1-r2_model/r2_all
+    for i in impt+list(test.keys()):#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
         for cluster in clusters:
             try:
                 X,Y1,Y2 = [],[],[]
@@ -194,10 +275,10 @@ if True:
                 se = np.sum((preds-np.log10(test['10']))**2)/np.matmul(temptrain.T,temptrain)[-1,-1]
                 se = 2*(se/np.sum(test['weight']))**.5
                 ids_non_zero = test[test[i]!=0].index
-                if len(i.split('_')) == 2:
-                    dictt_name[i] = (i+'_'+cluster,r2_score(np.log10(test['10']),preds),
+                if len(i.split('_')) == 2 and (clf.coef_[0]-se >0 or clf.coef_[0]+se <0):
+                    dictt_name[i] = (i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
                              clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)
-                    results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds),
+                    results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
                                  clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
                 if  clf.coef_[0]-se >0 or clf.coef_[0]+se <0 :
                     if '__' in i:
@@ -206,26 +287,26 @@ if True:
                                          dictt_name[i.split('_')[2]+'_norm'][2]))
                             >= r2_score(np.log10(test['10']),preds)
                             ):
-                            results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds),
+                            results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
                                      clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
             except : print (i)
     print ([x[:3] for x in sorted(results,key =  lambda x : x[1])[-20:]])
-print (dictt_name)
+#print (dictt_name)
 reg_coef = pd.DataFrame(results,columns= \
                         ['name','simple LR model R2','corr coef','Se','CI','present in ids']).\
                         sort_values('simple LR model R2').reset_index(drop=True)
 
-
-for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-60:]]:
-	if i[2] >= 0:
-		print (i[0][:-9]+str(i[2])[0:5])
-for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-60:]]:
-	if i[2] <= 0:
-		print (i[0][:-9]+str(i[2])[0:6])
+if True:
+    for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-160:]]:
+            if i[2] >= 0:
+                    print (i[0][:-9]+str(i[2])[0:5])
+    for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-160:]]:
+            if i[2] <= 0:
+                    print (i[0][:-9]+str(i[2])[0:6])
 def log12(x):
 	return np.log10(x)/np.log10(1.5)
 test['int']=(log12(test['10']).values-13).astype(np.int32)
-if True:
+if False:
     f1=open('/media/leexa/97ba6a6b-3f4d-4528-84ca-50200ba4594f/Projects/toxicity/Final/Permability/all_seq/staple/j3/miserables2.json','w')
     f1.write("""{\n "nodes":[\n""")
     for i in range(0,len(test['1'])):
