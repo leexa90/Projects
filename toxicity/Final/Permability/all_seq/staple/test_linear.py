@@ -12,10 +12,16 @@ x=charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[10]')\
              & (charge_csv['bond2'] == '[1, 3]') \
              & (charge_csv['charge'] >= 0.164) \
              & (charge_csv['charge'] <= 0.1652)]['origin'].values
-test = pd.read_csv('../stapled_peptide_permability_features.csv')
-temp=test.iloc[x]
-test = test[test['7'] != 1].reset_index(drop=True)
-test = test[test['1'] != '-AC-AHL-R8-LCLEKL-S5-GLV-(K-PEG1--FITC-)'].reset_index(drop=True)
+test = pd.read_csv('../peptide_permability_features.csv')
+test['1'] = test['ID']
+test['10'] = test['permability']*9+1 #so log10 becomes 1 or 0
+def func(x):
+	if '-' in x.lower():
+		return 1
+test = test[test['ID'].apply(func)!=1].reset_index(drop=True)
+#temp=test.iloc[x]
+#test = test[test['7'] != 1].reset_index(drop=True)
+#test = test[test['1'] != '-AC-AHL-R8-LCLEKL-S5-GLV-(K-PEG1--FITC-)'].reset_index(drop=True)
 def process_string(str,len=len):
     result = []
     special_resi = False
@@ -82,15 +88,15 @@ from Bio import pairwise2
 from Bio.pairwise2 import format_alignment
 
 # Define two sequences to be aligned
-for i in range(len(test)):
-    for j in range(i,len(test)):
-        alignments = pairwise2.align.globalms(test.iloc[i]['string'],
-                                             test.iloc[j]['string'],
-                                              2, -1, -0.5, -0.1)
-        score = max([0.5*a[-3]/a[-1] for a in alignments])
-        corr_mat[i,j] = score
-        corr_mat[j,i] = score
-if True:
+##for i in range(len(test)):
+##    for j in range(i,len(test)):
+##        alignments = pairwise2.align.globalms(test.iloc[i]['string'],
+##                                             test.iloc[j]['string'],
+##                                              2, -1, -0.5, -0.1)
+##        score = max([0.5*a[-3]/a[-1] for a in alignments])
+##        corr_mat[i,j] = score
+##        corr_mat[j,i] = score
+if False:
     heat_map = corr_mat
     import scipy.cluster.hierarchy as sch
     from scipy.cluster.hierarchy import fcluster
@@ -126,7 +132,8 @@ def get_surface_area(smile):
     charges = np.array([float(mol.GetAtomWithIdx(x).GetProp('_GasteigerCharge')) for x in range(len(atoms))])
     surf= np.array(Chem.MolSurf._LabuteHelper(mol))
     return (charges,surf[1:],atoms)
-test['charge_surf'] = test['SMILES'].apply( get_surface_area)
+#this takes very long
+#test['charge_surf'] = test['SMILES'].apply( get_surface_area)
 bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
         0.15,  0.2 ,  0.25,  0.3 ,999]
 if False:
@@ -183,19 +190,20 @@ if False:
 
 #weight matrix
 if True:
-    cluster = fcluster(Y, .66, criterion='distance')
-    test = test.set_value(test.index,'weight0',cluster)
-    test['weight'] = 1.0/test['weight0'].map(collections.Counter(fcluster(Y, .66, criterion='distance')))
+    #cluster = fcluster(Y, .66, criterion='distance')
+    #test = test.set_value(test.index,'weight0',cluster)
+    test['weight'] = 1.0#/test['weight0'].map(collections.Counter(fcluster(Y, .66, criterion='distance')))
 
 # get which cluster is it in as a intercept #
-for i in [3,]:#[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
-    test['cluster_%s'%i] = test.set_value(index,'cluster_%s'%i,fcluster(Y,i, criterion='distance'))['cluster_%s'%i]
-    print (i,max(fcluster(Y,i, criterion='distance')))
-    #class the small clusters into -1 
-    temp = test.groupby('cluster_%s'%i).apply(len).reset_index()
-    id_minus1 = test[test['cluster_%s'%i].isin(temp[temp[0] <5]['cluster_%s'%i].values)].index
-    test = test.set_value(id_minus1,'cluster_%s'%i,-1)
-    print (test.groupby('cluster_%s'%i).apply(len).reset_index())
+if False:
+    for i in [3,]:#[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
+        test['cluster_%s'%i] = test.set_value(index,'cluster_%s'%i,fcluster(Y,i, criterion='distance'))['cluster_%s'%i]
+        print (i,max(fcluster(Y,i, criterion='distance')))
+        #class the small clusters into -1 
+        temp = test.groupby('cluster_%s'%i).apply(len).reset_index()
+        id_minus1 = test[test['cluster_%s'%i].isin(temp[temp[0] <5]['cluster_%s'%i].values)].index
+        test = test.set_value(id_minus1,'cluster_%s'%i,-1)
+        print (test.groupby('cluster_%s'%i).apply(len).reset_index())
     
         
         
@@ -224,7 +232,7 @@ def process_string(str,len=len):
 if True:
     test['len']=test['1'].apply(process_string)
     test['res_list']=test['1'].apply(lambda x : process_string(x,list))
-    test['list']=test['1'].apply(lambda x : np.array(process_string(x,list)))
+    test['list']=test['1'].apply(lambda x : np.array(process_string(x.upper(),list)))
     test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
     test['res_list']=test['res_list'].apply(len)
     dictt = collections.Counter(np.concatenate(test['list'].values))
@@ -238,8 +246,7 @@ dictt_vol = {'FITC': 163.32732360530238, 'PEG2': 75.972, 'pff': 84.691, 'Y': 68.
              'W': 79.754, 'M': 51.659, 'V': 35.171, 'PEG5': 135.867, 'H': 56.292}
 for i in [('W','F','Y','pff'),('N','Q'),('L','I','V','NL'),('D','E'),
           ('S8','R8','B8'),('R5','S5'),('PEG2','PEG5','PEG1'),
-          ('H','R','K'),('S','T'),('S8','R8'),('S8','B8'),('R8','B8'),
-          ('W','F','pff'),('F','pff'),('F','Y')]:
+          ('H','R','K'),('S','T'),('S8','R8'),('S8','B8'),('R8','B8')]:
     dictt[i] = 999
           
 #single res
@@ -294,7 +301,7 @@ if True:
                 from sklearn.preprocessing import StandardScaler
                 from sklearn.linear_model import Lasso
                 alpha =0.00#alpha#10**alpha
-                clf = linear_model.LinearRegression()
+                clf = linear_model.LogisticRegression()
                 temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
                 if 'num' in i or 'res_list' in i: #do not scale count features. 
                     temptrain = test[[i,]].values
@@ -302,7 +309,7 @@ if True:
                 #temptrain = np.concatenate([dummie,temptrain],1)
                 preds = clf.fit(temptrain,np.log10(test['10']),sample_weight=test['weight']).predict(temptrain)
                 se = np.sum((preds-np.log10(test['10']))**2)/np.matmul(temptrain.T,temptrain)[-1,-1]
-                se = 3*(se/np.sum(test['weight']))**.5
+                se = 2.5*(se/np.sum(test['weight']))**.5
                 ids_non_zero = test[test[i]!=0].index
                 if len(i.split('_')) == 2 or (clf.coef_[0]-se >0 or clf.coef_[0]+se <0):
                     dictt_name[i] = (i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
@@ -327,10 +334,10 @@ reg_coef = pd.DataFrame(results,columns= \
 
 if True:
     for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-250:]]:
-            if i[2] > 0.01:
+            if i[2] >= 0:
                     print (i[0][:-10],str(i[2])[:6],str(i[1])[0:5])
     for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-250:]]:
-            if i[2] < -0.01:
+            if i[2] <= 0:
                     print (i[0][:-10],str(i[2])[:6],str(i[1])[0:6])
 def log12(x):
 	return np.log10(x)/np.log10(1.5)
@@ -354,7 +361,7 @@ if False:
     f1.close()
 
 # DCOR(METRIC) Amitava Roy
-if False:
+if True:
     def dist_covar(x,y):
         assert len(x)==len(y)
         a=1.0*np.zeros(shape=(len(x),len(x)))

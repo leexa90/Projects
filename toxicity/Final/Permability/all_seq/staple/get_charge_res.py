@@ -3,7 +3,7 @@ pd.options.display.max_rows = 20
 #gets the charge, bonds and neihbrours for each residue. kind of like a dictionary
 dictt = {'R8': 'N[C@@](CCCCCCC=3)(C)C(=O)N[C@@](CCCCCCC=3)(C)C(=O)',
          'R88': 'N[C@H](C)C(=O)N[C@@](CCCCCCC=3)(C)C(=O)N[C@H](C)C(=O)N[C@@](CCCCCCC=3)(C)C(=O)N[C@H](C)C(=O)',
-         'N': 'N[C@H](CC(N)=O)C(=O)N[C@H](CC(N)=O)C(=O)N[C@H](CC(N)=O)C(=O)',
+         'N': 'N[C@H](CC(N)=O)C(=O)N[C@H](CC(N)=O)C(=O)',
          'PEG1': 'NCCOCCOCC(=O)NCCOCCOCC(=O)',
          'K': 'N[C@H](CCCC[NH3+])C(=O)N[C@H](CCCC[NH3+])C(=O)',
          'F': 'N[C@H](Cc1ccccc1)C(=O)N[C@H](Cc1ccccc1)C(=O)',
@@ -86,10 +86,19 @@ def make_info(x,num=None):
     return [atoms,charges,np.stack((adj*np.array(atoms),adj2*np.array(atoms)),-1)]
 
 train['all']= train['SMILES'].apply(lambda x : make_info(x))
+def func3(x):
+    print (x)
+    if '=S' in x:
+        return 0.5*Descriptors.LabuteASA(Chem.MolFromSmiles(x*1))
+    else:
+        return np.round(0.5*(Descriptors.LabuteASA(Chem.MolFromSmiles(x*2))-
+                            Descriptors.LabuteASA(Chem.MolFromSmiles(x*1))),3)
 if True:
     train['id'] = train['res']
     train['len'] = train['all'].apply(lambda x : len(x[0]))
     train['ids'] = list(map(lambda x : [x[0],]*x[1],train[['id','len']].values))
+    train['vol'] = train['SMILES'].apply(func3)
+print (train[['vol','res']].groupby('res')['vol'].apply(np.mean).to_dict())  
 if True:
     MMFF = pd.DataFrame(None)
     MMFF['atoms'] = np.concatenate(train['all'].apply(lambda x : x[0]).values,0)
