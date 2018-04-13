@@ -280,6 +280,9 @@ for i in impt:
     if np.std(test[i])==0:
         del test[i]
 dictt_name = {}
+test['MW'] = test['len']
+del test['len']
+del test['FITC_norm']
 if True:
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
@@ -361,11 +364,11 @@ if True:
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
                     plt.plot([i[-4],],[counter,]*1,'ro')
                     if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
-                        txt = i[0][:-10]+'*'
-                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
                         txt = i[0][:-10]+'**'
+                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
                     else:
-                        txt = i[0][:-10]
+                        txt = i[0][:-10]+'*'
                     plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
     i = [x for x in sorted(results,key =  lambda x : x[-4]) if 'res_list_cluster_3' in x[0]][0]
@@ -377,7 +380,7 @@ if True:
     elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
         txt = i[0][:-10]+'**'
     else:
-        txt = i[0][:-10]
+        txt = i[0][:-10]+'*'
     plt.text(i[-4],counter+.25,'Number of residues**',horizontalalignment='center',fontsize=7)
     counter += 1
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
@@ -390,7 +393,7 @@ if True:
                     elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
                         txt = i[0][:-10]+'**'
                     else:
-                        txt = i[0][:-10]
+                        txt = i[0][:-10]+'*'
                     plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
     plt.title('Number Features')
@@ -412,7 +415,7 @@ if True:
                     elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
                         txt = i[0][:-10]+'**'
                     else:
-                        txt = i[0][:-10]
+                        txt = i[0][:-10]+'*'
                     plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
@@ -425,7 +428,7 @@ if True:
                     elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
                         txt = i[0][:-10]+'**'
                     else:
-                        txt = i[0][:-10]
+                        txt = i[0][:-10]+'*'
                     plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
     plt.ylim([0,counter])
