@@ -7,6 +7,9 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Descriptors
 from scipy import histogram, digitize, stats, mean, std
+import sys
+sys.path.append('/home/leexa/anaconda2/envs/deepchem/lib/python3.5/site-packages')
+import statsmodels.api as sm
 charge_csv =pd.read_csv('../stapled_peptide_geisteiger_charge.csv')
 x=charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[10]')\
              & (charge_csv['bond2'] == '[1, 3]') \
@@ -44,20 +47,20 @@ if True:
     test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
     test['res_list']=test['res_list'].apply(len)
     dictt = collections.Counter(np.concatenate(test['list'].values))
-    test['num_Aro_Ccycle'] = test['SMILES'].apply(lambda x :\
+    test['Aro_Ccycle_num'] = test['SMILES'].apply(lambda x :\
         Descriptors.NumAromaticCarbocycles(Chem.MolFromSmiles(x)))
-    test['num_Aro_Hcycle'] = test['SMILES'].apply(lambda x :\
+    test['Aro_Hcycle_num'] = test['SMILES'].apply(lambda x :\
         Descriptors.NumAromaticHeterocycles(Chem.MolFromSmiles(x)))
-    test['num_Aro_Ring'] = test['SMILES'].apply(lambda x :\
+    test['Aro_Ring_num'] = test['SMILES'].apply(lambda x :\
         Descriptors.NumAromaticRings(Chem.MolFromSmiles(x)))
-    test['num_Ali_Ccycle'] = test['SMILES'].apply(lambda x :\
+    test['Ali_Ccycle_num'] = test['SMILES'].apply(lambda x :\
         Descriptors.NumAliphaticCarbocycles(Chem.MolFromSmiles(x)))
-    test['num_Ali_Hcycle'] = test['SMILES'].apply(lambda x :\
+    test['Ali_Hcycle_num'] = test['SMILES'].apply(lambda x :\
         Descriptors.NumAliphaticHeterocycles(Chem.MolFromSmiles(x)))
-    test['num_Ali_Ring'] = test['SMILES'].apply(lambda x :\
+    test['Ali_Ring_num'] = test['SMILES'].apply(lambda x :\
         Descriptors.NumAliphaticRings(Chem.MolFromSmiles(x)))
     for i in [x for x in test.keys() if ('Ali' in x or 'Aro' in x)]:
-        test['norm_'+i[4:]] = test[i]/test['res_list']
+        test[i[:-4]+'_norm'] = test[i]/test['res_list']
     test['TPSA/LabuteASA'] = test['TPSA']/test['LabuteASA'] #ratio of polar SA
 print (dictt)
 dictt_counter = {}
@@ -127,6 +130,8 @@ def get_surface_area(smile):
     surf= np.array(Chem.MolSurf._LabuteHelper(mol))
     return (charges,surf[1:],atoms)
 test['charge_surf'] = test['SMILES'].apply( get_surface_area)
+test['charge_num'] = test['charge_surf'].apply(lambda x : np.sum(x[0]))
+test['charge_mean'] = test['charge_surf'].apply(lambda x : np.mean(x[0]))
 bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
         0.15,  0.2 ,  0.25,  0.3 ,999]
 if False:
@@ -186,7 +191,6 @@ if True:
     cluster = fcluster(Y, .66, criterion='distance')
     test = test.set_value(test.index,'weight0',cluster)
     test['weight'] = 1.0/test['weight0'].map(collections.Counter(fcluster(Y, .66, criterion='distance')))
-
 # get which cluster is it in as a intercept #
 for i in [3,]:#[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
     test['cluster_%s'%i] = test.set_value(index,'cluster_%s'%i,fcluster(Y,i, criterion='distance'))['cluster_%s'%i]
@@ -285,7 +289,7 @@ if True:
 ##        r2_model = sum(sample_weight*(y_true-y_pred)**2)
 ##        r2_all = sum(sample_weight*(y_true-mean)**2)
 ##        return 1-r2_model/r2_all
-    for i in list(test.keys()):#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
+    for i in list(test.keys())[15:]:#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
         for cluster in clusters:
             try:
                 X,Y1,Y2 = [],[],[]
@@ -296,15 +300,30 @@ if True:
                 alpha =0.00#alpha#10**alpha
                 clf = linear_model.LinearRegression()
                 temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
-                if 'num' in i or 'res_list' in i: #do not scale count features. 
+                ids_non_zero = test[test[i]!=0].index
+                if 'num' in i or 'res_list' in i or i in ['atom_1', 'atom_6', 'atom_7', 'atom_8', 'atom_9', 'atom_16', 'atom_len', 'atom_size']: #do not scale count features. 
                     temptrain = test[[i,]].values
+                    print  (i)
+                    i='num_' + i
+                temptrain2 = np.concatenate([temptrain*0+1,temptrain],1)
                 #dummie = pd.get_dummies(test[cluster].values,drop_first= True).values
                 #temptrain = np.concatenate([dummie,temptrain],1)
                 preds = clf.fit(temptrain,np.log10(test['10']),sample_weight=test['weight']).predict(temptrain)
-                se = np.sum((preds-np.log10(test['10']))**2)/np.matmul(temptrain.T,temptrain)[-1,-1]
-                se = 3*(se/np.sum(test['weight']))**.5
-                ids_non_zero = test[test[i]!=0].index
-                if len(i.split('_')) == 2 or (clf.coef_[0]-se >0 or clf.coef_[0]+se <0):
+                # equailvalent ~ inv(X.T*W*X)*X.T*W*Y
+                W=np.diag(test['weight'])
+                X=temptrain2
+                y=np.log10(test['10'])
+                B=np.matmul(np.linalg.inv(np.matmul(np.matmul(X.T,W),X)) ,np.matmul(np.matmul(X.T,W),y))
+                preds = np.matmul(B,X.T)
+                # sm.WLS(y, X, weights=test['weight']).fit().summary()
+                se = np.sum(
+                    (test['weight']*(preds-np.log10(test['10']))**2)
+                    )*np.linalg.inv(
+                         np.matmul(np.matmul(temptrain2.T,np.diag(test['weight'])),temptrain2)
+                         )[-1,-1]
+                se = 2.0*(se/(sum(test['weight'])-2))**.5
+    
+                if  (clf.coef_[0]-1.67*se/2 >0 or clf.coef_[0]+1.67*se/2  <0) and r2_score(np.log10(test['10']),preds,sample_weight=test['weight']) < 0.7:
                     dictt_name[i] = (i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
                              clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)
                     results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
@@ -318,7 +337,7 @@ if True:
 ##                            ):
 ##                            results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
 ##                                     clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
-            except : print (i)
+            except : None#print (i)
     print ([x[:3] for x in sorted(results,key =  lambda x : x[1])[-20:]])
 #print (dictt_name)
 reg_coef = pd.DataFrame(results,columns= \
@@ -326,12 +345,98 @@ reg_coef = pd.DataFrame(results,columns= \
                         sort_values('simple LR model R2').reset_index(drop=True)
 
 if True:
-    for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-250:]]:
+    for i in [x[:3] for x in sorted(results,key =  lambda x : x[0])[-250:]]:
             if i[2] > 0.01:
                     print (i[0][:-10],str(i[2])[:6],str(i[1])[0:5])
-    for i in [x[:3] for x in sorted(results,key =  lambda x : x[1])[-250:]]:
+    for i in [x[:3] for x in sorted(results,key =  lambda x : x[0])[-250:]]:
             if i[2] < -0.01:
                     print (i[0][:-10],str(i[2])[:6],str(i[1])[0:6])
+if True:
+    plt.close()
+    counter = 1
+    plots = []
+    for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
+            if i[2] < -0.01 and 'num' in i[0] and '.(' not in i[0]:
+                    plots += [i,]
+                    plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
+                    plt.plot([i[-4],],[counter,]*1,'ro')
+                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'*'
+                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
+                    counter += 1
+    i = [x for x in sorted(results,key =  lambda x : x[-4]) if 'res_list_cluster_3' in x[0]][0]
+    plots += [i,]
+    plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='g')
+    plt.plot([i[-4],],[counter,]*1,'go')
+    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
+        txt = i[0][:-10]+'*'
+    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+        txt = i[0][:-10]+'**'
+    else:
+        txt = i[0][:-10]
+    plt.text(i[-4],counter+.25,'Number of residues**',horizontalalignment='center',fontsize=7)
+    counter += 1
+    for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
+            if i[2] > 0.01 and 'num' in i[0] and '.(' not in i[0]:
+                    plots += [i,]
+                    plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
+                    plt.plot([i[-4],],[counter,]*1,'bo')
+                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'*'
+                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
+                    counter += 1
+    plt.title('Number Features')
+    plt.xlabel('Coefficient and 95% CI of feature')
+    plt.ylabel('Features')
+    plt.yticks([],[])
+    plt.ylim([0,counter])
+    plt.savefig('B_coef.png',dpi=300),plt.show()
+    plt.close()
+    counter = 1
+    plots = []
+    for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
+            if i[2] < -0.01 and 'num' not in i[0] and 'list' not in i[0] and 'normSA' not in i[0] and 'VSA' not in i[0]:
+                    plots += [i,]
+                    plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
+                    plt.plot([i[-4],],[counter,]*1,'ro')
+                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'*'
+                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
+                    counter += 1
+    for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
+            if i[2] > 0.01 and 'num' not in i[0] and 'list' not in i[0] and 'normSA' not in i[0] and 'VSA' not in i[0]:
+                    plots += [i,]
+                    plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
+                    plt.plot([i[-4],],[counter,]*1,'bo')
+                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'*'
+                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
+                    counter += 1
+    plt.ylim([0,counter])
+    plt.title('Normalized (by seq length) Features')
+    plt.xlabel('Coefficient and 95% CI of feature')
+    plt.ylabel('Percentage Features')
+    plt.yticks([],[])
+    plt.savefig('B_norm.png',dpi=300),plt.show()    
+
+
+                    
 def log12(x):
 	return np.log10(x)/np.log10(1.5)
 test['int']=(log12(test['10']).values-13).astype(np.int32)
@@ -352,7 +457,45 @@ if False:
                 f1.write('''    {"source":%s,"target":%s,"value":%s},\n'''%(i,j,corr_mat[i,j]))
     f1.write('''  ]\n}''')
     f1.close()
+if True:
+    plt.close()
+    test['res_list2'] = test['res_list']
+    bins = [[8,9,10,11,12],[13,14,15],[16,],[17,],[18,],[19,],[21,23,24,25],[26,28,31,38,39]]
+    for i in bins:
+        test = test.set_value(test[test['res_list2'].isin(i)].index,
+                              'res_list2',
+                              np.mean(i))
+        
+    test['20'] = np.log10(test['10'])
+    val = test.groupby('res_list2')['20'].apply(np.array).reset_index()
+    weight = test.groupby('res_list2')['weight'].apply(np.array).reset_index()
+    temp = pd.merge(val,weight,on='res_list2')
+    temp['mean'] = (temp['20']*temp['weight']).apply(sum)/temp['weight'].apply(sum)
+    temp['std'] = (((temp['20']-temp['mean'])**2)*temp['weight']).apply(sum)\
+                  /temp['weight'].apply(sum)
+    temp['num'] = temp['weight'].apply(sum)
+    temp['std'] = temp['std']**.5
+    temp = temp[temp['num'] > 5].reset_index(drop=True)
+    temp['se'] = temp['std']/temp['weight'].apply(sum).apply(lambda x : (x-1)**.5).astype(np.float32)
+    plt.errorbar(temp['res_list2'].values,
+                 temp['mean'].values,
+                 yerr=temp['se'].values);
+    plt.plot(temp['res_list2'].values,
+             temp['mean'].values,
+             'go')
+    plt.ylabel('flourescence')
+    plt.xlabel('length of peptide (includes FITC and linker)')
+    axes = plt.gca()
+    plt.title('Flourscence vs peptide length')
+    plt.xlim(min(test['res_list']),max(test['res_list']))
+    plt.yticks(axes.get_yticks(),(10**axes.get_yticks()).astype(np.int32))
+    plt.xticks([np.mean(x) for x in  bins],[str(x) for x in bins], rotation='vertical')
+    print (axes.get_yticks())
+    plt.savefig('length.png',dpi=300,bbox_inches='tight')
+    plt.show()
 
+    
+test['20'] = np.log10(test['10'])
 # DCOR(METRIC) Amitava Roy
 if False:
     def dist_covar(x,y):

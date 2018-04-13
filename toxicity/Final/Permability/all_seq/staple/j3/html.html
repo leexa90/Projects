@@ -132,11 +132,11 @@ var handle = slider.append("circle")
       .call(force.drag);
   var max_area = d3.max( svg, function(d) { return d.group });
   var median_area = d3.median( svg, function(d) { return d.group });
-  var color_scale = d3.scale.linear().domain([0, median_area, max_area]).range(['blue', 'beige', 'red']);
+  var color_scale = d3.scale.linear().domain([1,4,7]).range(['blue','grey', 'red']);
 console.log("Median is", median_area);
   node.append("circle")
       .attr("r", 5)
-      .style("fill", function(d) { return color(d.group); });
+      .style("fill", function(d) { return color_scale(d.group); });
 	  
   node.append("text")
       .attr("dx", 8)
