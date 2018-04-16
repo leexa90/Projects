@@ -15,10 +15,11 @@ x=charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[10]')\
              & (charge_csv['bond2'] == '[1, 3]') \
              & (charge_csv['charge'] >= 0.164) \
              & (charge_csv['charge'] <= 0.1652)]['origin'].values
-test = pd.read_csv('../stapled_peptide_permability_features.csv')
+test = pd.read_csv('../peptide_permability_features.csv')
 temp=test.iloc[x]
-test = test[test['7'] == 1].reset_index(drop=True)
-test = test[test['1'] != '-AC-AHL-R8-LCLEKL-S5-GLV-(K-PEG1--FITC-)'].reset_index(drop=True)
+test['1'] = test['ID']
+#test = test[test['7'] == 1].reset_index(drop=True)
+#test = test[test['1'] != '-AC-AHL-R8-LCLEKL-S5-GLV-(K-PEG1--FITC-)'].reset_index(drop=True)
 def process_string(str,len=len):
     result = []
     special_resi = False
@@ -251,10 +252,10 @@ for res in dictt.keys():
     if dictt[res] >= 20:
         test['%s_num' %str(res)] = test['list'].apply(lambda x : sum(np.in1d(x,np.array(res))))
         test['%s_norm' %str(res)] = 1.0*test['%s_num'%str(res)]/test['res_list']
-        test['%s_normSA' %str(res)] = test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum) #total area
-        test['%s_normSA' %str(res)] = test['list'].apply(lambda y : sum(np.array(list(map(lambda x : dictt_vol[x],y)))[np.in1d(y,np.array(res))]))\
-                                      /test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum)
-        impt += ['%s_norm' %str(res),'%s_num' %str(res),'%s_normSA' %str(res)]
+        #test['%s_normSA' %str(res)] = test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum) #total area
+        #test['%s_normSA' %str(res)] = test['list'].apply(lambda y : sum(np.array(list(map(lambda x : dictt_vol[x],y)))[np.in1d(y,np.array(res))]))\
+        #                              /test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum)
+        impt += ['%s_norm' %str(res),'%s_num' %str(res),]#'%s_normSA' %str(res)]
 #double res
 def func_compare2(x,gap,res): #find motiffs
     for i in range(len(res)):
@@ -281,14 +282,15 @@ for i in impt:
         del test[i]
 dictt_name = {}
 if True:
+    test['10'] = (test['source']==2)*9 +1
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
     from sklearn.metrics import r2_score
-##    def r2_score(y_true,y_pred,sample_weight):
-##        mean = sum(y_true*sample_weight)/sum(sample_weight)
-##        r2_model = sum(sample_weight*(y_true-y_pred)**2)
-##        r2_all = sum(sample_weight*(y_true-mean)**2)
-##        return 1-r2_model/r2_all
+    def log_likelihood(X,B,y): #loglihood of logistic regresion parameters
+        temp1 = np.sum(y * np.matmul(X,B))
+        temp2 = np.sum(np.log(1+np.exp(np.matul(X,B))))
+        return temp1-temp2
+    
     for i in list(test.keys())[15:]:#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
         for cluster in clusters:
             try:
@@ -298,7 +300,7 @@ if True:
                 from sklearn.preprocessing import StandardScaler
                 from sklearn.linear_model import Lasso
                 alpha =0.00#alpha#10**alpha
-                clf = linear_model.LinearRegression()
+                clf = linear_model.LogisticRegression()
                 temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
                 ids_non_zero = test[test[i]!=0].index
                 if 'num' in i or 'res_list' in i or i in ['atom_1', 'atom_6', 'atom_7', 'atom_8', 'atom_9', 'atom_16', 'atom_len', 'atom_size']: #do not scale count features. 
@@ -313,8 +315,8 @@ if True:
                 W=np.diag(test['weight'])
                 X=temptrain2
                 y=np.log10(test['10'])
-                B=np.matmul(np.linalg.inv(np.matmul(np.matmul(X.T,W),X)) ,np.matmul(np.matmul(X.T,W),y))
-                preds = np.matmul(B,X.T)
+                B=np.concatenate([[clf.intercept_],clf.coef_])
+                preds = np.matmul(X,B)
                 # sm.WLS(y, X, weights=test['weight']).fit().summary()
                 se = np.sum(
                     (test['weight']*(preds-np.log10(test['10']))**2)
