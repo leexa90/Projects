@@ -17,7 +17,7 @@ x=charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[10]')\
              & (charge_csv['charge'] <= 0.1652)]['origin'].values
 test = pd.read_csv('../stapled_peptide_permability_features.csv')
 temp=test.iloc[x]
-test = test[test['7'] == 1].reset_index(drop=True)
+#test = test[test['7'] != 1].reset_index(drop=True)
 test = test[test['1'] != '-AC-AHL-R8-LCLEKL-S5-GLV-(K-PEG1--FITC-)'].reset_index(drop=True)
 def process_string(str,len=len):
     result = []
@@ -85,15 +85,15 @@ from Bio import pairwise2
 from Bio.pairwise2 import format_alignment
 
 # Define two sequences to be aligned
-##for i in range(len(test)):
-##    for j in range(i,len(test)):
-##        alignments = pairwise2.align.globalms(test.iloc[i]['string'],
-##                                             test.iloc[j]['string'],
-##                                              2, -1, -0.5, -0.1)
-##        score = max([0.5*a[-3]/a[-1] for a in alignments])
-##        corr_mat[i,j] = score
-##        corr_mat[j,i] = score
-if False:
+for i in range(len(test)):
+    for j in range(i,len(test)):
+        alignments = pairwise2.align.globalms(test.iloc[i]['string'],
+                                             test.iloc[j]['string'],
+                                              2, -1, -0.5, -0.1)
+        score = max([0.5*a[-3]/a[-1] for a in alignments])
+        corr_mat[i,j] = score
+        corr_mat[j,i] = score
+if True:
     heat_map = corr_mat
     import scipy.cluster.hierarchy as sch
     from scipy.cluster.hierarchy import fcluster
@@ -129,9 +129,9 @@ def get_surface_area(smile):
     charges = np.array([float(mol.GetAtomWithIdx(x).GetProp('_GasteigerCharge')) for x in range(len(atoms))])
     surf= np.array(Chem.MolSurf._LabuteHelper(mol))
     return (charges,surf[1:],atoms)
-#test['charge_surf'] = test['SMILES'].apply( get_surface_area)
-#test['charge_num'] = test['charge_surf'].apply(lambda x : np.sum(x[0]))
-#test['charge_mean'] = test['charge_surf'].apply(lambda x : np.mean(x[0]))
+test['charge_surf'] = test['SMILES'].apply( get_surface_area)
+test['charge_num'] = test['charge_surf'].apply(lambda x : np.sum(x[0]))
+test['charge_mean'] = test['charge_surf'].apply(lambda x : np.mean(x[0]))
 bins = [-999,-0.3 , -0.25, -0.2 , -0.15, -0.1 , -0.05,  0.  ,  0.05,  0.1 ,
         0.15,  0.2 ,  0.25,  0.3 ,999]
 if False:
@@ -188,17 +188,17 @@ if False:
 
 #weight matrix
 if True:
-    #cluster = fcluster(Y, .66, criterion='distance')
-    #test = test.set_value(test.index,'weight0',cluster)
-    test['weight'] = 1#.0/test['weight0'].map(collections.Counter(fcluster(Y, .66, criterion='distance')))
+    cluster = fcluster(Y, .66, criterion='distance')
+    test = test.set_value(test.index,'weight0',cluster)
+    test['weight'] = 1.0/test['weight0'].map(collections.Counter(fcluster(Y, .66, criterion='distance')))
 # get which cluster is it in as a intercept #
 for i in [3,]:#[1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8]: 
-    test['cluster_%s'%i] = test.set_value(test.index,'cluster_%s'%i,1)#fcluster(Y,i, criterion='distance'))['cluster_%s'%i]
-    #print (i,max(fcluster(Y,i, criterion='distance')))
+    test['cluster_%s'%i] = test.set_value(index,'cluster_%s'%i,fcluster(Y,i, criterion='distance'))['cluster_%s'%i]
+    print (i,max(fcluster(Y,i, criterion='distance')))
     #class the small clusters into -1 
-    #temp = test.groupby('cluster_%s'%i).apply(len).reset_index()
-    #id_minus1 = test[test['cluster_%s'%i].isin(temp[temp[0] <5]['cluster_%s'%i].values)].index
-    #test = test.set_value(id_minus1,'cluster_%s'%i,-1)
+    temp = test.groupby('cluster_%s'%i).apply(len).reset_index()
+    id_minus1 = test[test['cluster_%s'%i].isin(temp[temp[0] <5]['cluster_%s'%i].values)].index
+    test = test.set_value(id_minus1,'cluster_%s'%i,-1)
     print (test.groupby('cluster_%s'%i).apply(len).reset_index())
     
         
@@ -229,7 +229,7 @@ if True:
     test['len']=test['1'].apply(process_string)
     test['res_list']=test['1'].apply(lambda x : process_string(x,list))
     test['list']=test['1'].apply(lambda x : np.array(process_string(x,list)))
-    test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
+    #test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
     test['res_list']=test['res_list'].apply(len)
     dictt = collections.Counter(np.concatenate(test['list'].values))
 print (dictt)
@@ -242,20 +242,25 @@ dictt_vol = {'FITC': 163.32732360530238, 'PEG2': 75.972, 'pff': 84.691, 'Y': 68.
              'W': 79.754, 'M': 51.659, 'V': 35.171, 'PEG5': 135.867, 'H': 56.292}
 for i in [('W','F','Y','pff'),('N','Q'),('L','I','V','NL'),('D','E'),
           ('S8','R8','B8'),('R5','S5'),('PEG2','PEG5','PEG1'),
-          ('H','R','K'),('S','T'),('S8','R8'),('S8','B8'),('R8','B8'),
+          ('R','K'),('H','R','K'),('S','T'),('S8','R8'),('S8','B8'),('R8','B8'),
           ('W','F','pff'),('F','pff'),('F','Y')]:
     dictt[i] = 999
           
 #single res
 for res in dictt.keys():
-    if dictt[res] >= 20:
+    #if dictt[res] >= 20:
         test['%s_num' %str(res)] = test['list'].apply(lambda x : sum(np.in1d(x,np.array(res))))
         test['%s_norm' %str(res)] = 1.0*test['%s_num'%str(res)]/test['res_list']
+        #test['%s_normLG' %str(res)] = test['%s_norm' %str(res)].apply(np.log)
+        #test['%s_normSQ' %str(res)] = test['%s_norm' %str(res)].apply(lambda x : x**2)
         test['%s_normSA' %str(res)] = test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum) #total area
         test['%s_normSA' %str(res)] = test['list'].apply(lambda y : sum(np.array(list(map(lambda x : dictt_vol[x],y)))[np.in1d(y,np.array(res))]))\
                                       /test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum)
-        impt += ['%s_norm' %str(res),'%s_num' %str(res),'%s_normSA' %str(res)]
+        impt += ['%s_norm' %str(res),'%s_num' %str(res),'%s_normSA' %str(res),]#'%s_normSQ' %str(res),'%s_normLG' %str(res)]
+
 #double res
+#test = test[test['R_num'] <= 4].reset_index(drop=True)
+dictt = collections.Counter(np.concatenate(test['list'].values))
 def func_compare2(x,gap,res): #find motiffs
     for i in range(len(res)):
         if i==0:
@@ -280,6 +285,9 @@ for i in impt:
     if np.std(test[i])==0:
         del test[i]
 dictt_name = {}
+test['MW'] = test['len']
+del test['len']
+del test['FITC_norm']
 if True:
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
@@ -304,7 +312,7 @@ if True:
                 if 'num' in i or 'res_list' in i or i in ['atom_1', 'atom_6', 'atom_7', 'atom_8', 'atom_9', 'atom_16', 'atom_len', 'atom_size']: #do not scale count features. 
                     temptrain = test[[i,]].values
                     print  (i)
-                    i='num_' + i
+                    #i='num_' + i
                 temptrain2 = np.concatenate([temptrain*0+1,temptrain],1)
                 #dummie = pd.get_dummies(test[cluster].values,drop_first= True).values
                 #temptrain = np.concatenate([dummie,temptrain],1)
@@ -321,9 +329,9 @@ if True:
                     )*np.linalg.inv(
                          np.matmul(np.matmul(temptrain2.T,np.diag(test['weight'])),temptrain2)
                          )[-1,-1]
-                se = 1.67*(se/(sum(test['weight'])-2))**.5 #effective sample size
+                se = 2.0*(se/(sum(test['weight'])-2))**.5
     
-                if  (clf.coef_[0]-2*se/2 >0 or clf.coef_[0]+2*se/2  <0) and r2_score(np.log10(test['10']),preds,sample_weight=test['weight']) < 0.7:
+                if  (clf.coef_[0]-1.67*se/2 >0 or clf.coef_[0]+1.67*se/2  <0) and r2_score(np.log10(test['10']),preds,sample_weight=test['weight']) < 0.7:
                     dictt_name[i] = (i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
                              clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)
                     results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
@@ -360,22 +368,38 @@ if True:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
                     plt.plot([i[-4],],[counter,]*1,'ro')
-                    plt.text(i[-4],counter+.25,i[0][:-10],horizontalalignment='center',fontsize=7)
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]+'*'
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
-    try:
-        i = [x for x in sorted(results,key =  lambda x : x[-4]) if 'res_list_cluster_3' in x[0]][0]
-        plots += [i,]
-        plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='g')
-        plt.plot([i[-4],],[counter,]*1,'go')
-        plt.text(i[-4],counter+.25,'Number of residues',horizontalalignment='center',fontsize=7)
-        counter += 1
-    except : None
+    i = [x for x in sorted(results,key =  lambda x : x[-4]) if 'res_list_cluster_3' in x[0]][0]
+    plots += [i,]
+    plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='g')
+    plt.plot([i[-4],],[counter,]*1,'go')
+    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+        txt = i[0][:-10]+'***'
+    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
+        txt = i[0][:-10]+'**'
+    else:
+        txt = i[0][:-10]+'*'
+    plt.text(i[-4],counter+.25,'Number of residues**',horizontalalignment='center',fontsize=7)
+    counter += 1
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
             if i[2] > 0.01 and 'num' in i[0] and '.(' not in i[0]:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
                     plt.plot([i[-4],],[counter,]*1,'bo')
-                    plt.text(i[-4],counter+.25,i[0][:-10],horizontalalignment='center',fontsize=7)
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]+'*'
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
     plt.title('Number Features')
     plt.xlabel('Coefficient and 95% CI of feature')
@@ -391,17 +415,29 @@ if True:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
                     plt.plot([i[-4],],[counter,]*1,'ro')
-                    plt.text(i[-4],counter+.25,i[0][:-10],horizontalalignment='center',fontsize=7)
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]+'*'
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
             if i[2] > 0.01 and 'num' not in i[0] and 'list' not in i[0] and 'normSA' not in i[0] and 'VSA' not in i[0]:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
                     plt.plot([i[-4],],[counter,]*1,'bo')
-                    plt.text(i[-4],counter+.25,i[0][:-10],horizontalalignment='center',fontsize=7)
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'**'
+                    else:
+                        txt = i[0][:-10]+'*'
+                    plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
                     counter += 1
     plt.ylim([0,counter])
-    plt.title('Percentage Features')
+    plt.title('Normalized (by seq length) Features')
     plt.xlabel('Coefficient and 95% CI of feature')
     plt.ylabel('Percentage Features')
     plt.yticks([],[])
@@ -466,7 +502,45 @@ if True:
     plt.savefig('length_linear.png',dpi=300,bbox_inches='tight')
     plt.show()
 
-    
+if True:
+    plt.close()
+    test['res_list2'] = (test['5']+0.5)//1
+    bins = [[-7,-6,-5,-4,-3], [-2],
+            [-1], [0], [1,2], [3,4],  [6], [7,8,9,10]]
+    for i in bins:
+        test = test.set_value(test[test['res_list2'].isin(i)].index,
+                              'res_list2',
+                              np.mean(i))
+        
+    test['20'] = np.log10(test['10'])
+    val = test.groupby('res_list2')['20'].apply(np.array).reset_index()
+    weight = test.groupby('res_list2')['weight'].apply(np.array).reset_index()
+    temp = pd.merge(val,weight,on='res_list2')
+    temp['mean'] = (temp['20']*temp['weight']).apply(sum)/temp['weight'].apply(sum)
+    temp['std'] = (((temp['20']-temp['mean'])**2)*temp['weight']).apply(sum)\
+                  /temp['weight'].apply(sum)
+    temp['num'] = temp['weight'].apply(sum)
+    temp['std'] = temp['std']**.5
+    temp = temp[temp['num'] > 5].reset_index(drop=True)
+    temp['se'] = temp['std']/temp['weight'].apply(sum).apply(lambda x : (x-1)**.5).astype(np.float32)
+    plt.errorbar(temp['res_list2'].values,
+                 temp['mean'].values,
+                 yerr=temp['se'].values);
+    plt.plot(temp['res_list2'].values,
+             temp['mean'].values,
+             'go')
+    plt.ylabel('flourescence')
+    plt.xlabel('length of peptide (includes FITC and linker)')
+    axes = plt.gca()
+    plt.title('Flourescence vs peptide length')
+    plt.xlim(min(test['res_list']),max(test['res_list']))
+    plt.yticks(axes.get_yticks(),(10**axes.get_yticks()).astype(np.int32))
+    plt.xticks([np.mean(x) for x in  bins],[str(x) for x in bins], rotation='vertical')
+    print (axes.get_yticks())
+    plt.xlim([np.mean(x)-0.5 for x in  bins][0:1]+[np.mean(x)+0.5 for x in  bins][-1:])
+    plt.savefig('charge_linear.png',dpi=300,bbox_inches='tight')
+    plt.show()
+
 test['20'] = np.log10(test['10'])
 # DCOR(METRIC) Amitava Roy
 if False:
@@ -491,3 +565,33 @@ if False:
             corr[i,j]=dist_covar(test[impt[i]].values,test[impt[j]].values)
         
         
+'''
+L_num         -0.0411      0.014     -2.913      0.004      -0.069      -0.013
+NL_num        -0.0857      0.052     -1.642      0.103      -0.189       0.017
+K_num          0.9926      0.012     80.829      0.000       0.968       1.017
+F_num         -0.0081      0.020     -0.401      0.689      -0.048       0.032
+T_num         -0.1181      0.023     -5.160      0.000      -0.163      -0.073
+B8_num         0.3055      0.105      2.908      0.004       0.098       0.513
+C_num          0.1361      0.062      2.203      0.029       0.014       0.258
+G_num          0.0805      0.024      3.423      0.001       0.034       0.127
+M_num         -0.0106      0.048     -0.222      0.825      -0.105       0.084
+R5_num        -0.5665      0.050    -11.300      0.000      -0.665      -0.467
+N_num          0.0799      0.021      3.843      0.000       0.039       0.121
+V_num          0.0889      0.021      4.331      0.000       0.048       0.129
+S8_num        -0.6650      0.056    -11.834      0.000      -0.776      -0.554
+I_num         -0.0245      0.018     -1.366      0.174      -0.060       0.011
+R8_num        -0.4440      0.041    -10.799      0.000      -0.525      -0.363
+Q_num         -0.0046      0.013     -0.366      0.715      -0.029       0.020
+pff_num       -0.2225      0.054     -4.087      0.000      -0.330      -0.115
+R_num          1.0097      0.007    135.127      0.000       0.995       1.024
+D_num         -0.9477      0.021    -44.593      0.000      -0.990      -0.906
+H_num          0.1875      0.029      6.564      0.000       0.131       0.244
+E_num         -0.9900      0.017    -57.135      0.000      -1.024      -0.956
+B5_num         0.0227      0.046      0.495      0.621      -0.068       0.113
+S5_num        -0.6078      0.030    -20.451      0.000      -0.666      -0.549
+Y_num          0.0104      0.025      0.410      0.682      -0.040       0.060
+P_num         -0.1294      0.031     -4.227      0.000      -0.190      -0.069
+A_num         -0.0415      0.016     -2.670      0.008      -0.072      -0.011
+W_num          0.0789      0.039      2.044      0.043       0.003       0.155
+S_num         -0.0114      0.020     -0.572      0.568      -0.051       0.028
+'''

@@ -229,7 +229,7 @@ if True:
     test['len']=test['1'].apply(process_string)
     test['res_list']=test['1'].apply(lambda x : process_string(x,list))
     test['list']=test['1'].apply(lambda x : np.array(process_string(x,list)))
-    test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
+    #test['res_list_QN']=test['res_list'].apply(lambda x : collections.Counter(x)['Q']+collections.Counter(x)['N'])
     test['res_list']=test['res_list'].apply(len)
     dictt = collections.Counter(np.concatenate(test['list'].values))
 print (dictt)
@@ -242,20 +242,25 @@ dictt_vol = {'FITC': 163.32732360530238, 'PEG2': 75.972, 'pff': 84.691, 'Y': 68.
              'W': 79.754, 'M': 51.659, 'V': 35.171, 'PEG5': 135.867, 'H': 56.292}
 for i in [('W','F','Y','pff'),('N','Q'),('L','I','V','NL'),('D','E'),
           ('S8','R8','B8'),('R5','S5'),('PEG2','PEG5','PEG1'),
-          ('H','R','K'),('S','T'),('S8','R8'),('S8','B8'),('R8','B8'),
+          ('R','K'),('H','R','K'),('S','T'),('S8','R8'),('S8','B8'),('R8','B8'),
           ('W','F','pff'),('F','pff'),('F','Y')]:
     dictt[i] = 999
           
 #single res
 for res in dictt.keys():
-    if dictt[res] >= 20:
+    #if dictt[res] >= 20:
         test['%s_num' %str(res)] = test['list'].apply(lambda x : sum(np.in1d(x,np.array(res))))
         test['%s_norm' %str(res)] = 1.0*test['%s_num'%str(res)]/test['res_list']
+        #test['%s_normLG' %str(res)] = test['%s_norm' %str(res)].apply(np.log1p)
+        #test['%s_normSQ' %str(res)] = test['%s_norm' %str(res)].apply(lambda x : x**2)
         test['%s_normSA' %str(res)] = test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum) #total area
         test['%s_normSA' %str(res)] = test['list'].apply(lambda y : sum(np.array(list(map(lambda x : dictt_vol[x],y)))[np.in1d(y,np.array(res))]))\
                                       /test['list'].apply(lambda y: np.array(list(map(lambda x : dictt_vol[x],y)))).apply(np.sum)
-        impt += ['%s_norm' %str(res),'%s_num' %str(res),'%s_normSA' %str(res)]
+        impt += ['%s_norm' %str(res),'%s_num' %str(res),'%s_normSA' %str(res),]#'%s_normSQ' %str(res),'%s_normLG' %str(res)]
+
 #double res
+#test = test[test['R_num'] <= 4].reset_index(drop=True)
+dictt = collections.Counter(np.concatenate(test['list'].values))
 def func_compare2(x,gap,res): #find motiffs
     for i in range(len(res)):
         if i==0:
@@ -283,6 +288,21 @@ dictt_name = {}
 test['MW'] = test['len']
 del test['len']
 del test['FITC_norm']
+class StandardScaler(object):
+    #my own scaler with weights, verified to give idential values for unweights values to original function
+    def fit(self,X,weights=test['weight']):
+        if type(weights)==type(None):
+            mean = np.mean(X, 0).values
+            std = np.std(X, 0).values
+        else:
+            weights= np.array([weights,]*X.shape[1]).T
+            mean = np.sum(np.array(weights)*np.array(X),0)/np.sum(np.array(weights),0)
+            std = np.sum(np.array(weights)*((np.array(X)-mean)**2),0)/np.sum(np.array(weights),0)
+        self.mean = mean
+        self.std = std
+        return self
+    def transform(self,X):
+        return (X.values-self.mean)/self.std
 if True:
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
@@ -307,7 +327,7 @@ if True:
                 if 'num' in i or 'res_list' in i or i in ['atom_1', 'atom_6', 'atom_7', 'atom_8', 'atom_9', 'atom_16', 'atom_len', 'atom_size']: #do not scale count features. 
                     temptrain = test[[i,]].values
                     print  (i)
-                    i='num_' + i
+                    #i='num_' + i
                 temptrain2 = np.concatenate([temptrain*0+1,temptrain],1)
                 #dummie = pd.get_dummies(test[cluster].values,drop_first= True).values
                 #temptrain = np.concatenate([dummie,temptrain],1)
@@ -363,10 +383,10 @@ if True:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
                     plt.plot([i[-4],],[counter,]*1,'ro')
-                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
-                        txt = i[0][:-10]+'**'
-                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
                         txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
+                        txt = i[0][:-10]+'**'
                     else:
                         txt = i[0][:-10]+'*'
                     plt.text(i[-4],counter+.25,txt,horizontalalignment='center',fontsize=7)
@@ -375,9 +395,9 @@ if True:
     plots += [i,]
     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='g')
     plt.plot([i[-4],],[counter,]*1,'go')
-    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
-        txt = i[0][:-10]+'*'
-    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+        txt = i[0][:-10]+'***'
+    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
         txt = i[0][:-10]+'**'
     else:
         txt = i[0][:-10]+'*'
@@ -388,9 +408,9 @@ if True:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
                     plt.plot([i[-4],],[counter,]*1,'bo')
-                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
-                        txt = i[0][:-10]+'*'
-                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
                         txt = i[0][:-10]+'**'
                     else:
                         txt = i[0][:-10]+'*'
@@ -410,9 +430,9 @@ if True:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
                     plt.plot([i[-4],],[counter,]*1,'ro')
-                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
-                        txt = i[0][:-10]+'*'
-                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
                         txt = i[0][:-10]+'**'
                     else:
                         txt = i[0][:-10]+'*'
@@ -423,9 +443,9 @@ if True:
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
                     plt.plot([i[-4],],[counter,]*1,'bo')
-                    if i[-4]-i[-3] > 0 or  i[-4]+i[-3] < 0:
-                        txt = i[0][:-10]+'*'
-                    elif i[-4]-1.19*i[-3] > 0 or i[-4]+1.19*i[-3] < 0:
+                    if i[-4]-1.19*i[-3] > 0 or  i[-4]+1.19*i[-3] < 0:
+                        txt = i[0][:-10]+'***'
+                    elif i[-4]-i[-3] > 0 or i[-4]+i[-3] < 0:
                         txt = i[0][:-10]+'**'
                     else:
                         txt = i[0][:-10]+'*'
@@ -497,9 +517,48 @@ if True:
     plt.savefig('length.png',dpi=300,bbox_inches='tight')
     plt.show()
 
-    
+if True:
+    plt.close()
+    test['res_list2'] = (test['5']+0.5)//1
+    bins = [[-7,-6,-5,-4,-3], [-2],
+            [-1], [0], [1,2], [3,4],  [6], [7,8,9,10]]
+    for i in bins:
+        test = test.set_value(test[test['res_list2'].isin(i)].index,
+                              'res_list2',
+                              np.mean(i))
+        
+    test['20'] = np.log10(test['10'])
+    val = test.groupby('res_list2')['20'].apply(np.array).reset_index()
+    weight = test.groupby('res_list2')['weight'].apply(np.array).reset_index()
+    temp = pd.merge(val,weight,on='res_list2')
+    temp['mean'] = (temp['20']*temp['weight']).apply(sum)/temp['weight'].apply(sum)
+    temp['std'] = (((temp['20']-temp['mean'])**2)*temp['weight']).apply(sum)\
+                  /temp['weight'].apply(sum)
+    temp['num'] = temp['weight'].apply(sum)
+    temp['std'] = temp['std']**.5
+    temp = temp[temp['num'] > 5].reset_index(drop=True)
+    temp['se'] = temp['std']/temp['weight'].apply(sum).apply(lambda x : (x-1)**.5).astype(np.float32)
+    plt.errorbar(temp['res_list2'].values,
+                 temp['mean'].values,
+                 yerr=temp['se'].values);
+    plt.plot(temp['res_list2'].values,
+             temp['mean'].values,
+             'go')
+    plt.ylabel('flourescence')
+    plt.xlabel('length of peptide (includes FITC and linker)')
+    axes = plt.gca()
+    plt.title('Flourescence vs peptide length')
+    plt.xlim(min(test['res_list']),max(test['res_list']))
+    plt.yticks(axes.get_yticks(),(10**axes.get_yticks()).astype(np.int32))
+    plt.xticks([np.mean(x) for x in  bins],[str(x) for x in bins], rotation='vertical')
+    print (axes.get_yticks())
+    plt.xlim([np.mean(x)-0.5 for x in  bins][0:1]+[np.mean(x)+0.5 for x in  bins][-1:])
+    plt.savefig('charge.png',dpi=300,bbox_inches='tight')
+    plt.show()
+
 test['20'] = np.log10(test['10'])
 # DCOR(METRIC) Amitava Roy
+
 if False:
     def dist_covar(x,y):
         assert len(x)==len(y)
@@ -521,4 +580,121 @@ if False:
         for j in range(len(impt)):
             corr[i,j]=dist_covar(test[impt[i]].values,test[impt[j]].values)
         
+def makePlot(i) :
+    plt.close()
+    temp = test[['20',i,'weight0']].groupby('weight0')[i].apply(np.mean).reset_index()
+    temp = pd.merge(temp, test[['20',i,'weight0']].groupby('weight0')['20'].apply(np.mean).reset_index(),
+                    on = ['weight0'])
+    temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
+    if 'num' in i or 'res_list' in i or i in ['atom_1', 'atom_6', 'atom_7', 'atom_8', 'atom_9', 'atom_16', 'atom_len', 'atom_size']: #do not scale count features. 
+        temptrain = test[[i,]].values
+        print  (i)
+    temptrain2 = np.concatenate([temptrain*0+1,temptrain],1)
+    W=np.diag(test['weight'])
+    X=temptrain2
+    y=np.log10(test['10'])
+    B=np.matmul(np.linalg.inv(np.matmul(np.matmul(X.T,W),X)) ,np.matmul(np.matmul(X.T,W),y))
+    preds = np.matmul(B,X.T)
+    se = np.sum(
+        (test['weight']*(preds-np.log10(test['10']))**2)
+        )*np.linalg.inv(
+             np.matmul(np.matmul(temptrain2.T,np.diag(test['weight'])),temptrain2)
+             )
+    se = (se/(sum(test['weight'])-2))
+    err2=np.sum(
+        (test['weight']*(preds-np.log10(test['10']))**2)
+        )/(sum(test['weight'])-2)
+    err2 = err2**.5
+    err=np.diag(np.matmul(np.matmul(temptrain2,se),temptrain2.T))**.5
+    B = np.round(B,3)
+    plt.plot(test[i],preds,'r',label='y = %sX + %s'%(B[1],B[0]));
+    plt.plot(temp[i],temp['20'],'bo',label='data points from clusters');
+    plt.ylabel('Log flourescence');
+    plt.errorbar(test[i],preds,color='green',yerr=err2*2,label='regresion sigma');
+    plt.errorbar(test[i],preds,color='red',yerr=err*2);
+    axes = plt.axes()
+    xlim = axes.get_xlim()
+    # example of how to zoomout by a factor of 0.1
+    factor = 0.1
+    plt.title(i,fontsize=32)
+    new_xlim = (xlim[0] + xlim[1])/2 + np.array((-0.5, 0.5)) * (xlim[1] - xlim[0]) * (1 + factor) 
+    axes.set_xlim(new_xlim)
+    plt.xlabel(i);plt.legend();plt.savefig('%s.png'%i,bbox_inches='tight' );plt.show()
+dataA = []
+for seed in range(1,3):
+    replace = False
+    ### 25 % of data to predict, test on 50% data
+    test1=test.sort_values(['weight','10']).iloc[0::2].reset_index(drop=True)
+    #test1 = test1.sample(len(test)//2,replace=replace, random_state=seed).reset_index(drop=True)
+    test2=test.sort_values(['weight','10']).iloc[1::2].reset_index(drop=True)
+    features = [x[0][:-10] for x in results]
+    X,Y1,Y2 = [],[],[]
+    from sklearn import linear_model,preprocessing ,decomposition
+    from sklearn.decomposition import PCA
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.linear_model import Lasso
+    test = test.iloc[::-1]
+    for alpha in np.linspace(-5,-2,5):# [0.03,0.1,0.3,1.0,3.0]:
+        alpha =10**alpha
+        clf = linear_model.Lasso(alpha=alpha)
+        temptrain  = StandardScaler().fit(test1[features]).transform(test1[features])
+        preds = clf.fit(temptrain,np.log10(test1['10'])).predict(temptrain)
+        temptrain  = StandardScaler().fit(test1[features]).transform(test2[features])
+        preds2 = clf.predict(temptrain)
+        a,b=np.mean((preds -np.log10(test.iloc[::2]['10']))**2)**.5,np.mean((preds2 -np.log10(test.iloc[1::2]['10']))**2)**.5
+##        temptrain  = StandardScaler().fit(test[features]).transform(test[features])
+##        preds3 = clf.fit(StandardScaler().fit(test[features]).transform(test[features]),
+##                         np.log10(test['10'])).predict(temptrain)
+##        test['pred_linear'] = preds3
+        print (alpha,a,b)
+        X += [alpha,]
+        Y1 += [a,]
+        Y2 += [b,]    
+        pd.DataFrame(features)['a']=clf.coef_
+        D = pd.DataFrame(features);D['a']=clf.coef_
+        print (D[D['a'] != 0][0].values)
+        r1 = 1-np.mean((preds -test1['20'])**2)/np.mean((np.mean(test1['20']) -test1['20'])**2)
+        r2 = str(np.corrcoef(preds2 ,np.log10(test2['10']))[0,1])[:4]#str(np.mean((preds2 -np.log10(test2['10']))**2)**.5)[:4]#str(1-np.mean((10**preds2 -test2['10'])**2)/np.mean((np.mean(test2['10']) -test2['10'])**2))[:4]
+        dataA += [r2,]
+        print (r2)
+        print (alpha,a,b,r1,r2)
+        if True:
+            plt.plot([2.4,3.8],[2.4,3.8],'g',label='y = x');
+            plt.plot(preds,np.log10(test1['10']),'ro',label='train predictions');
+            plt.ylim([2.4,3.8]);plt.xlim([2.4,3.8]);
+            plt.title('Stapled Peptide model predict stapled peptide\ncorr coef = %s'%r2);
+            plt.xlabel('predictions of log flourescence');plt.ylabel('ground truth of log flourescence');
+            plt.plot(preds2,np.log10(test2['10']),'bo',label='test predictions');plt.legend()
+            plt.savefig('StapledPeptide_model_predict_StapledPeptide.png');plt.show()
         
+	
+'''
+L_num         -0.0411      0.014     -2.913      0.004      -0.069      -0.013
+NL_num        -0.0857      0.052     -1.642      0.103      -0.189       0.017
+K_num          0.9926      0.012     80.829      0.000       0.968       1.017
+F_num         -0.0081      0.020     -0.401      0.689      -0.048       0.032
+T_num         -0.1181      0.023     -5.160      0.000      -0.163      -0.073
+B8_num         0.3055      0.105      2.908      0.004       0.098       0.513
+C_num          0.1361      0.062      2.203      0.029       0.014       0.258
+G_num          0.0805      0.024      3.423      0.001       0.034       0.127
+M_num         -0.0106      0.048     -0.222      0.825      -0.105       0.084
+R5_num        -0.5665      0.050    -11.300      0.000      -0.665      -0.467
+N_num          0.0799      0.021      3.843      0.000       0.039       0.121
+V_num          0.0889      0.021      4.331      0.000       0.048       0.129
+S8_num        -0.6650      0.056    -11.834      0.000      -0.776      -0.554
+I_num         -0.0245      0.018     -1.366      0.174      -0.060       0.011
+R8_num        -0.4440      0.041    -10.799      0.000      -0.525      -0.363
+Q_num         -0.0046      0.013     -0.366      0.715      -0.029       0.020
+pff_num       -0.2225      0.054     -4.087      0.000      -0.330      -0.115
+R_num          1.0097      0.007    135.127      0.000       0.995       1.024
+D_num         -0.9477      0.021    -44.593      0.000      -0.990      -0.906
+H_num          0.1875      0.029      6.564      0.000       0.131       0.244
+E_num         -0.9900      0.017    -57.135      0.000      -1.024      -0.956
+B5_num         0.0227      0.046      0.495      0.621      -0.068       0.113
+S5_num        -0.6078      0.030    -20.451      0.000      -0.666      -0.549
+Y_num          0.0104      0.025      0.410      0.682      -0.040       0.060
+P_num         -0.1294      0.031     -4.227      0.000      -0.190      -0.069
+A_num         -0.0415      0.016     -2.670      0.008      -0.072      -0.011
+W_num          0.0789      0.039      2.044      0.043       0.003       0.155
+S_num         -0.0114      0.020     -0.572      0.568      -0.051       0.028
+'''

@@ -286,10 +286,12 @@ if True:
     clusters = [x for x in test.keys() if 'cluster_' in x]
     results = []
     from sklearn.metrics import r2_score
-    def log_likelihood(X,B,y): #loglihood of logistic regresion parameters
-        temp1 = np.sum(y * np.matmul(X,B))
-        temp2 = np.sum(np.log(1+np.exp(np.matul(X,B))))
-        return temp1-temp2
+    def log_likelihood(B,X,y): #loglihood of logistic regresion parameters
+            #numericalyl checked to be simillar to statsmodels
+            B = np.reshape(B,(2,1))
+            temp1 = np.sum(y * np.matmul(X,B))
+            temp2 = np.sum(np.log(1+np.exp(np.matmul(X,B))))
+            return temp1-temp2
     
     for i in list(test.keys())[15:]:#(0.0001,0.0003,0.001,0.003,0.01,0.03,0.1,0.3):
         for cluster in clusters:
@@ -300,7 +302,6 @@ if True:
                 from sklearn.preprocessing import StandardScaler
                 from sklearn.linear_model import Lasso
                 alpha =0.00#alpha#10**alpha
-                clf = linear_model.LogisticRegression()
                 temptrain  = StandardScaler().fit(test[[i,]]).transform(test[[i,]])
                 ids_non_zero = test[test[i]!=0].index
                 if 'num' in i or 'res_list' in i or i in ['atom_1', 'atom_6', 'atom_7', 'atom_8', 'atom_9', 'atom_16', 'atom_len', 'atom_size']: #do not scale count features. 
@@ -308,21 +309,13 @@ if True:
                     print  (i)
                     i='num_' + i
                 temptrain2 = np.concatenate([temptrain*0+1,temptrain],1)
-                #dummie = pd.get_dummies(test[cluster].values,drop_first= True).values
-                #temptrain = np.concatenate([dummie,temptrain],1)
-                preds = clf.fit(temptrain,np.log10(test['10']),sample_weight=test['weight']).predict(temptrain)
-                # equailvalent ~ inv(X.T*W*X)*X.T*W*Y
                 W=np.diag(test['weight'])
                 X=temptrain2
-                y=np.log10(test['10'])
-                B=np.concatenate([[clf.intercept_],clf.coef_])
-                preds = np.matmul(X,B)
-                # sm.WLS(y, X, weights=test['weight']).fit().summary()
-                se = np.sum(
-                    (test['weight']*(preds-np.log10(test['10']))**2)
-                    )*np.linalg.inv(
-                         np.matmul(np.matmul(temptrain2.T,np.diag(test['weight'])),temptrain2)
-                         )[-1,-1]
+                y=np.log10(test['10']).values
+                clf = sm.Logit(y,X).fit()
+                preds = clf.predict(X)
+                die
+                se = (np.linalg.inv(-clf.model.hessian(clf.params))**.5)[-1,-1]
                 se = 1.67*(se/(sum(test['weight'])-2))**.5 #effective sample size
     
                 if  (clf.coef_[0]-2*se/2 >0 or clf.coef_[0]+2*se/2  <0) and r2_score(np.log10(test['10']),preds,sample_weight=test['weight']) < 0.7:
@@ -339,7 +332,7 @@ if True:
 ##                            ):
 ##                            results += [(i+'_'+cluster,r2_score(np.log10(test['10']),preds,sample_weight=test['weight']),
 ##                                     clf.coef_[0],se,[clf.coef_[0]-se,clf.coef_[0]+se],ids_non_zero)]
-            except : None#print (i)
+            except ValueError : None#print (i)
     print ([x[:3] for x in sorted(results,key =  lambda x : x[1])[-20:]])
 #print (dictt_name)
 reg_coef = pd.DataFrame(results,columns= \

@@ -74,7 +74,7 @@ def save_smile(i,counter ):
     smile = process_string(i)
     smile_str = ''
     second_ii = False
-    for ii in smile[1:]:
+    for ii in smile[:]:
         if second_ii==0.5 and ii in ['B5','B8']:
             second_ii = True
         elif second_ii is True and ii in ['S8','S5','R8','R5']:
@@ -85,11 +85,11 @@ def save_smile(i,counter ):
             second_ii = 0.5
     smile_str += '[O-]'
     try:
-        #mol0 = Chem.MolFromSmiles(smile_str)
-        #mol = Chem.AddHs(mol0)
-        #AllChem.Compute2DCoords(mol)
+        mol0 = Chem.MolFromSmiles(smile_str)
+        mol = Chem.AddHs(mol0)
+        AllChem.Compute2DCoords(mol)
         #AllChem.EmbedMolecule(mol,AllChem.ETKDG())
-        #open('temp_%s.sdf'%(counter),'w').write(Chem.MolToMolBlock(mol))
+        open('temp_%s.sdf'%(counter),'w').write(Chem.MolToMolBlock(mol))
         return smile_str
     except :
         print (counter,smile_str)
