@@ -19,6 +19,7 @@ test = pd.read_csv('../stapled_peptide_permability_features.csv')
 temp=test.iloc[x]
 test = test[test['7'] != 1].reset_index(drop=True)
 test = test[test['1'] != '-AC-AHL-R8-LCLEKL-S5-GLV-(K-PEG1--FITC-)'].reset_index(drop=True)
+#test['err'] = 0.5*np.abs(np.log10(test['8'])-np.log10(test['10']))
 def process_string(str,len=len):
     result = []
     special_resi = False
@@ -97,7 +98,7 @@ if True:
     heat_map = corr_mat
     import scipy.cluster.hierarchy as sch
     from scipy.cluster.hierarchy import fcluster
-    Y = sch.linkage(heat_map,method='single')
+    Y = sch.linkage(heat_map,method='average')
     Z = sch.dendrogram(Y,orientation='right')
     index = Z['leaves']
     D = heat_map[index,:]
@@ -107,6 +108,7 @@ if True:
     plt.xticks(range(len(index)),sorted_keys,rotation='vertical', fontsize=2)
     plt.yticks(range(len(index)),sorted_keys, fontsize=2)
     plt.imshow(D);plt.savefig('cluster_peptide.png',dpi=500, bbox_inches='tight');#plt.show()
+    plt.close()
     Z = sch.dendrogram(Y,orientation='right')
     plt.yticks(np.array(range(1,1+len(index)))*10-5,sorted_keys, fontsize=2)
     plt.savefig('cluster_peptide.png',dpi=500)
@@ -374,12 +376,14 @@ if True:
     for i in [x[:3] for x in sorted(results,key =  lambda x : x[0])[-250:]]:
             if i[2] < -0.01:
                     print (i[0][:-10],str(i[2])[:6],str(i[1])[0:6])
+features = []
 if True:
     plt.close()
     counter = 1
     plots = []
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
             if i[2] < -0.01 and 'num' in i[0] and '.(' not in i[0]:
+                    features += [i[0][:-10],]
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
                     plt.plot([i[-4],],[counter,]*1,'ro')
@@ -405,6 +409,7 @@ if True:
     counter += 1
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
             if i[2] > 0.01 and 'num' in i[0] and '.(' not in i[0]:
+                    features += [i[0][:-10],]
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
                     plt.plot([i[-4],],[counter,]*1,'bo')
@@ -427,6 +432,7 @@ if True:
     plots = []
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
             if i[2] < -0.01 and 'num' not in i[0] and 'list' not in i[0] and 'normSA' not in i[0] and 'VSA' not in i[0]:
+                    features += [i[0][:-10],]
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='r')
                     plt.plot([i[-4],],[counter,]*1,'ro')
@@ -440,6 +446,7 @@ if True:
                     counter += 1
     for i in [x for x in sorted(results,key =  lambda x : x[-4])[-250:]]:
             if i[2] > 0.01 and 'num' not in i[0] and 'list' not in i[0] and 'normSA' not in i[0] and 'VSA' not in i[0]:
+                    features += [i[0][:-10],]
                     plots += [i,]
                     plt.errorbar([i[-4],],[counter,]*1,xerr=i[-3],fmt='b')
                     plt.plot([i[-4],],[counter,]*1,'bo')
@@ -621,27 +628,31 @@ def makePlot(i) :
     axes.set_xlim(new_xlim)
     plt.xlabel(i);plt.legend();plt.savefig('%s.png'%i,bbox_inches='tight' );plt.show()
 dataA = []
+all_pred = []
 for seed in range(1,3):
+    if seed ==1 :
+        a,b = 0,1
+    else:
+        a,b = 1,0
     replace = False
-    ### 25 % of data to predict, test on 50% data
-    test1=test.sort_values(['weight','10']).iloc[0::2].reset_index(drop=True)
+    test1=test.sort_values(['weight','10']).iloc[a::2].reset_index(drop=True)
     #test1 = test1.sample(len(test)//2,replace=replace, random_state=seed).reset_index(drop=True)
-    test2=test.sort_values(['weight','10']).iloc[1::2].reset_index(drop=True)
-    features = [x[0][:-10] for x in results]
+    test2=test.sort_values(['weight','10']).iloc[b::2].reset_index(drop=True)
+    #features = [x[0][:-10] for x in results]
     X,Y1,Y2 = [],[],[]
     from sklearn import linear_model,preprocessing ,decomposition
     from sklearn.decomposition import PCA
     from sklearn.preprocessing import StandardScaler
     from sklearn.linear_model import Lasso
     test = test.iloc[::-1]
-    for alpha in np.linspace(-5,-2,5):# [0.03,0.1,0.3,1.0,3.0]:
+    for alpha in np.linspace(-5,-2,5)[-2:-1]:# [0.03,0.1,0.3,1.0,3.0]:
         alpha =10**alpha
         clf = linear_model.Lasso(alpha=alpha)
         temptrain  = StandardScaler().fit(test1[features]).transform(test1[features])
         preds = clf.fit(temptrain,np.log10(test1['10'])).predict(temptrain)
         temptrain  = StandardScaler().fit(test1[features]).transform(test2[features])
         preds2 = clf.predict(temptrain)
-        a,b=np.mean((preds -np.log10(test.iloc[::2]['10']))**2)**.5,np.mean((preds2 -np.log10(test.iloc[1::2]['10']))**2)**.5
+        a,b=np.mean((preds -np.log10(test1['10']))**2)**.5,np.mean((preds2 -np.log10(test2['10']))**2)**.5
 ##        temptrain  = StandardScaler().fit(test[features]).transform(test[features])
 ##        preds3 = clf.fit(StandardScaler().fit(test[features]).transform(test[features]),
 ##                         np.log10(test['10'])).predict(temptrain)
@@ -653,6 +664,7 @@ for seed in range(1,3):
         pd.DataFrame(features)['a']=clf.coef_
         D = pd.DataFrame(features);D['a']=clf.coef_
         print (D[D['a'] != 0][0].values)
+        all_pred += [D[D['a'] != 0][0].values,]
         r1 = 1-np.mean((preds -test1['20'])**2)/np.mean((np.mean(test1['20']) -test1['20'])**2)
         r2 = str(np.corrcoef(preds2 ,np.log10(test2['10']))[0,1])[:4]#str(np.mean((preds2 -np.log10(test2['10']))**2)**.5)[:4]#str(1-np.mean((10**preds2 -test2['10'])**2)/np.mean((np.mean(test2['10']) -test2['10'])**2))[:4]
         dataA += [r2,]
@@ -660,14 +672,19 @@ for seed in range(1,3):
         print (alpha,a,b,r1,r2)
         if True:
             plt.plot([2.4,3.8],[2.4,3.8],'g',label='y = x');
+            #plt.errorbar(preds,np.log10(test1['10']),yerr=test1['err'],ecolor='r',fmt='o')
             plt.plot(preds,np.log10(test1['10']),'ro',label='train predictions');
             plt.ylim([2.4,3.8]);plt.xlim([2.4,3.8]);
             plt.title('Stapled Peptide model predict stapled peptide\ncorr coef = %s'%r2);
             plt.xlabel('predictions of log flourescence');plt.ylabel('ground truth of log flourescence');
-            plt.plot(preds2,np.log10(test2['10']),'bo',label='test predictions');plt.legend()
-            plt.savefig('StapledPeptide_model_predict_StapledPeptide.png');plt.show()
-        
-	
+            #plt.errorbar(preds2,np.log10(test2['10']),yerr=test2['err'],ecolor='b',fmt='o')
+            plt.plot(preds2,np.log10(test2['10']),'bo',label='test predictions');#plt.legend()
+            plt.savefig('StapledPeptide_model_predict_StapledPeptide.png');
+            plt.show()
+collections.Counter(np.concatenate(all_pred))
+if True:
+    cluster = fcluster(Y, .66, criterion='distance')
+    test = test.set_value(test.index,'weight2',cluster)	
 '''
 L_num         -0.0411      0.014     -2.913      0.004      -0.069      -0.013
 NL_num        -0.0857      0.052     -1.642      0.103      -0.189       0.017
