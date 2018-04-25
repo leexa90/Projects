@@ -17,7 +17,7 @@ x=charge_csv[(charge_csv['atoms'] == 28) & (charge_csv['bond1'] == '[10]')\
              & (charge_csv['charge'] <= 0.1652)]['origin'].values
 test = pd.read_csv('../stapled_peptide_permability_features.csv')
 temp=test.iloc[x]
-test = test[test['7'] == 1].reset_index(drop=True)
+test = test[test['7'] != 1].reset_index(drop=True)
 test = test[test['1'] != '-AC-AHL-R8-LCLEKL-S5-GLV-(K-PEG1--FITC-)'].reset_index(drop=True)
 test['20'] = np.log10(test['10'])
 #test['err'] = 0.5*np.abs(np.log10(test['8'])-np.log10(test['10']))
@@ -674,10 +674,10 @@ for cutoff in [0.1,0.15,0.2,0.3]:
             B = minimize(weighted_lasso,B)['x']
             temptrain  = StandardScaler().fit(test1[features]).transform(test1[features])
             X = np.concatenate([temptrain[:,0:1]*0+1,temptrain],1)
-            preds = np.matmul(X,np.reshape(B,(43,1)))[:,0]
+            preds = np.matmul(X,np.reshape(B,(len(features),1)))[:,0]
             temptrain  = StandardScaler().fit(test1[features]).transform(test2[features])
             X = np.concatenate([temptrain[:,0:1]*0+1,temptrain],1)
-            preds2 = np.matmul(X,np.reshape(B,(43,1)))[:,0]
+            preds2 = np.matmul(X,np.reshape(B,(len(features),1)))[:,0]
             a,b=np.mean((preds -np.log10(test1['10']))**2)**.5,np.mean((preds2 -np.log10(test2['10']))**2)**.5
     ##        temptrain  = StandardScaler().fit(test[features]).transform(test[features])
     ##        preds3 = clf.fit(StandardScaler().fit(test[features]).transform(test[features]),
@@ -725,7 +725,7 @@ for cutoff in [0.1,0.15,0.2,0.3]:
             score = score + np.sum(np.abs(B*alpha))
             return score
         minimize(weighted_lasso,B)
-    for seed in range(1,3): #weighted alsso clusters 
+    for seed in range(3,3): #weighted alsso clusters 
         if seed ==1 :
             a,b = 0,1
         else:
@@ -758,10 +758,10 @@ for cutoff in [0.1,0.15,0.2,0.3]:
             B = minimize(weighted_lasso,B)['x']
             temptrain  = StandardScaler().fit(test1[features]).transform(test1[features])
             X = np.concatenate([temptrain[:,0:1]*0+1,temptrain],1)
-            preds = np.matmul(X,np.reshape(B,(len(features),1)))[:,0]
+            preds = np.matmul(X,np.reshape(B,(1+len(features),1)))[:,0]
             temptrain  = StandardScaler().fit(test1[features]).transform(test2[features])
             X = np.concatenate([temptrain[:,0:1]*0+1,temptrain],1)
-            preds2 = np.matmul(X,np.reshape(B,(len(features),1)))[:,0]
+            preds2 = np.matmul(X,np.reshape(B,(1+len(features),1)))[:,0]
             a,b=np.mean((preds -np.log10(test1['10']))**2)**.5,np.mean((preds2 -np.log10(test2['10']))**2)**.5
     ##        temptrain  = StandardScaler().fit(test[features]).transform(test[features])
     ##        preds3 = clf.fit(StandardScaler().fit(test[features]).transform(test[features]),
