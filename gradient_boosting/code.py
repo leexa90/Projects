@@ -1,5 +1,5 @@
 '''
-coding gradient boosting algorithm
+coding gradient boosting algorithm, implementation for undnerstanding.
 '''
 
 import numpy as np
